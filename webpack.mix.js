@@ -19,13 +19,16 @@ mix.webpackConfig({
         enforce: 'pre',
         exclude: /node_modules/,
         loader: 'eslint-loader',
-        test: /\.(js|vue)?$/
-      }
-    ]
-  }
+        test: /\.(js|vue)?$/,
+      },
+    ],
+  },
 });
 
 mix
   .js('resources/js/app.js', 'public/js')
   .sass('resources/sass/app.scss', 'public/css')
-  .copy('resources/assets/images', 'public/images');
+  .copy('resources/assets/images', 'public/images')
+  .purgeCss({
+    enabled: true,
+  });
