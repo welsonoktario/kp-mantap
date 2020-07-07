@@ -24,7 +24,6 @@ Route::get('/admin/', function () {
         return view('admin.index');
     }
     return redirect('/login');
-
 });
 
 Route::get('/export', 'ExportController@index');
@@ -33,3 +32,6 @@ Route::get('/export/pdf', 'ExportController@export');
 Route::get('/users', 'UsersController@index');
 Route::post('/users', 'UsersController@create');
 
+Route::get('/admin/transaksi', function () {
+    return view('admin.transaksi.index');
+});

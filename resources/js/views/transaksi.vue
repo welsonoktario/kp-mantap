@@ -2,6 +2,20 @@
   <div class="no">
     <c-header :title="$route.name" />
     <div class="bg-white rounded shadow p-2">
+      <div class="row">
+        <div class="col-10">
+          <h4>List Transaksi</h4>
+        </div>
+        <div class="col-2 pb-4">
+          <button
+            class="btn btn-block btn-primary"
+            data-toggle="modal"
+            data-target="#modalTambah"
+          >
+            Tambah Transaksi
+          </button>
+        </div>
+      </div>
       <data-table
         :fields="columns"
         :items="transaksis"
@@ -12,6 +26,7 @@
         @sort="handleSort"
       />
     </div>
+    <c-modal :idModal="'modalTambah'" :tipe="'Tambah'" />
     <!-- <table class="table abstable-responsive">
       <thead>
         <tr>
@@ -48,11 +63,13 @@
 <script>
 import CHeader from '../components/Header';
 import DataTable from '../components/DataTable';
+import CModal from '../components/ModalTransaksi';
 
 export default {
   components: {
     CHeader,
     DataTable,
+    CModal,
   },
   data: () => ({
     columns: [
@@ -83,6 +100,11 @@ export default {
       {
         key: 'dompet',
         sortable: true,
+      },
+      {
+        key: 'actions',
+        label: 'Aksi',
+        sortable: false,
       },
     ],
     transaksis: [

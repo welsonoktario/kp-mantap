@@ -41,7 +41,20 @@
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc"
         show-empty
-      ></b-table>
+      >
+        <!-- eslint-disable-next-line vue/no-unused-vars -->
+        <template v-slot:cell(actions)="row">
+          <b-button
+            @click="edit(row.item, row.index, $event.target)"
+            data-toggle="modal"
+            data-target="#modalEdit"
+            size="sm"
+            class="mr-1"
+          >
+            Edit
+          </b-button>
+        </template>
+      </b-table>
     </div>
 
     <!-- BAGIAN INI AKAN MENAMPILKAN JUMLAH DATA YANG DI-LOAD -->
@@ -61,13 +74,23 @@
         aria-controls="dw-datatable"
       ></b-pagination>
     </div>
+    <c-modal
+      ref="modalEdit"
+      :idModal="'modalEdit'"
+      :tipe="'Edit'"
+      :transaksi="selectedTrans"
+    />
   </div>
 </template>
 
 <script>
 import _ from 'lodash'; //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
+import CModal from './ModalTransaksi';
 
 export default {
+  components: {
+    CModal,
+  },
   //PROPS INI ADALAH DATA YANG AKAN DIMINTA DARI PENGGUNA COMPONENT DATATABLE YANG KITA BUAT
   props: {
     //ITEMS STRUKTURNYA ADALAH ARRAY, KARENA BAGIAN INI BERISI DATA YANG AKAN DITAMPILKAN DAN SIFATNYA WAJIB DIKIRIMKAN KETIKA COMPONENT INI DIGUNAKAN
@@ -90,6 +113,7 @@ export default {
       //VARIABLE INI AKAN MENGHADLE SORTING DATA
       sortBy: null, //FIELD YANG AKAN DISORT AKAN OTOMATIS DISIMPAN DISINI
       sortDesc: false, //SEDANGKAN JENISNYA ASCENDING ATAU DESC AKAN DISIMPAN DISINI
+      selectedTrans: null,
     };
   },
   watch: {
@@ -122,6 +146,18 @@ export default {
     changePage(val) {
       //KIRIM EMIT DENGAN NAMA PAGINATION DAN VALUENYA ADALAH HALAMAN YANG DIPILIH OLEH USER
       this.$emit('pagination', val);
+    },
+    // eslint-disable-next-line no-unused-vars
+    edit(item, index, button) {
+      this.selectedTrans = this.items[index];
+      const transaksi = this.selectedTrans;
+      const tanggal = transaksi.tanggal.split('/');
+      this.$refs.modalEdit.$data.dataTransaksi.dompet = transaksi.dompet;
+      this.$refs.modalEdit.$data.dataTransaksi.kategori = transaksi.kategori;
+      this.$refs.modalEdit.$data.dataTransaksi.keterangan =
+        transaksi.keterangan;
+      this.$refs.modalEdit.$data.dataTransaksi.nominal = transaksi.nominal;
+      this.$refs.modalEdit.$data.dataTransaksi.tanggal = `${tanggal[2]}-${tanggal[1]}-${tanggal[0]}`;
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN
     //KITA GUNAKAN DEBOUNCE UNTUK MEMBUAT DELAY, DIMANA FUNGSI INI AKAN DIJALANKAN

@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-undef
 const mix = require('laravel-mix');
+require('laravel-mix-purgecss');
 
 /*
  |--------------------------------------------------------------------------
@@ -28,7 +29,4 @@ mix.webpackConfig({
 mix
   .js('resources/js/app.js', 'public/js')
   .sass('resources/sass/app.scss', 'public/css')
-  .copy('resources/assets/images', 'public/images')
-  .purgeCss({
-    enabled: true,
-  });
+  .copy('resources/assets/images', 'public/images');
