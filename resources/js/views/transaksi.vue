@@ -4,7 +4,7 @@
     <div class="bg-white rounded shadow p-2">
       <div class="row">
         <div class="col-10">
-          <h4>List Transaksi</h4>
+          <h4 class="ml-2 mt-2">List Transaksi</h4>
         </div>
         <div class="col-2 pb-4">
           <button
@@ -90,7 +90,7 @@ export default {
         sortable: true,
       },
       {
-        key: 'user',
+        key: 'pic',
         sortable: true,
       },
       {
@@ -114,7 +114,7 @@ export default {
         keterangan: 'Lorem ipsum',
         nominal: 250000,
         jenis: 'Keluar',
-        user: 'John',
+        pic: 'John',
         kategori: 'Pinjaman',
         dompet: 'BCA',
       },
@@ -124,7 +124,7 @@ export default {
         keterangan: 'Lorem ipsum 2',
         nominal: 125000,
         jenis: 'Keluar',
-        user: 'Jane',
+        pic: 'Jane',
         kategori: 'BS',
         dompet: 'BCA',
       },
@@ -134,7 +134,7 @@ export default {
         keterangan: 'Lorem ipsum 3',
         nominal: 500000,
         jenis: 'Masuk',
-        user: 'Doe',
+        pic: 'Doe',
         kategori: 'Sumbangan',
         dompet: 'BCA',
       },
@@ -144,7 +144,7 @@ export default {
         keterangan: 'Lorem ipsum 4',
         nominal: 100000,
         jenis: 'Masuk',
-        user: 'John',
+        pic: 'John',
         kategori: 'Pinjaman',
         dompet: 'BCA',
       },
@@ -154,7 +154,7 @@ export default {
         keterangan: 'Lorem ipsum 5',
         nominal: 150000,
         jenis: 'Masuk',
-        user: 'John',
+        pic: 'John',
         kategori: 'Pinjaman',
         dompet: 'BCA',
       },

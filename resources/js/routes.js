@@ -13,9 +13,29 @@ let routes = [
     name: 'User',
   },
   {
+    path: '/dompet',
+    component: require('./views/dompet').default,
+    name: 'Dompet',
+  },
+  {
+    path: '/kategori',
+    component: require('./views/kategori').default,
+    name: 'Kategori',
+  },
+  {
     path: '/transaksi',
     component: require('./views/transaksi').default,
     name: 'Transaksi',
+  },
+  {
+    path: '/aktivitas',
+    component: require('./views/aktivitas').default,
+    name: 'Aktivitas',
+  },
+  {
+    path: '/aktivitas/:id',
+    component: require('./views/detail-aktivitas').default,
+    name: 'Detail Aktivitas',
   },
   {
     path: '/laporan',

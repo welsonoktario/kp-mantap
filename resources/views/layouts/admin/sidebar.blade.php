@@ -21,9 +21,27 @@
           </router-link>
         </li>
         <li class="nav-item">
+          <router-link tag="a" to="/dompet" class="nav-link">
+            <i class="nav-icon fas fa-wallet"></i>
+            <p>Dompet</p>
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link tag="a" to="/kategori" class="nav-link">
+            <i class="nav-icon fas fa-grip-horizontal"></i>
+            <p>Kategori</p>
+          </router-link>
+        </li>
+        <li class="nav-item">
           <router-link tag="a" to="/transaksi" class="nav-link">
             <i class="nav-icon fas fa-money-bill-wave-alt"></i>
             <p>Transaksi</p>
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link tag="a" to="/aktivitas" class="nav-link">
+            <i class="nav-icon fas fa-poll-h"></i>
+            <p>Aktivitas</p>
           </router-link>
         </li>
         <li class="nav-item">

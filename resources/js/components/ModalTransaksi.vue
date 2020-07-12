@@ -13,7 +13,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">{{ tipe }}</h5>
+            <h5 class="modal-title">{{ tipe }} Transaksi</h5>
             <button
               type="button"
               class="close"
@@ -37,7 +37,7 @@
                     v-for="(dompet, index) in dataDompet"
                     :key="index"
                     :value="dompet.id"
-                    :selected="dompet.nama == 'BS'"
+                    :selected="dompet.nama == dataTransaksi.dompet"
                     >{{ dompet.nama }}</option
                   >
                 </select>
@@ -167,16 +167,7 @@ export default {
     context: null,
   }),
   mounted() {
-    if (this.transaksi) {
-      const transaksi = this.transaksi;
-      const tanggal = transaksi.tanggal.split('/');
-      this.dataTransaksi.dompet = transaksi.dompet;
-      this.dataTransaksi.kategori = transaksi.kategori;
-      this.dataTransaksi.keterangan = transaksi.keterangan;
-      this.dataTransaksi.nominal = transaksi.nominal;
-      this.dataTransaksi.tanggal = `${tanggal[2]}-${tanggal[1]}-${tanggal[0]}`;
-      console.log(this.dataTransaksi);
-    }
+    console.log('buka');
   },
   methods: {
     onContext(ctx) {

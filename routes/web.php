@@ -35,3 +35,23 @@ Route::post('/users', 'UsersController@create');
 Route::get('/admin/transaksi', function () {
     return view('admin.transaksi.index');
 });
+
+Route::get('/admin/dompet', function () {
+    return view('admin.dompet.index');
+});
+
+Route::get('/admin/kategori', function () {
+    return view('admin.kategori.index');
+});
+
+Route::get('/admin/aktivitas', function () {
+    return view('admin.aktivitas.index');
+});
+
+Route::get('/admin/aktivitas/:id', function () {
+    return view('admin.aktivitas.detail-aktivitas');
+});
+
+Route::get('/admin/laporan', function () {
+    return view('admin.laporan.index');
+});
