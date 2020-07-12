@@ -37,7 +37,7 @@
                     v-for="(dompet, index) in dataDompet"
                     :key="index"
                     :value="dompet.id"
-                    :selected="dompet.nama == dataTransaksi.dompet"
+                    :selected="dompet.id == dataTransaksi.dompet"
                     >{{ dompet.nama }}</option
                   >
                 </select>
@@ -54,7 +54,7 @@
                     v-for="(kategori, index) in dataKategori"
                     :key="index"
                     :value="kategori.id"
-                    :selected="kategori.nama == dataTransaksi.kategori"
+                    :selected="kategori.id == dataTransaksi.kategori"
                     >{{ kategori.nama }}</option
                   >
                 </select>
@@ -72,7 +72,7 @@
             <div class="form-group">
               <label for="nominal">Nominal</label>
               <input
-                v-model="dataTransaksi.nominal"
+                v-model="dataTransaksi.pengeluaran"
                 type="text"
                 class="form-control"
                 id="nominal"
@@ -97,7 +97,7 @@
             >
               Tutup
             </button>
-            <button type="button" class="btn btn-primary">{{ tipe }}</button>
+            <button @click="tambahTransaksi" type="button" class="btn btn-primary">{{ tipe }}</button>
           </div>
         </div>
       </div>
@@ -126,10 +126,11 @@ export default {
   },
   data: () => ({
     dataTransaksi: {
-      dompet: '',
-      kategori: '',
+      dompet: 0,
+      kategori: 0,
       keterangan: '',
-      nominal: 0,
+      pemasukan: 0,
+      pengeluaran: 0,
       tanggal: '',
     },
     dataKategori: [
@@ -172,6 +173,16 @@ export default {
   methods: {
     onContext(ctx) {
       this.context = ctx;
+    },
+    tambahTransaksi() {
+      const data = this.dataTransaksi;
+      console.log(data);
+
+      // eslint-disable-next-line no-undef
+      axios
+        .post('http://localhost:8000/api/transaksi', data)
+        // eslint-disable-next-line prettier/prettier
+        .then(res => console.log(res));
     },
   },
 };
