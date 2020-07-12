@@ -51,7 +51,7 @@
             >
               Tutup
             </button>
-            <button type="button" class="btn btn-primary">{{ tipe }}</button>
+            <button @click="save" type="button" class="btn btn-primary">{{ tipe }}</button>
           </div>
         </div>
       </div>
@@ -80,6 +80,7 @@ export default {
   },
   data: () => ({
     dataDompet: {
+      id: 0,
       nama: '',
       keterangan: '',
     },
@@ -88,6 +89,34 @@ export default {
   methods: {
     onContext(ctx) {
       this.context = ctx;
+    },
+    save() {
+      /* eslint-disable no-undef */
+      if (this.tipe == 'Tambah') {
+        axios
+          .post('http://localhost:8000/api/dompet', this.dataDompet)
+          // eslint-disable-next-line prettier/prettier
+          .then(res => {
+            console.log(res);
+            if (res.status == 200) {
+              this.$parent.loadData();
+            }
+          });
+      } else if (this.tipe === 'Edit') {
+        console.log(this.dataDompet);
+        axios
+          .put(
+            `http://localhost:8000/api/dompet/${this.dataDompet.id}`,
+            this.dataDompet
+          )
+          // eslint-disable-next-line prettier/prettier
+          .then(res => {
+            console.log(res);
+            if (res.status == 200) {
+              this.$parent.$parent.loadData();
+            }
+          });
+      }
     },
   },
 };

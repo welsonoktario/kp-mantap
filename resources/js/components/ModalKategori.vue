@@ -51,7 +51,7 @@
             >
               Tutup
             </button>
-            <button type="button" class="btn btn-primary">{{ tipe }}</button>
+            <button @click="save" type="button" class="btn btn-primary">{{ tipe }}</button>
           </div>
         </div>
       </div>
@@ -80,14 +80,46 @@ export default {
   },
   data: () => ({
     dataKategori: {
+      id: 0,
       nama: '',
       keterangan: '',
     },
     context: null,
   }),
+  mounted() {
+    console.log(this.kategori);
+  },
   methods: {
     onContext(ctx) {
       this.context = ctx;
+    },
+    save() {
+      /* eslint-disable no-undef */
+      if (this.tipe == 'Tambah') {
+        axios
+          .post('http://localhost:8000/api/kategori', this.dataKategori)
+          // eslint-disable-next-line prettier/prettier
+          .then(res => {
+            console.log(res);
+            if (res.status == 200) {
+              this.$parent.loadData();
+            }
+          });
+      } else if (this.tipe === 'Edit') {
+        console.log(this.dataKategori);
+        axios
+          .put(
+            `http://localhost:8000/api/kategori/${this.dataKategori.id}`,
+            this.dataKategori
+          )
+          // eslint-disable-next-line prettier/prettier
+          .then(res => {
+            console.log(res);
+            if (res.status == 200) {
+              this.$parent.$parent.loadData();
+            }
+          });
+      }
     },
   },
 };

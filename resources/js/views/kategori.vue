@@ -48,32 +48,12 @@ export default {
         sortable: true,
       },
       {
-        key: 'keterangan',
-        sortable: true,
-      },
-      {
         key: 'actions',
         label: 'Aksi',
         sortable: false,
       },
     ],
-    kategori: [
-      {
-        id: 1,
-        nama: 'Pinjaman',
-        keterangan: 'Pinjaman oleh staf atau karyawan',
-      },
-      {
-        id: 2,
-        nama: 'BS',
-        keterangan: 'Biaya Studi oleh staf atau karyawan',
-      },
-      {
-        id: 3,
-        nama: 'Sumbangan',
-        keterangan: 'Sumbangan dari mahasiswa wisuda',
-      },
-    ],
+    kategori: [],
     meta: [], //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
@@ -81,7 +61,20 @@ export default {
     sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false, //ASCEDING
   }),
+  mounted() {
+    this.loadData();
+  },
   methods: {
+    loadData() {
+      // eslint-disable-next-line no-undef
+      axios
+        .get('http://localhost:8000/api/kategori')
+        // eslint-disable-next-line prettier/prettier
+        .then(res => {
+          console.log(res.data);
+          this.kategori = res.data;
+        });
+    },
     handlePerPage(val) {
       this.per_page = val;
     },

@@ -57,23 +57,7 @@ export default {
         sortable: false,
       },
     ],
-    dompet: [
-      {
-        id: 1,
-        nama: 'BCA',
-        keterangan: 'Tabungan Bank BCA',
-      },
-      {
-        id: 2,
-        nama: 'Koperasi',
-        keterangan: 'Tabungan koperasi',
-      },
-      {
-        id: 3,
-        nama: 'HSBC',
-        keterangan: 'Tabungan Bank HSBC',
-      },
-    ],
+    dompet: [],
     meta: [], //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
@@ -81,7 +65,20 @@ export default {
     sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false, //ASCEDING
   }),
+  mounted() {
+    this.loadData();
+  },
   methods: {
+    loadData() {
+      // eslint-disable-next-line no-undef
+      axios
+        .get('http://localhost:8000/api/dompet')
+        // eslint-disable-next-line prettier/prettier
+        .then(res => {
+          console.log(res);
+          this.dompet = res.data.data;
+        });
+    },
     handlePerPage(val) {
       this.per_page = val;
     },

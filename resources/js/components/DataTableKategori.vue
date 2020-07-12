@@ -151,13 +151,15 @@ export default {
     edit(item, index, button) {
       this.selectedKategori = this.items[index];
       const kategori = this.selectedKategori;
+      this.$refs.modalEdit.$data.dataKategori.id = kategori.id;
       this.$refs.modalEdit.$data.dataKategori.nama = kategori.nama;
       this.$refs.modalEdit.$data.dataKategori.keterangan = kategori.keterangan;
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN
     //KITA GUNAKAN DEBOUNCE UNTUK MEMBUAT DELAY, DIMANA FUNGSI INI AKAN DIJALANKAN
     //500 MIL SECOND SETELAH USER BERHENTI MENGETIK
-    search: _.debounce(function (e) {
+    // eslint-disable-next-line prettier/prettier
+    search: _.debounce(function(e) {
       //KIRIM EMIT DENGAN NAMA SEARCH DAN VALUE SESUAI YANG DIKETIKKAN OLEH USER
       this.$emit('search', e.target.value);
     }, 500),

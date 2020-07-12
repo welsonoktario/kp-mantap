@@ -89,7 +89,7 @@ class DompetController extends Controller
     public function update(Request $request, $id)
     {
         $dompet = Dompet::findOrFail($id);
-        $dompet->name = $request->get('nama');
+        $dompet->nama = $request->get('nama');
         $dompet->save();
 
         if ($dompet->save()) {

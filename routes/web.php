@@ -33,6 +33,8 @@ Route::get('/users', 'UsersController@index');
 Route::post('/users', 'UsersController@create');
 
 Route::group(['prefix' => 'api'], function () {
+    Route::resource('dompet', 'DompetController');
+    Route::resource('kategori', 'KategoriController');
     Route::resource('transaksi', 'TransaksiController');
 });
 
