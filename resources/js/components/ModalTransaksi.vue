@@ -24,41 +24,34 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="form-row">
-              <div class="form-group col-6">
-                <label for="dompet">Dompet</label>
-                <select
-                  v-model="dataTransaksi.dompet"
-                  id="dompet"
-                  class="form-control"
-                  name="dompet"
+            <div class="form-group">
+              <label for="dompet">Dompet</label>
+              <select
+                v-model="dataTransaksi.dompet"
+                id="dompet"
+                class="form-control"
+                name="dompet"
+              >
+                <option
+                  v-for="(dompet, index) in dataDompet"
+                  :key="index"
+                  :value="dompet.id"
+                  :selected="dompet.id == dataTransaksi.dompet"
+                  >{{ dompet.nama }}</option
                 >
-                  <option
-                    v-for="(dompet, index) in dataDompet"
-                    :key="index"
-                    :value="dompet.id"
-                    :selected="dompet.id == dataTransaksi.dompet"
-                    >{{ dompet.nama }}</option
-                  >
-                </select>
-              </div>
-              <div class="form-group col-6">
-                <label for="kategori">Kategori</label>
-                <select
-                  v-model="dataTransaksi.kategori"
-                  id="kategori"
-                  class="form-control"
-                  name="kategori"
-                >
-                  <option
-                    v-for="(kategori, index) in dataKategori"
-                    :key="index"
-                    :value="kategori.id"
-                    :selected="kategori.id == dataTransaksi.kategori"
-                    >{{ kategori.nama }}</option
-                  >
-                </select>
-              </div>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="kategori">Kategori</label>
+              <multiselect
+                v-model="dataTransaksi.kategori"
+                label="nama"
+                track-by="id"
+                :options="dataKategori"
+                :multiple="true"
+                :taggable="true"
+                @tag="addTag"
+              ></multiselect>
             </div>
             <div class="form-group">
               <label for="keterangan">Keterangan</label>
@@ -97,7 +90,13 @@
             >
               Tutup
             </button>
-            <button @click="tambahTransaksi" type="button" class="btn btn-primary">{{ tipe }}</button>
+            <button
+              @click="tambahTransaksi"
+              type="button"
+              class="btn btn-primary"
+            >
+              {{ tipe }}
+            </button>
           </div>
         </div>
       </div>
@@ -125,9 +124,10 @@ export default {
     },
   },
   data: () => ({
+    search: '',
     dataTransaksi: {
       dompet: 0,
-      kategori: 0,
+      kategori: [],
       keterangan: '',
       pemasukan: 0,
       pengeluaran: 0,
@@ -167,10 +167,15 @@ export default {
     ],
     context: null,
   }),
-  mounted() {
-    console.log('buka');
-  },
   methods: {
+    addTag(newTag) {
+      const tag = {
+        id: newTag,
+        nama: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
+      };
+      this.dataKategori.push(tag);
+      this.dataTransaksi.kategori.push(tag);
+    },
     onContext(ctx) {
       this.context = ctx;
     },
@@ -182,8 +187,10 @@ export default {
       axios
         .post('http://localhost:8000/api/transaksi', data)
         // eslint-disable-next-line prettier/prettier
-        .then(res => console.log(res));
+        .then((res) => console.log(res));
     },
   },
 };
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

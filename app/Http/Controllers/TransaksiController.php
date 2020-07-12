@@ -52,15 +52,19 @@ class TransaksiController extends Controller
         $dompet = Dompet::findOrFail($request->get('dompet'));
         $transaksi->dompet()->associate($dompet);
 
-        $kategori = Kategori::findOrFail($request->get('kategori'));
-        $transaksi->kategori()->attach($kategori);
-
-        if ($request->get('kegiatan')) {
-            $kegiatan = Kegiatan::findOrFail($request->get('kegiatan'));
-            $transaksi->kegiatan()->attach($kegiatan);
-        }
-
         if ($transaksi->save()) {
+            $kategoris = $request->get('kategori');
+
+            foreach ($kategoris as $k) {
+                $kategori = Kategori::findOrFail($k['id']);
+                $transaksi->kategori()->attach($kategori);
+            }
+
+            if ($request->get('kegiatan')) {
+                $kegiatan = Kegiatan::findOrFail($request->get('kegiatan'));
+                $transaksi->kegiatan()->attach($kegiatan);
+            }
+
             return response()->json([
                 'status' => 'OK',
                 'data' => $transaksi

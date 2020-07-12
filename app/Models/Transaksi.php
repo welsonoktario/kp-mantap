@@ -8,17 +8,17 @@ class Transaksi extends Model
 {
     public function dompet()
     {
-        return $this->belongsTo('App\Models\Kategori');
+        return $this->belongsTo('App\Models\Dompet');
     }
 
     public function kategori()
     {
-        return $this->belongsToMany('App\Models\Kategori');
+        return $this->belongsToMany('App\Models\Kategori', 'kategori_transaksis');
     }
 
     public function kegiatan()
     {
-        return $this->belongsToMany('App\Models\Kegiatan');
+        return $this->belongsToMany('App\Models\Kegiatan', 'kegiatan_transaksis');
     }
 
     public function user()
