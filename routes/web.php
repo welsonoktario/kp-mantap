@@ -32,6 +32,10 @@ Route::get('/export/pdf', 'ExportController@export');
 Route::get('/users', 'UsersController@index');
 Route::post('/users', 'UsersController@create');
 
+Route::group(['prefix' => 'api'], function () {
+    Route::resource('transaksi', 'TransaksiController');
+});
+
 Route::get('/admin/transaksi', function () {
     return view('admin.transaksi.index');
 });
