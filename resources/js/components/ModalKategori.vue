@@ -97,7 +97,7 @@ export default {
       /* eslint-disable no-undef */
       if (this.tipe == 'Tambah') {
         axios
-          .post('http://localhost:8000/api/kategori', this.dataKategori)
+          .post('/kategori', this.dataKategori)
           // eslint-disable-next-line prettier/prettier
           .then(res => {
             console.log(res);
@@ -108,10 +108,7 @@ export default {
       } else if (this.tipe === 'Edit') {
         console.log(this.dataKategori);
         axios
-          .put(
-            `http://localhost:8000/api/kategori/${this.dataKategori.id}`,
-            this.dataKategori
-          )
+          .put(`/kategori/${this.dataKategori.id}`, this.dataKategori)
           // eslint-disable-next-line prettier/prettier
           .then(res => {
             console.log(res);

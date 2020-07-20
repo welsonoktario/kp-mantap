@@ -185,9 +185,9 @@ export default {
 
       // eslint-disable-next-line no-undef
       axios
-        .post('http://localhost:8000/api/transaksi', data)
+        .post('/transaksi', data)
         // eslint-disable-next-line prettier/prettier
-        .then((res) => console.log(res));
+        .then(res => console.log(res));
     },
   },
 };

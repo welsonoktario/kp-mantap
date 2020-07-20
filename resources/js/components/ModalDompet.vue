@@ -94,7 +94,7 @@ export default {
       /* eslint-disable no-undef */
       if (this.tipe == 'Tambah') {
         axios
-          .post('http://localhost:8000/api/dompet', this.dataDompet)
+          .post('/dompet', this.dataDompet)
           // eslint-disable-next-line prettier/prettier
           .then(res => {
             console.log(res);
@@ -105,10 +105,7 @@ export default {
       } else if (this.tipe === 'Edit') {
         console.log(this.dataDompet);
         axios
-          .put(
-            `http://localhost:8000/api/dompet/${this.dataDompet.id}`,
-            this.dataDompet
-          )
+          .put(`/dompet/${this.dataDompet.id}`, this.dataDompet)
           // eslint-disable-next-line prettier/prettier
           .then(res => {
             console.log(res);
