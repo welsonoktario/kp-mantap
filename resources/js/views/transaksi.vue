@@ -74,7 +74,7 @@ export default {
   data: () => ({
     columns: [
       {
-        key: 'tanggal',
+        key: 'tanggal_transaksi',
         sortable: true,
       },
       {
@@ -82,23 +82,20 @@ export default {
         sortable: false,
       },
       {
-        key: 'nominal',
+        key: 'pemasukan',
         sortable: true,
       },
       {
-        key: 'jenis',
+        key: 'pengeluaran',
         sortable: true,
       },
       {
-        key: 'pic',
+        key: 'kategori[0].nama',
+        label: 'Kategori',
         sortable: true,
       },
       {
-        key: 'kategori',
-        sortable: true,
-      },
-      {
-        key: 'dompet',
+        key: 'dompet.nama',
         sortable: true,
       },
       {
@@ -107,58 +104,7 @@ export default {
         sortable: false,
       },
     ],
-    transaksis: [
-      {
-        id: 1,
-        tanggal: '15/06/2020',
-        keterangan: 'Lorem ipsum',
-        nominal: 250000,
-        jenis: 'Keluar',
-        pic: 'John',
-        kategori: 'Pinjaman',
-        dompet: 'BCA',
-      },
-      {
-        id: 2,
-        tanggal: '18/06/2020',
-        keterangan: 'Lorem ipsum 2',
-        nominal: 125000,
-        jenis: 'Keluar',
-        pic: 'Jane',
-        kategori: 'BS',
-        dompet: 'BCA',
-      },
-      {
-        id: 3,
-        tanggal: '18/06/2020',
-        keterangan: 'Lorem ipsum 3',
-        nominal: 500000,
-        jenis: 'Masuk',
-        pic: 'Doe',
-        kategori: 'Sumbangan',
-        dompet: 'BCA',
-      },
-      {
-        id: 4,
-        tanggal: '19/06/2020',
-        keterangan: 'Lorem ipsum 4',
-        nominal: 100000,
-        jenis: 'Masuk',
-        pic: 'John',
-        kategori: 'Pinjaman',
-        dompet: 'BCA',
-      },
-      {
-        id: 5,
-        tanggal: '20/06/2020',
-        keterangan: 'Lorem ipsum 5',
-        nominal: 150000,
-        jenis: 'Masuk',
-        pic: 'John',
-        kategori: 'Pinjaman',
-        dompet: 'BCA',
-      },
-    ],
+    transaksis: [],
     meta: [], //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
@@ -166,7 +112,20 @@ export default {
     sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false, //ASCEDING
   }),
+  mounted() {
+    this.loadData();
+  },
   methods: {
+    loadData() {
+      // eslint-disable-next-line no-undef
+      axios
+        .get('/transaksi')
+        // eslint-disable-next-line prettier/prettier
+        .then(res => {
+          console.log(res.data);
+          this.transaksis = res.data.data;
+        });
+    },
     handlePerPage(val) {
       this.per_page = val;
     },

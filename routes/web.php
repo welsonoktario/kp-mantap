@@ -36,6 +36,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::resource('dompet', 'DompetController');
     Route::resource('kategori', 'KategoriController');
     Route::resource('transaksi', 'TransaksiController');
+    Route::resource('aktivitas', 'KegiatanController');
 });
 
 Route::get('/admin/transaksi', function () {

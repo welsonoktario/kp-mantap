@@ -8,6 +8,6 @@ class Kegiatan extends Model
 {
     public function transaksi()
     {
-        return $this->hasMany('App\Models\Transaksi', 'kegiatan_transaksis');
+        return $this->belongsToMany('App\Models\Transaksi', 'kegiatan_transaksis');
     }
 }
