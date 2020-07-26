@@ -68,7 +68,7 @@ export default {
     loadData() {
       // eslint-disable-next-line no-undef
       axios
-        .get('http://localhost:8000/api/kategori')
+        .get('/kategori')
         // eslint-disable-next-line prettier/prettier
         .then(res => {
           console.log(res.data);

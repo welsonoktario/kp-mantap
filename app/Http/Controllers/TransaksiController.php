@@ -20,7 +20,7 @@ class TransaksiController extends Controller
     {
         return response()->json([
             'status' => 'OK',
-            'data' => Transaksi::all(),
+            'data' => Transaksi::with(['dompet', 'kategori'])->get(),
         ]);
     }
 

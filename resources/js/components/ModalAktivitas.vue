@@ -52,7 +52,7 @@
             >
               Tutup
             </button>
-            <button v-on:click="save" type="button" class="btn btn-primary">{{ tipe }}</button>
+            <button @click="save" type="button" class="btn btn-primary">{{ tipe }}</button>
           </div>
         </div>
       </div>
@@ -81,6 +81,7 @@ export default {
   },
   data: () => ({
     dataAktivitas: {
+      id: 0,
       keterangan: '',
       pic: '',
     },
@@ -90,18 +91,31 @@ export default {
     onContext(ctx) {
       this.context = ctx;
     },
-    save(){
-      if (this.tipe == "Tambah"){
+    save() {
+      /* eslint-disable no-undef */
+      if (this.tipe == 'Tambah') {
         axios
-        .post('/kegiatan', this.dataAktivitas)
-        .then(res => {
-          console.log(res);
-          if (res.status == 200){
-            console.log("berhasil");
-          }
-        });
+          .post('/aktivitas', this.dataAktivitas)
+          // eslint-disable-next-line prettier/prettier
+          .then(res => {
+            console.log(res);
+            if (res.status == 200) {
+              this.$parent.loadData();
+            }
+          });
+      } else if (this.tipe === 'Edit') {
+        console.log(this.dataAktivitas);
+        axios
+          .put(`/dompet/${this.dataAktivitas.id}`, this.dataAktivitas)
+          // eslint-disable-next-line prettier/prettier
+          .then(res => {
+            console.log(res);
+            if (res.status == 200) {
+              this.$parent.$parent.loadData();
+            }
+          });
       }
-    }
+    },
   },
 };
 </script>

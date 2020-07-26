@@ -42,6 +42,10 @@
         :sort-desc.sync="sortDesc"
         show-empty
       >
+        <!-- <template v-slot:cell(kategori)="data">
+          {{ data.value.last.toUpperCase() }}, <b>{{ data.value.first }}</b>
+        </template> -->
+
         <!-- eslint-disable-next-line vue/no-unused-vars -->
         <template v-slot:cell(actions)="row">
           <b-button

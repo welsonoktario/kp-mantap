@@ -4,7 +4,7 @@
     <div class="bg-white rounded shadow p-2">
       <div class="row">
         <div class="col-10">
-          <h4 class="ml-2 mt-2">{{ aktivitas }}</h4>
+          <h4 class="ml-2 mt-2">{{ aktivitas.keterangan }}</h4>
         </div>
         <div class="col-2 pb-4">
           <button
@@ -18,7 +18,7 @@
       </div>
       <data-table
         :fields="columns"
-        :items="transaksis"
+        :items="aktivitas.transaksi"
         :meta="meta"
         @per_page="handlePerPage"
         @pagination="handlePagination"
@@ -44,7 +44,7 @@ export default {
   data: () => ({
     columns: [
       {
-        key: 'tanggal',
+        key: 'tanggal_transaksi',
         sortable: true,
       },
       {
@@ -52,15 +52,11 @@ export default {
         sortable: false,
       },
       {
-        key: 'nominal',
+        key: 'pemasukan',
         sortable: true,
       },
       {
-        key: 'jenis',
-        sortable: true,
-      },
-      {
-        key: 'pic',
+        key: 'pengeluaran',
         sortable: true,
       },
       {
@@ -77,37 +73,29 @@ export default {
         sortable: false,
       },
     ],
-    transaksis: [
-      {
-        id: 1,
-        tanggal: '15/06/2020',
-        keterangan: 'Cicil pinjaman',
-        nominal: 250000,
-        jenis: 'Keluar',
-        pic: 'Welson',
-        kategori: 'Pinjaman',
-        dompet: 'BCA',
-      },
-      {
-        id: 2,
-        tanggal: '18/06/2020',
-        keterangan: 'Cicil pinjaman (lunas)',
-        nominal: 125000,
-        jenis: 'Keluar',
-        pic: 'Welson',
-        kategori: 'Pinjaman',
-        dompet: 'BCA',
-      },
-    ],
+    aktivitas: [],
     meta: [], //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
     search: '',
-    aktivitas: 'Lorem ipsum 2',
     sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false, //ASCEDING
   }),
+  mounted() {
+    this.loadTransaksi();
+  },
   methods: {
+    loadTransaksi() {
+      const id = this.$route.params.id;
+      // eslint-disable-next-line no-undef
+      axios
+        .get(`/aktivitas/${id}`)
+        // eslint-disable-next-line prettier/prettier
+        .then(res => {
+          console.log(res.data);
+          this.aktivitas = res.data.data[0];
+        });
+    },
     handlePerPage(val) {
       this.per_page = val;
     },

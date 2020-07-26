@@ -57,23 +57,7 @@ export default {
         sortable: false,
       },
     ],
-    aktivitas: [
-      {
-        id: 1,
-        keterangan: 'Lorem ipsum',
-        pic: 'John',
-      },
-      {
-        id: 2,
-        keterangan: 'Lorem ipsum 2',
-        pic: 'Welson',
-      },
-      {
-        id: 3,
-        keterangan: 'Lorem ipsum 3',
-        pic: 'Gatum',
-      },
-    ],
+    aktivitas: [],
     meta: [], //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
@@ -81,10 +65,21 @@ export default {
     sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false, //ASCEDING
   }),
-  mounted(){
-    this.load();
+
+  mounted() {
+    this.loadData();
   },
   methods: {
+    loadData() {
+      // eslint-disable-next-line no-undef
+      axios
+        .get('/aktivitas')
+        // eslint-disable-next-line prettier/prettier
+        .then(res => {
+          console.log(res.data);
+          this.aktivitas = res.data.data;
+        });
+    },
     handlePerPage(val) {
       this.per_page = val;
     },
