@@ -14,7 +14,10 @@ class KategoriController extends Controller
      */
     public function index()
     {
-        return Kategori::all();
+        return response()->json([
+            'status' => 'OK',
+            'data' => Kategori::all()
+        ]);
     }
 
     /**

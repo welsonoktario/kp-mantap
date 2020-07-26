@@ -41,7 +41,7 @@
                 >
               </select>
             </div>
-            <div class="form-group">
+            <div class="form-group" v-if="dataKategori !== []">
               <label for="kategori">Kategori</label>
               <multiselect
                 v-model="dataTransaksi.kategori"
@@ -133,10 +133,8 @@ export default {
       pengeluaran: 0,
       tanggal: '',
     },
-    dataKategori: [
-    ],
-    dataDompet: [
-    ],
+    dataKategori: [],
+    dataDompet: [],
     context: null,
   }),
   mounted() {
@@ -158,35 +156,30 @@ export default {
       const data = this.dataTransaksi;
       console.log(data);
 
-      // eslint-disable-next-line no-undef
-      axios
+      window.axios
         .post('/transaksi', data)
         // eslint-disable-next-line prettier/prettier
         .then(res => console.log(res));
-      this.$parent.loadData()
+      this.$parent.loadData();
     },
-    loadForm(){
+    loadForm() {
       // load dompet
-      axios
-        .get('/dompet')
-        .then(res =>
-          {
-            console.log(res);
-            if(res.status == 200){
-              this.dataDompet = res.data.data;
-            }
-          }
-        );
+      window.axios.get('/dompet').then((res) => {
+        console.log('dompet');
+        console.log(res);
+        if (res.status == 200) {
+          this.dataDompet = res.data.data;
+        }
+      });
       // load kategori
-      axios
-        .get('/kategori')
-        .then(res => {
-          console.log(res);
-          if (res.status == 200){
-            this.dataKategori = res.data.data;
-          }
-        });
-    }
+      window.axios.get('/kategori').then((res) => {
+        console.log('kategori');
+        console.log(res);
+        if (res.status == 200) {
+          this.dataKategori = res.data.data;
+        }
+      });
+    },
   },
 };
 </script>

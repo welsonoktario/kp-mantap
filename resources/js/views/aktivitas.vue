@@ -98,13 +98,11 @@ export default {
       this.sortBy = val.sortBy;
       this.sortByDesc = val.sortDesc;
     },
-    load(){
-      axios
-        .get('/kegiatan')
-        .then(res => {
-          console.log(res);
-          this.aktivitas = res.data.data;
-        });
+    load() {
+      window.axios.get('/kegiatan').then((res) => {
+        console.log(res);
+        this.aktivitas = res.data.data;
+      });
     },
   },
 };
