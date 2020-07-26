@@ -52,7 +52,7 @@
             >
               Tutup
             </button>
-            <button type="button" class="btn btn-primary">{{ tipe }}</button>
+            <button v-on:click="save" type="button" class="btn btn-primary">{{ tipe }}</button>
           </div>
         </div>
       </div>
@@ -90,6 +90,18 @@ export default {
     onContext(ctx) {
       this.context = ctx;
     },
+    save(){
+      if (this.tipe == "Tambah"){
+        axios
+        .post('/kegiatan', this.dataAktivitas)
+        .then(res => {
+          console.log(res);
+          if (res.status == 200){
+            console.log("berhasil");
+          }
+        });
+      }
+    }
   },
 };
 </script>

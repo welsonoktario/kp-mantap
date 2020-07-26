@@ -81,6 +81,9 @@ export default {
     sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false, //ASCEDING
   }),
+  mounted(){
+    this.load();
+  },
   methods: {
     handlePerPage(val) {
       this.per_page = val;
@@ -99,6 +102,14 @@ export default {
       //MAKA SET SORT-NYA
       this.sortBy = val.sortBy;
       this.sortByDesc = val.sortDesc;
+    },
+    load(){
+      axios
+        .get('/kegiatan')
+        .then(res => {
+          console.log(res);
+          this.aktivitas = res.data.data;
+        });
     },
   },
 };
