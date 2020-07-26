@@ -40,6 +40,7 @@ class DompetController extends Controller
     {
         $dompet = new Dompet();
         $dompet->nama = $request->get('nama');
+        $dompet->keterangan = $request->get('keterangan');
         $dompet->save();
 
         if ($dompet->save()) {
@@ -90,6 +91,7 @@ class DompetController extends Controller
     {
         $dompet = Dompet::findOrFail($id);
         $dompet->nama = $request->get('nama');
+        $dompet->keterangan = $request->get('keterangan');
         $dompet->save();
 
         if ($dompet->save()) {

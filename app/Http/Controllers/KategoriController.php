@@ -37,6 +37,7 @@ class KategoriController extends Controller
     {
         $kategori = new Kategori();
         $kategori->nama = $request->get('nama');
+        $kategori->keterangan = $request->get('keterangan');
         $kategori->save();
 
         if ($kategori->save()) {

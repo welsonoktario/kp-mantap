@@ -27,36 +27,6 @@
       />
     </div>
     <c-modal :idModal="'modalTambah'" :tipe="'Tambah'" />
-    <!-- <table class="table abstable-responsive">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Tanggal</th>
-          <th scope="col">Keterangan</th>
-          <th scope="col">Nominal</th>
-          <th scope="col">Jenis</th>
-          <th scope="col">Penerima/Pemberi</th>
-          <th scope="col">Kategori</th>
-          <th scope="col">Dompet</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(transaksi, index) in transaksis" :key="index">
-          <th>{{ index + 1 }}</th>
-          <td>{{ transaksi.tanggal }}</td>
-          <td>{{ transaksi.keterangan }}</td>
-          <td>Rp. {{ transaksi.nominal }}</td>
-          <td>{{ transaksi.jenis }}</td>
-          <td>{{ transaksi.user }}</td>
-          <td>{{ transaksi.kategori }}</td>
-          <td>{{ transaksi.dompet }}</td>
-          <td>
-            <a :href="transaksi.id">Edit</a>
-          </td>
-        </tr>
-      </tbody>
-    </table> -->
   </div>
 </template>
 

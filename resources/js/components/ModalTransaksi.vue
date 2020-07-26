@@ -134,39 +134,14 @@ export default {
       tanggal: '',
     },
     dataKategori: [
-      {
-        id: 1,
-        nama: 'Pinjaman',
-      },
-      {
-        id: 2,
-        nama: 'BS',
-      },
-      {
-        id: 3,
-        nama: 'Sumbangan',
-      },
-      {
-        id: 4,
-        nama: 'Biasa',
-      },
     ],
     dataDompet: [
-      {
-        id: 1,
-        nama: 'BCA',
-      },
-      {
-        id: 2,
-        nama: 'HCBC',
-      },
-      {
-        id: 3,
-        nama: 'Koperasi',
-      },
     ],
     context: null,
   }),
+  mounted() {
+    this.loadForm();
+  },
   methods: {
     addTag(newTag) {
       const tag = {
@@ -188,7 +163,30 @@ export default {
         .post('/transaksi', data)
         // eslint-disable-next-line prettier/prettier
         .then(res => console.log(res));
+      this.$parent.loadData()
     },
+    loadForm(){
+      // load dompet
+      axios
+        .get('/dompet')
+        .then(res =>
+          {
+            console.log(res);
+            if(res.status == 200){
+              this.dataDompet = res.data.data;
+            }
+          }
+        );
+      // load kategori
+      axios
+        .get('/kategori')
+        .then(res => {
+          console.log(res);
+          if (res.status == 200){
+            this.dataKategori = res.data.data;
+          }
+        });
+    }
   },
 };
 </script>
