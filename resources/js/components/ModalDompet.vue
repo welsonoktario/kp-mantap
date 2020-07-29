@@ -3,8 +3,8 @@
   <div>
     <!-- Modal -->
     <div
-      class="modal fade"
       :id="idModal"
+      class="modal fade"
       tabindex="-1"
       role="dialog"
       :aria-labelledby="idModal"
@@ -27,18 +27,18 @@
             <div class="form-group">
               <label for="keterangan">Nama</label>
               <input
+                id="nama"
                 v-model="dataDompet.nama"
                 class="form-control"
-                id="nama"
                 name="nama"
               />
             </div>
             <div class="form-group">
               <label for="nominal">Keterangan</label>
               <textarea
+                id="keterangan"
                 v-model="dataDompet.keterangan"
                 class="form-control"
-                id="keterangan"
                 rows="2"
               ></textarea>
             </div>
@@ -51,7 +51,7 @@
             >
               Tutup
             </button>
-            <button @click="save" type="button" class="btn btn-primary">{{ tipe }}</button>
+            <button type="button" class="btn btn-primary" @click="save">{{ tipe }}</button>
           </div>
         </div>
       </div>
@@ -65,30 +65,30 @@ export default {
     dompet: {
       type: Object,
       required: false,
-      default: undefined,
+      default: undefined
     },
     tipe: {
       type: String,
       required: true,
-      default: 'Tambah',
+      default: 'Tambah'
     },
     idModal: {
       type: String,
       required: true,
-      default: 'modalTambah',
-    },
+      default: 'modalTambah'
+    }
   },
   data: () => ({
     dataDompet: {
       id: 0,
       nama: '',
-      keterangan: '',
+      keterangan: ''
     },
-    context: null,
+    context: null
   }),
   methods: {
     onContext(ctx) {
-      this.context = ctx;
+      this.context = ctx
     },
     save() {
       /* eslint-disable no-undef */
@@ -97,24 +97,23 @@ export default {
           .post('/dompet', this.dataDompet)
           // eslint-disable-next-line prettier/prettier
           .then(res => {
-            console.log(res);
+            console.log(res)
             if (res.status == 200) {
-              this.$parent.loadData();
+              this.$parent.loadData()
             }
-          });
+          })
       } else if (this.tipe === 'Edit') {
-        console.log(this.dataDompet);
+        console.log(this.dataDompet)
         axios
-          .put(`/dompet/${this.dataDompet.id}`, this.dataDompet)
-          // eslint-disable-next-line prettier/prettier
-          .then(res => {
-            console.log(res);
+          .patch(`/dompet/${this.dataDompet.id}`, this.dataDompet)
+          .then((res) => {
+            console.log(res)
             if (res.status == 200) {
-              this.$parent.$parent.loadData();
+              this.$parent.$parent.loadData()
             }
-          });
+          })
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>

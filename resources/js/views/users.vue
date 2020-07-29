@@ -199,21 +199,21 @@ export default {
         name: '',
         email: '',
         password: '',
-        password_confirmation: '',
-      }),
-    };
+        password_confirmation: ''
+      })
+    }
   },
 
   created() {
     // eslint-disable-next-line no-undef
-    axios.get('/users').then(({ data }) => (this.users = data));
+    axios.get('/users').then(({ data }) => (this.users = data))
   },
 
   methods: {
     onSubmit() {
-      this.form.password_confirmation = this.form.password; // Temp for this form only.
-      this.form.post('/users').then((user) => this.users.push(user));
-    },
-  },
-};
+      this.form.password_confirmation = this.form.password // Temp for this form only.
+      this.form.post('/users').then((user) => this.users.push(user))
+    }
+  }
+}
 </script>

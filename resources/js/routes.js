@@ -1,52 +1,52 @@
 /* eslint-disable no-undef */
-import VueRouter from 'vue-router';
+import VueRouter from 'vue-router'
 
 let routes = [
   {
     path: '/home',
     component: require('./views/dashboard').default,
-    name: 'Home',
+    name: 'Home'
   },
   {
     path: '/user',
     component: require('./views/users').default,
-    name: 'User',
+    name: 'User'
   },
   {
     path: '/dompet',
     component: require('./views/dompet').default,
-    name: 'Dompet',
+    name: 'Dompet'
   },
   {
     path: '/kategori',
     component: require('./views/kategori').default,
-    name: 'Kategori',
+    name: 'Kategori'
   },
   {
     path: '/transaksi',
     component: require('./views/transaksi').default,
-    name: 'Transaksi',
+    name: 'Transaksi'
   },
   {
     path: '/aktivitas',
     component: require('./views/aktivitas').default,
-    name: 'Aktivitas',
+    name: 'Aktivitas'
   },
   {
     path: '/aktivitas/:id',
     component: require('./views/detail-aktivitas').default,
-    name: 'Detail Aktivitas',
+    name: 'Detail Aktivitas'
   },
   {
     path: '/laporan',
     component: require('./views/laporan').default,
-    name: 'Laporan',
-  },
-];
+    name: 'Laporan'
+  }
+]
 
 export default new VueRouter({
   base: '/admin/',
   mode: 'history',
   routes,
-  linkActiveClass: 'active',
-});
+  linkActiveClass: 'active'
+})

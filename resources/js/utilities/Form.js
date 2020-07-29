@@ -1,4 +1,4 @@
-import Errors from './Errors';
+import Errors from './Errors'
 
 class Form {
   /**
@@ -7,26 +7,26 @@ class Form {
    * @param {object} data
    */
   constructor(data) {
-    this.originalData = data;
+    this.originalData = data
 
     for (let field in data) {
-      this[field] = data[field];
+      this[field] = data[field]
     }
 
-    this.errors = new Errors();
+    this.errors = new Errors()
   }
 
   /**
    * Fetch all relevant data for the form.
    */
   data() {
-    let data = {};
+    let data = {}
 
     for (let property in this.originalData) {
-      data[property] = this[property];
+      data[property] = this[property]
     }
 
-    return data;
+    return data
   }
 
   /**
@@ -34,10 +34,10 @@ class Form {
    */
   reset() {
     for (let field in this.originalData) {
-      this[field] = '';
+      this[field] = ''
     }
 
-    this.errors.clear();
+    this.errors.clear()
   }
 
   /**
@@ -46,7 +46,7 @@ class Form {
    * @param {string} url
    */
   post(url) {
-    return this.submit('post', url);
+    return this.submit('post', url)
   }
 
   /**
@@ -55,7 +55,7 @@ class Form {
    * @param {string} url
    */
   put(url) {
-    return this.submit('put', url);
+    return this.submit('put', url)
   }
 
   /**
@@ -64,7 +64,7 @@ class Form {
    * @param {string} url
    */
   patch(url) {
-    return this.submit('patch', url);
+    return this.submit('patch', url)
   }
 
   /**
@@ -73,7 +73,7 @@ class Form {
    * @param {string} url
    */
   delete(url) {
-    return this.submit('delete', url);
+    return this.submit('delete', url)
   }
 
   /**
@@ -87,16 +87,16 @@ class Form {
       // eslint-disable-next-line no-undef
       axios[requestType](url, this.data())
         .then((response) => {
-          this.onSuccess(response.data);
+          this.onSuccess(response.data)
 
-          resolve(response.data);
+          resolve(response.data)
         })
         .catch((error) => {
-          this.onFail(error.response.data.errors);
+          this.onFail(error.response.data.errors)
 
-          reject(error.response.data.errors);
-        });
-    });
+          reject(error.response.data.errors)
+        })
+    })
   }
 
   /**
@@ -105,8 +105,8 @@ class Form {
    * @param {object} data
    */
   onSuccess(data) {
-    console.log(data);
-    this.reset();
+    console.log(data)
+    this.reset()
   }
 
   /**
@@ -115,8 +115,8 @@ class Form {
    * @param {object} errors
    */
   onFail(errors) {
-    this.errors.record(errors);
+    this.errors.record(errors)
   }
 }
 
-export default Form;
+export default Form
