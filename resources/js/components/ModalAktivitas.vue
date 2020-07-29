@@ -99,20 +99,10 @@ export default {
           }
         })
       } else if (this.tipe === 'Edit') {
-<<<<<<< HEAD
         window.axios
           .put(`/dompet/${this.dataAktivitas.id}`, this.dataAktivitas)
           .then((res) => {
             if (res.status === 200) {
-=======
-        console.log(this.dataAktivitas)
-        axios
-          .put(`/aktivitas/${this.dataAktivitas.id}`, this.dataAktivitas)
-          // eslint-disable-next-line prettier/prettier
-          .then(res => {
-            console.log(res)
-            if (res.status == 200) {
->>>>>>> 19bb145c3924e279af50b72cf9b49ab2614f7cf0
               this.$parent.$parent.loadData()
             }
           })
