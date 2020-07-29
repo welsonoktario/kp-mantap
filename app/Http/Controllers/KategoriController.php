@@ -91,6 +91,7 @@ class KategoriController extends Controller
     {
         $kategori = Kategori::findOrFail($id);
         $kategori->nama = $request->nama;
+        $kategori->keterangan = $request->keterangan;
         $kategori->save();
 
         if ($kategori->save()) {

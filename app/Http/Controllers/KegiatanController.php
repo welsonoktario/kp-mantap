@@ -16,6 +16,7 @@ class KegiatanController extends Controller
     {
         return response()->json([
             'status' => 'OK',
+
             'data' => Kegiatan::with('transaksi')->get()
         ]);
     }
@@ -81,6 +82,7 @@ class KegiatanController extends Controller
     public function edit($id)
     {
         //
+
     }
 
     /**
@@ -95,6 +97,7 @@ class KegiatanController extends Controller
         $kegiatan = Kegiatan::findOrFail($id);
         $kegiatan->keterangan = $request->get('keterangan');
         $kegiatan->pic = $request->get('pic');
+        $kegiatan->save();
 
         if ($kegiatan->save()) {
             return response()->json([

@@ -74,7 +74,7 @@ export default {
       // eslint-disable-next-line no-undef
       axios
         .get('/aktivitas')
-        // eslint-disable-next-line prettier/prettier
+        // eslint-disable-next-x  line prettier/prettier
         .then(res => {
           console.log(res.data)
           this.aktivitas = res.data.data

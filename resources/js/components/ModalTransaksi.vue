@@ -178,11 +178,22 @@ export default {
         }
       })
       // load kategori
+<<<<<<< HEAD
+      axios
+        .get('/kategori')
+        .then(res => {
+          console.log(res);
+          if (res.status == 200){
+            this.dataKategori = res.data;
+          }
+        });
+=======
       window.axios.get('/kategori').then((res) => {
         if (res.status == 200) {
           this.dataKategori = res.data.data
         }
       })
+>>>>>>> 899e21ed182040ef0255c17f43eefa6d1569098c
     }
   }
 }
