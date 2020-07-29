@@ -1,6 +1,6 @@
 <template>
   <div class="no">
-    <c-header :title="$route.name" />
+    <CHeader :title="$route.name" />
 
     <!-- Main content -->
 
@@ -11,11 +11,11 @@
 </template>
 
 <script>
-import CHeader from '../components/Header';
+import CHeader from '../components/Header'
 
 export default {
   components: {
-    CHeader,
-  },
-};
+    CHeader
+  }
+}
 </script>

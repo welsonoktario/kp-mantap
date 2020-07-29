@@ -3,8 +3,8 @@
   <div>
     <!-- Modal -->
     <div
-      class="modal fade"
       :id="idModal"
+      class="modal fade"
       tabindex="-1"
       role="dialog"
       :aria-labelledby="idModal"
@@ -27,8 +27,8 @@
             <div class="form-group">
               <label for="dompet">Dompet</label>
               <select
-                v-model="dataTransaksi.dompet"
                 id="dompet"
+                v-model="dataTransaksi.dompet"
                 class="form-control"
                 name="dompet"
               >
@@ -41,7 +41,7 @@
                 >
               </select>
             </div>
-            <div class="form-group">
+            <div v-if="dataKategori !== []" class="form-group">
               <label for="kategori">Kategori</label>
               <multiselect
                 v-model="dataTransaksi.kategori"
@@ -56,29 +56,29 @@
             <div class="form-group">
               <label for="keterangan">Keterangan</label>
               <textarea
+                id="keterangan"
                 v-model="dataTransaksi.keterangan"
                 class="form-control"
-                id="keterangan"
                 rows="2"
               ></textarea>
             </div>
             <div class="form-group">
               <label for="nominal">Nominal</label>
               <input
+                id="nominal"
                 v-model="dataTransaksi.pengeluaran"
                 type="text"
                 class="form-control"
-                id="nominal"
                 name="nominal"
               />
             </div>
             <div class="form-group w-100">
               <label for="tanggal">Tanggal</label>
               <b-calendar
-                block
                 v-model="dataTransaksi.tanggal"
-                @context="onContext"
+                block
                 locale="id"
+                @context="onContext"
               ></b-calendar>
             </div>
           </div>
@@ -91,9 +91,9 @@
               Tutup
             </button>
             <button
-              @click="tambahTransaksi"
               type="button"
               class="btn btn-primary"
+              @click="tambahTransaksi"
             >
               {{ tipe }}
             </button>
@@ -110,18 +110,18 @@ export default {
     transaksi: {
       type: Object,
       required: false,
-      default: undefined,
+      default: undefined
     },
     tipe: {
       type: String,
       required: true,
-      default: 'Tambah',
+      default: 'Tambah'
     },
     idModal: {
       type: String,
       required: true,
-      default: 'modalTambah',
-    },
+      default: 'modalTambah'
+    }
   },
   data: () => ({
     search: '',
@@ -131,53 +131,48 @@ export default {
       keterangan: '',
       pemasukan: 0,
       pengeluaran: 0,
-      tanggal: '',
+      tanggal: ''
     },
-    dataKategori: [
-    ],
-    dataDompet: [
-    ],
-    context: null,
+    dataKategori: [],
+    dataDompet: [],
+    context: null
   }),
   mounted() {
-    this.loadForm();
+    this.loadForm()
   },
   methods: {
     addTag(newTag) {
       const tag = {
         id: newTag,
-        nama: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
-      };
-      this.dataKategori.push(tag);
-      this.dataTransaksi.kategori.push(tag);
+        nama: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000)
+      }
+      this.dataKategori.push(tag)
+      this.dataTransaksi.kategori.push(tag)
     },
     onContext(ctx) {
-      this.context = ctx;
+      this.context = ctx
     },
     tambahTransaksi() {
-      const data = this.dataTransaksi;
-      console.log(data);
+      const data = this.dataTransaksi
+      console.log(data)
 
-      // eslint-disable-next-line no-undef
-      axios
+      window.axios
         .post('/transaksi', data)
         // eslint-disable-next-line prettier/prettier
         .then(res => console.log(res));
       this.$parent.loadData()
     },
-    loadForm(){
+    loadForm() {
       // load dompet
-      axios
-        .get('/dompet')
-        .then(res =>
-          {
-            console.log(res);
-            if(res.status == 200){
-              this.dataDompet = res.data.data;
-            }
-          }
-        );
+      window.axios.get('/dompet').then((res) => {
+        console.log('dompet')
+        console.log(res)
+        if (res.status == 200) {
+          this.dataDompet = res.data.data
+        }
+      })
       // load kategori
+<<<<<<< HEAD
       axios
         .get('/kategori')
         .then(res => {
@@ -186,9 +181,18 @@ export default {
             this.dataKategori = res.data;
           }
         });
+=======
+      window.axios.get('/kategori').then((res) => {
+        console.log('kategori')
+        console.log(res)
+        if (res.status == 200) {
+          this.dataKategori = res.data.data
+        }
+      })
+>>>>>>> 899e21ed182040ef0255c17f43eefa6d1569098c
     }
-  },
-};
+  }
+}
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

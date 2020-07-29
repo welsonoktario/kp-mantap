@@ -6,8 +6,8 @@
         <label class="mr-2">Showing</label>
         <!-- KETIKA SELECT BOXNYA DIGANTI, MAKA AKAN MENJALANKAN FUNGSI loadPerPage -->
         <select
-          class="form-control"
           v-model="meta.per_page"
+          class="form-control"
           @change="loadPerPage"
         >
           <option value="10">10</option>
@@ -45,11 +45,11 @@
         <!-- eslint-disable-next-line vue/no-unused-vars -->
         <template v-slot:cell(actions)="row">
           <b-button
-            @click="edit(row.item, row.index, $event.target)"
             data-toggle="modal"
             data-target="#modalEdit"
             size="sm"
             class="mr-1"
+            @click="edit(row.item, row.index, $event.target)"
           >
             Edit
           </b-button>
@@ -70,13 +70,13 @@
         :total-rows="meta.total"
         :per-page="meta.per_page"
         align="right"
-        @change="changePage"
         aria-controls="dw-datatable"
+        @change="changePage"
       ></b-pagination>
     </div>
-    <c-modal
+    <CModal
       ref="modalEdit"
-      :idModal="'modalEdit'"
+      :id-modal="'modalEdit'"
       :tipe="'Edit'"
       :transaksi="selectedKategori"
     />
@@ -84,37 +84,37 @@
 </template>
 
 <script>
-import _ from 'lodash'; //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
-import CModal from './ModalKategori';
+import _ from 'lodash' //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
+import CModal from './ModalKategori'
 
 export default {
   components: {
-    CModal,
+    CModal
   },
   //PROPS INI ADALAH DATA YANG AKAN DIMINTA DARI PENGGUNA COMPONENT DATATABLE YANG KITA BUAT
   props: {
     //ITEMS STRUKTURNYA ADALAH ARRAY, KARENA BAGIAN INI BERISI DATA YANG AKAN DITAMPILKAN DAN SIFATNYA WAJIB DIKIRIMKAN KETIKA COMPONENT INI DIGUNAKAN
     items: {
       type: Array,
-      required: true,
+      required: true
     },
     //FIELDS JUGA SAMA DENGAN ITEMS
     fields: {
       type: Array,
-      required: true,
+      required: true
     },
     //ADAPUN META, TYPENYA ADALAH OBJECT YANG BERISI INFORMASI MENGENAL CURRENT PAGE, LOAD PERPAGE, TOTAL DATA, DAN LAIN SEBAGAINYA.
     meta: {
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       //VARIABLE INI AKAN MENGHADLE SORTING DATA
       sortBy: null, //FIELD YANG AKAN DISORT AKAN OTOMATIS DISIMPAN DISINI
       sortDesc: false, //SEDANGKAN JENISNYA ASCENDING ATAU DESC AKAN DISIMPAN DISINI
-      selectedKategori: null,
-    };
+      selectedKategori: null
+    }
   },
   watch: {
     //KETIKA VALUE DARI VARIABLE sortBy BERUBAH
@@ -124,36 +124,36 @@ export default {
       //SEHINGGA DARI PARENT TERSEBUT, KITA BISA MENGGUNAKAN VALUE YANG DIKIRIMKAN
       this.$emit('sort', {
         sortBy: this.sortBy,
-        sortDesc: this.sortDesc,
-      });
+        sortDesc: this.sortDesc
+      })
     },
     //KETIKA VALUE DARI SORTDESC BERUBAH
     sortDesc() {
       //MAKA CARA YANG SAMA AKAN DIKERJAKAN
       this.$emit('sort', {
         sortBy: this.sortBy,
-        sortDesc: this.sortDesc,
-      });
-    },
+        sortDesc: this.sortDesc
+      })
+    }
   },
   methods: {
     //JIKA SELECT BOX DIGANTI, MAKA FUNGSI INI AKAN DIJALANKAN
     loadPerPage() {
       //DAN KITA EMIT LAGI DENGAN NAMA per_page DAN VALUE SESUAI PER_PAGE YANG DIPILIH
-      this.$emit('per_page', this.meta.per_page);
+      this.$emit('per_page', this.meta.per_page)
     },
     //KETIKA PAGINATION BERUBAH, MAKA FUNGSI INI AKAN DIJALANKAN
     changePage(val) {
       //KIRIM EMIT DENGAN NAMA PAGINATION DAN VALUENYA ADALAH HALAMAN YANG DIPILIH OLEH USER
-      this.$emit('pagination', val);
+      this.$emit('pagination', val)
     },
     // eslint-disable-next-line no-unused-vars
     edit(item, index, button) {
-      this.selectedKategori = this.items[index];
-      const kategori = this.selectedKategori;
-      this.$refs.modalEdit.$data.dataKategori.id = kategori.id;
-      this.$refs.modalEdit.$data.dataKategori.nama = kategori.nama;
-      this.$refs.modalEdit.$data.dataKategori.keterangan = kategori.keterangan;
+      this.selectedKategori = this.items[index]
+      const kategori = this.selectedKategori
+      this.$refs.modalEdit.$data.dataKategori.id = kategori.id
+      this.$refs.modalEdit.$data.dataKategori.nama = kategori.nama
+      this.$refs.modalEdit.$data.dataKategori.keterangan = kategori.keterangan
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN
     //KITA GUNAKAN DEBOUNCE UNTUK MEMBUAT DELAY, DIMANA FUNGSI INI AKAN DIJALANKAN
@@ -161,8 +161,8 @@ export default {
     // eslint-disable-next-line prettier/prettier
     search: _.debounce(function(e) {
       //KIRIM EMIT DENGAN NAMA SEARCH DAN VALUE SESUAI YANG DIKETIKKAN OLEH USER
-      this.$emit('search', e.target.value);
-    }, 500),
-  },
-};
+      this.$emit('search', e.target.value)
+    }, 500)
+  }
+}
 </script>

@@ -3,8 +3,8 @@
   <div>
     <!-- Modal -->
     <div
-      class="modal fade"
       :id="idModal"
+      class="modal fade"
       tabindex="-1"
       role="dialog"
       :aria-labelledby="idModal"
@@ -27,19 +27,19 @@
             <div class="form-group">
               <label for="keterangan">Keterangan</label>
               <textarea
+                id="keterangan"
                 v-model="dataAktivitas.keterangan"
                 class="form-control"
-                id="keterangan"
                 rows="2"
               ></textarea>
             </div>
             <div class="form-group">
               <label for="nominal">PIC</label>
               <input
+                id="nominal"
                 v-model="dataAktivitas.pic"
                 type="text"
                 class="form-control"
-                id="nominal"
                 name="nominal"
               />
             </div>
@@ -52,7 +52,7 @@
             >
               Tutup
             </button>
-            <button @click="save" type="button" class="btn btn-primary">{{ tipe }}</button>
+            <button type="button" class="btn btn-primary" @click="save">{{ tipe }}</button>
           </div>
         </div>
       </div>
@@ -66,30 +66,30 @@ export default {
     aktivitas: {
       type: Object,
       required: false,
-      default: undefined,
+      default: undefined
     },
     tipe: {
       type: String,
       required: true,
-      default: 'Tambah',
+      default: 'Tambah'
     },
     idModal: {
       type: String,
       required: true,
-      default: 'modalTambah',
-    },
+      default: 'modalTambah'
+    }
   },
   data: () => ({
     dataAktivitas: {
       id: 0,
       keterangan: '',
-      pic: '',
+      pic: ''
     },
-    context: null,
+    context: null
   }),
   methods: {
     onContext(ctx) {
-      this.context = ctx;
+      this.context = ctx
     },
     save() {
       /* eslint-disable no-undef */
@@ -98,24 +98,24 @@ export default {
           .post('/aktivitas', this.dataAktivitas)
           // eslint-disable-next-line prettier/prettier
           .then(res => {
-            console.log(res);
+            console.log(res)
             if (res.status == 200) {
-              this.$parent.loadData();
+              this.$parent.loadData()
             }
-          });
+          })
       } else if (this.tipe === 'Edit') {
-        console.log(this.dataAktivitas);
+        console.log(this.dataAktivitas)
         axios
           .put(`/aktivitas/${this.dataAktivitas.id}`, this.dataAktivitas)
           // eslint-disable-next-line prettier/prettier
           .then(res => {
-            console.log(res);
+            console.log(res)
             if (res.status == 200) {
-              this.$parent.$parent.loadData();
+              this.$parent.$parent.loadData()
             }
-          });
+          })
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>

@@ -16,11 +16,8 @@ class KegiatanController extends Controller
     {
         return response()->json([
             'status' => 'OK',
-            // 'data' => 
-            // 'kegiatan' => Kegiatan::find(1),
-            // 'transaksi' => Kegiatan::find(1)->transaksi, 
-            
-            'data' => Kegiatan::all(),
+
+            'data' => Kegiatan::with('transaksi')->get()
         ]);
     }
 

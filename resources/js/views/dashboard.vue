@@ -1,6 +1,6 @@
 <template>
   <div class="no">
-    <c-header :title="$route.name" />
+    <CHeader :title="$route.name" />
 
     <!-- Main content -->
 
@@ -263,7 +263,7 @@
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
-            <div class="d-none" id="card-refresh-content">
+            <div id="card-refresh-content" class="d-none">
               The body of the card after card refresh
             </div>
           </div>
@@ -372,11 +372,11 @@
 </template>
 
 <script>
-import CHeader from '../components/Header';
+import CHeader from '../components/Header'
 
 export default {
   components: {
-    CHeader,
-  },
-};
+    CHeader
+  }
+}
 </script>
