@@ -111,7 +111,7 @@ class TransaksiController extends Controller
     public function update(Request $request, $id)
     {
         $transaksi = Transaksi::findOrFail($id);
-        $transaksi->tanggal_transaksi = $request->get('tanggal');
+        $transaksi->tanggal_transaksi = $request->get('tanggal_transaksi');
         $transaksi->keterangan = $request->get('keterangan');
         $transaksi->pemasukan = $request->get('pemasukan');
         $transaksi->pengeluaran = $request->get('pengeluaran');

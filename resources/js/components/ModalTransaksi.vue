@@ -36,7 +36,7 @@
                   v-for="(dompet, index) in dataDompet"
                   :key="index"
                   :value="dompet.id"
-                  :selected="dompet.id == dataTransaksi.dompet"
+                  :selected="dompet.id == dataTransaksi.dompet.id"
                   >{{ dompet.nama }}</option
                 >
               </select>
@@ -75,7 +75,7 @@
             <div class="form-group w-100">
               <label for="tanggal">Tanggal</label>
               <b-calendar
-                v-model="dataTransaksi.tanggal"
+                v-model="dataTransaksi.tanggal_transaksi"
                 block
                 locale="id"
                 @context="onContext"
@@ -131,7 +131,7 @@ export default {
       keterangan: '',
       pemasukan: 0,
       pengeluaran: 0,
-      tanggal: ''
+      tanggal_transaksi: ''
     },
     dataKategori: [],
     dataDompet: [],
@@ -152,29 +152,33 @@ export default {
     onContext(ctx) {
       this.context = ctx
     },
-    tambahTransaksi() {
+    async tambahTransaksi() {
       const data = this.dataTransaksi
-      console.log(data)
-
-      window.axios
-        .post('/transaksi', data)
-        // eslint-disable-next-line prettier/prettier
-        .then(res => console.log(res));
-      this.$parent.loadData()
+      if (this.tipe === 'Edit') {
+        await window.axios
+          .patch(`/transaksi/${this.transaksi.id}`, data)
+          .then((res) => {
+            if (res.status === 200) {
+              this.$parent.$parent.loadData()
+            }
+          })
+      } else {
+        await window.axios.post('/transaksi', data).then((res) => {
+          if (res.status === 200) {
+            this.$parent.loadData()
+          }
+        })
+      }
     },
     loadForm() {
       // load dompet
       window.axios.get('/dompet').then((res) => {
-        console.log('dompet')
-        console.log(res)
         if (res.status == 200) {
           this.dataDompet = res.data.data
         }
       })
       // load kategori
       window.axios.get('/kategori').then((res) => {
-        console.log('kategori')
-        console.log(res)
         if (res.status == 200) {
           this.dataKategori = res.data.data
         }

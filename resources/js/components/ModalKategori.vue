@@ -94,25 +94,17 @@ export default {
       this.context = ctx
     },
     save() {
-      /* eslint-disable no-undef */
       if (this.tipe == 'Tambah') {
-        axios
-          .post('/kategori', this.dataKategori)
-          // eslint-disable-next-line prettier/prettier
-          .then(res => {
-            console.log(res)
-            if (res.status == 200) {
-              this.$parent.loadData()
-            }
-          })
+        window.axios.post('/kategori', this.dataKategori).then((res) => {
+          if (res.status === 200) {
+            this.$parent.loadData()
+          }
+        })
       } else if (this.tipe === 'Edit') {
-        console.log(this.dataKategori)
-        axios
-          .put(`/kategori/${this.dataKategori.id}`, this.dataKategori)
-          // eslint-disable-next-line prettier/prettier
-          .then(res => {
-            console.log(res)
-            if (res.status == 200) {
+        window.axios
+          .patch(`/kategori/${this.dataKategori.id}`, this.dataKategori)
+          .then((res) => {
+            if (res.status === 200) {
               this.$parent.$parent.loadData()
             }
           })

@@ -92,25 +92,17 @@ export default {
       this.context = ctx
     },
     save() {
-      /* eslint-disable no-undef */
       if (this.tipe == 'Tambah') {
-        axios
-          .post('/aktivitas', this.dataAktivitas)
-          // eslint-disable-next-line prettier/prettier
-          .then(res => {
-            console.log(res)
-            if (res.status == 200) {
-              this.$parent.loadData()
-            }
-          })
+        window.axios.post('/aktivitas', this.dataAktivitas).then((res) => {
+          if (res.status === 200) {
+            this.$parent.loadData()
+          }
+        })
       } else if (this.tipe === 'Edit') {
-        console.log(this.dataAktivitas)
-        axios
+        window.axios
           .put(`/dompet/${this.dataAktivitas.id}`, this.dataAktivitas)
-          // eslint-disable-next-line prettier/prettier
-          .then(res => {
-            console.log(res)
-            if (res.status == 200) {
+          .then((res) => {
+            if (res.status === 200) {
               this.$parent.$parent.loadData()
             }
           })

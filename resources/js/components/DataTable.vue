@@ -156,14 +156,15 @@ export default {
     edit(item, index, button) {
       this.selectedTrans = this.items[index]
       const transaksi = this.selectedTrans
-      this.$refs.modalEdit.$data.dataTransaksi = transaksi
-      /* this.$refs.modalEdit.$data.dataTransaksi.dompet = transaksi.dompet;
-      this.$refs.modalEdit.$data.dataTransaksi.kategori = transaksi.kategori;
-      this.$refs.modalEdit.$data.dataTransaksi.keterangan =
-        transaksi.keterangan;
-      this.$refs.modalEdit.$data.dataTransaksi.pengeluaran = transaksi.nominal;
-      this.$refs.modalEdit.$data.dataTransaksi.tanggal =
-        transaksi.tanggal_transaksi; */
+      console.log(transaksi)
+      this.$refs.modalEdit.$data.dataTransaksi.dompet = transaksi.dompet
+      this.$refs.modalEdit.$data.dataTransaksi.kategori = transaksi.kategori
+      this.$refs.modalEdit.$data.dataTransaksi.keterangan = transaksi.keterangan
+      this.$refs.modalEdit.$data.dataTransaksi.pemasukan = transaksi.pemasukan
+      this.$refs.modalEdit.$data.dataTransaksi.pengeluaran =
+        transaksi.pengeluaran
+      this.$refs.modalEdit.$data.dataTransaksi.tanggal_transaksi =
+        transaksi.tanggal_transaksi
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN
     //KITA GUNAKAN DEBOUNCE UNTUK MEMBUAT DELAY, DIMANA FUNGSI INI AKAN DIJALANKAN

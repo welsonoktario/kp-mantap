@@ -91,24 +91,19 @@ export default {
       this.context = ctx
     },
     save() {
-      /* eslint-disable no-undef */
       if (this.tipe == 'Tambah') {
-        axios
-          .post('/dompet', this.dataDompet)
-          // eslint-disable-next-line prettier/prettier
-          .then(res => {
-            console.log(res)
-            if (res.status == 200) {
-              this.$parent.loadData()
-            }
-          })
+        window.axios.post('/dompet', this.dataDompet).then((res) => {
+          console.log(res)
+          if (res.status === 200) {
+            this.$parent.loadData()
+          }
+        })
       } else if (this.tipe === 'Edit') {
-        console.log(this.dataDompet)
-        axios
+        window.axios
           .patch(`/dompet/${this.dataDompet.id}`, this.dataDompet)
           .then((res) => {
             console.log(res)
-            if (res.status == 200) {
+            if (res.status === 200) {
               this.$parent.$parent.loadData()
             }
           })
