@@ -106,7 +106,7 @@ export default {
       } else if (this.tipe === 'Edit') {
         console.log(this.dataAktivitas);
         axios
-          .put(`/dompet/${this.dataAktivitas.id}`, this.dataAktivitas)
+          .put(`/aktivitas/${this.dataAktivitas.id}`, this.dataAktivitas)
           // eslint-disable-next-line prettier/prettier
           .then(res => {
             console.log(res);

@@ -20,7 +20,7 @@ class KegiatanController extends Controller
             // 'kegiatan' => Kegiatan::find(1),
             // 'transaksi' => Kegiatan::find(1)->transaksi, 
             
-            'data' => Kegiatan::find(1)->with('transaksi')->get()
+            'data' => Kegiatan::all(),
         ]);
     }
 
@@ -85,6 +85,7 @@ class KegiatanController extends Controller
     public function edit($id)
     {
         //
+
     }
 
     /**
@@ -99,6 +100,7 @@ class KegiatanController extends Controller
         $kegiatan = Kegiatan::findOrFail($id);
         $kegiatan->keterangan = $request->get('keterangan');
         $kegiatan->pic = $request->get('pic');
+        $kegiatan->save();
 
         if ($kegiatan->save()) {
             return response()->json([

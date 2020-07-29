@@ -52,8 +52,8 @@
             data-toggle="modal"
             data-target="#modalEdit"
             size="sm"
-            class="mr-1"
-          >
+            class="mr-1">
+            
             Edit
           </b-button>
         </template>
@@ -160,6 +160,7 @@ export default {
     edit(item, index, button) {
       this.selectedAktivitas = this.items[index];
       const aktivitas = this.selectedAktivitas;
+      this.$refs.modalEdit.$data.dataAktivitas.id = aktivitas.id;
       this.$refs.modalEdit.$data.dataAktivitas.pic = aktivitas.pic;
       this.$refs.modalEdit.$data.dataAktivitas.keterangan =
         aktivitas.keterangan;
