@@ -43,15 +43,15 @@ class KategoriController extends Controller
         $kategori->keterangan = $request->get('keterangan');
         $kategori->save();
 
-        if ($kategori->save()) {
+        if (!$kategori->save()) {
             return response()->json([
-                'status' => 'OK',
-                'data' => $kategori,
-            ]);
+                'status' => 'GAGAL'
+            ], 500);
         }
 
         return response()->json([
-            'status' => 'GAGAL'
+            'status' => 'OK',
+            'data' => $kategori,
         ]);
     }
 
@@ -63,6 +63,13 @@ class KategoriController extends Controller
      */
     public function show($id)
     {
+        if (!$kategori = Kategori::find($id)) {
+            return response()->json([
+                'status' => 'GAGAL',
+                'pesan' => 'Kategori tidak ditemukan'
+            ], 404);
+        }
+
         return response()->json([
             'status' => 'OK',
             'data' => Kategori::findOrFail($id),
@@ -94,15 +101,15 @@ class KategoriController extends Controller
         $kategori->keterangan = $request->keterangan;
         $kategori->save();
 
-        if ($kategori->save()) {
+        if (!$kategori->save()) {
             return response()->json([
-                'status' => 'OK',
-                'data' => $kategori,
-            ]);
+                'status' => 'GAGAL'
+            ], 500);
         }
 
         return response()->json([
-            'status' => 'GAGAL'
+            'status' => 'OK',
+            'data' => $kategori,
         ]);
     }
 
@@ -114,14 +121,14 @@ class KategoriController extends Controller
      */
     public function destroy($id)
     {
-        if (Kategori::destroy($id)) {
+        if (!Kategori::find($id)->delete()) {
             return response()->json([
-                'status' => 'OK'
-            ]);
+                'status' => 'GAGAL'
+            ], 500);
         }
 
         return response()->json([
-            'status' => 'GAGAL'
+            'status' => 'OK'
         ]);
     }
 }

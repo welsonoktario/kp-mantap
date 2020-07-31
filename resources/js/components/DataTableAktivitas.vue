@@ -56,6 +56,13 @@
           >
             Edit
           </b-button>
+          <b-button
+            size="sm"
+            class="mx-1"
+            @click="hapus(row.item, row.index, $event.target)"
+          >
+            Hapus
+          </b-button>
         </template>
       </b-table>
     </div>
@@ -108,6 +115,7 @@ export default {
     },
     //ADAPUN META, TYPENYA ADALAH OBJECT YANG BERISI INFORMASI MENGENAL CURRENT PAGE, LOAD PERPAGE, TOTAL DATA, DAN LAIN SEBAGAINYA.
     meta: {
+      type: Object,
       required: true
     }
   },
@@ -158,12 +166,20 @@ export default {
     },
     // eslint-disable-next-line no-unused-vars
     edit(item, index, button) {
-      this.selectedAktivitas = this.items[index];
-      const aktivitas = this.selectedAktivitas;
-      this.$refs.modalEdit.$data.dataAktivitas.id = aktivitas.id;
-      this.$refs.modalEdit.$data.dataAktivitas.pic = aktivitas.pic;
-      this.$refs.modalEdit.$data.dataAktivitas.keterangan =
-        aktivitas.keterangan;
+      this.selectedAktivitas = this.items[index]
+      const aktivitas = this.selectedAktivitas
+      this.$refs.modalEdit.$data.dataAktivitas.id = aktivitas.id
+      this.$refs.modalEdit.$data.dataAktivitas.pic = aktivitas.pic
+      this.$refs.modalEdit.$data.dataAktivitas.keterangan = aktivitas.keterangan
+    },
+    // eslint-disable-next-line no-unused-vars
+    hapus(item, index, button) {
+      this.$parent.$data.aktivitas.splice(index, 1)
+      /* window.axios.delete(`/aktivitas/${this.items[index].id}`).then((res) => {
+        if (res.status === 200) {
+
+        }
+      }) */
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN
     //KITA GUNAKAN DEBOUNCE UNTUK MEMBUAT DELAY, DIMANA FUNGSI INI AKAN DIJALANKAN

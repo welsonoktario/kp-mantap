@@ -16,19 +16,18 @@ class UsersController extends Controller
         return User::all();
     }
 
-    public function create(Request $request)
+    public function show($id)
     {
+        if (!$user = User::find($id)) {
+            return response()->json([
+                'status' => 'GAGAL',
+                'pesan' => 'User tidak ditemukan'
+            ], 404);
+        }
 
-        Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ])->validate();
-
-        return User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => Hash::make($request['password']),
+        return response()->json([
+            'status' => 'OK',
+            'data' => $user
         ]);
     }
 }

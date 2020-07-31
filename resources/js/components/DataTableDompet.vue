@@ -105,6 +105,7 @@ export default {
     },
     //ADAPUN META, TYPENYA ADALAH OBJECT YANG BERISI INFORMASI MENGENAL CURRENT PAGE, LOAD PERPAGE, TOTAL DATA, DAN LAIN SEBAGAINYA.
     meta: {
+      type: Object,
       required: true
     }
   },

@@ -54,7 +54,7 @@ export default {
       }
     ],
     kategori: [],
-    meta: [], //JUGA BERLAKU UNTUK META
+    meta: {}, //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
     search: '',

@@ -16,7 +16,7 @@ class DompetController extends Controller
     {
         return response()->json([
             'status' => 'OK',
-            'data' => Dompet::all(),
+            'data' => Dompet::with('transaksi')->get(),
         ]);
     }
 
@@ -41,17 +41,17 @@ class DompetController extends Controller
         $dompet = new Dompet();
         $dompet->nama = $request->get('nama');
         $dompet->keterangan = $request->get('keterangan');
-        $dompet->save();
 
-        if ($dompet->save()) {
+        if (!$dompet->save()) {
             return response()->json([
-                'status' => 'OK',
-                'data' => $dompet,
-            ]);
+                'status' => 'GAGAL',
+                'pesan' => 'Gagal menyimpam dompet'
+            ], 500);
         }
 
         return response()->json([
-            'status' => 'GAGAL'
+            'status' => 'OK',
+            'data' => $dompet,
         ]);
     }
 
@@ -63,9 +63,16 @@ class DompetController extends Controller
      */
     public function show($id)
     {
+        if (!$dompet = Dompet::find($id)) {
+            return response()->json([
+                'status' => 'GAGAL',
+                'pesan' => 'Dompet tidak ditemukan'
+            ], 404);
+        }
+
         return response()->json([
             'status' => 'OK',
-            'data' => Dompet::findOrFail($id),
+            'data' => $dompet,
         ]);
     }
 
@@ -89,20 +96,20 @@ class DompetController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $dompet = Dompet::findOrFail($id);
+        $dompet = Dompet::find($id);
         $dompet->nama = $request->get('nama');
         $dompet->keterangan = $request->get('keterangan');
-        $dompet->save();
 
-        if ($dompet->save()) {
+        if (!$dompet->save()) {
             return response()->json([
-                'status' => 'OK',
-                'data' => $dompet,
-            ]);
+                'status' => 'GAGAL',
+                'pesan' => 'Gagal mengubah dompet'
+            ], 500);
         }
 
         return response()->json([
-            'status' => 'GAGAL'
+            'status' => 'OK',
+            'data' => $dompet,
         ]);
     }
 
@@ -114,14 +121,14 @@ class DompetController extends Controller
      */
     public function destroy($id)
     {
-        if (Dompet::destroy($id)) {
+        if (!Dompet::find($id)->delete()) {
             return response()->json([
-                'status' => 'OK'
-            ]);
+                'status' => 'GAGAL'
+            ], 500);
         }
 
         return response()->json([
-            'status' => 'GAGAL'
+            'status' => 'OK'
         ]);
     }
 }

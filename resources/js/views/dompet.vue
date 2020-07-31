@@ -58,7 +58,7 @@ export default {
       }
     ],
     dompet: [],
-    meta: [], //JUGA BERLAKU UNTUK META
+    meta: {}, //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
     search: '',
@@ -75,7 +75,7 @@ export default {
         .get('http://localhost:8000/api/dompet')
         // eslint-disable-next-line prettier/prettier
         .then(res => {
-          console.log(res)
+          console.log(res.data)
           this.dompet = res.data.data
         })
     },

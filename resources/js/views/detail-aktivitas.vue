@@ -17,6 +17,8 @@
         </div>
       </div>
       <DataTable
+        v-if="aktivitas != []"
+        :is-aktivitas="true"
         :fields="columns"
         :items="aktivitas.transaksi"
         :meta="meta"
@@ -26,7 +28,7 @@
         @sort="handleSort"
       />
     </div>
-    <CModal :id-modal="'modalTambah'" :tipe="'Tambah'" />
+    <CModal :id-modal="'modalTambah'" :tipe="'Tambah'" :is-aktivitas="true" />
   </div>
 </template>
 
@@ -60,11 +62,13 @@ export default {
         sortable: true
       },
       {
-        key: 'kategori',
+        key: 'kategori[0].nama',
+        label: 'Kategori',
         sortable: true
       },
       {
-        key: 'dompet',
+        key: 'dompet.nama',
+        label: 'Dompet',
         sortable: true
       },
       {
@@ -74,7 +78,7 @@ export default {
       }
     ],
     aktivitas: [],
-    meta: [], //JUGA BERLAKU UNTUK META
+    meta: {}, //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
     search: '',
@@ -88,13 +92,11 @@ export default {
     loadTransaksi() {
       const id = this.$route.params.id
       // eslint-disable-next-line no-undef
-      axios
-        .get(`/aktivitas/${id}`)
-        // eslint-disable-next-line prettier/prettier
-        .then(res => {
-          console.log(res.data)
-          this.aktivitas = res.data.data[0]
-        })
+      axios.get(`/aktivitas/${id}`).then((res) => {
+        console.log('data aktivitas transaksi')
+        console.log(res.data)
+        this.aktivitas = res.data.data[0]
+      })
     },
     handlePerPage(val) {
       this.per_page = val

@@ -24,6 +24,15 @@
             </button>
           </div>
           <div class="modal-body">
+            <div class="form-group text-center">
+              <b-form-radio-group
+                id="btn-jenis"
+                v-model="selectedJenis"
+                :options="optionsJenis"
+                buttons
+                name="radios-btn-default"
+              ></b-form-radio-group>
+            </div>
             <div class="form-group">
               <label for="dompet">Dompet</label>
               <select
@@ -66,14 +75,14 @@
               <label for="nominal">Nominal</label>
               <input
                 id="nominal"
-                v-model="dataTransaksi.pengeluaran"
+                v-model="nominal"
                 type="text"
                 class="form-control"
                 name="nominal"
               />
             </div>
             <div class="form-group w-100">
-              <label for="tanggal">Tanggal</label>
+              <label for="tanggal_transaksi">Tanggal</label>
               <b-calendar
                 v-model="dataTransaksi.tanggal_transaksi"
                 block
@@ -112,6 +121,11 @@ export default {
       required: false,
       default: undefined
     },
+    isAktivitas: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     tipe: {
       type: String,
       required: true,
@@ -125,6 +139,12 @@ export default {
   },
   data: () => ({
     search: '',
+    optionsJenis: [
+      { text: 'Pemasukan', value: 0 },
+      { text: 'Pengeluaran', value: 1 }
+    ],
+    selectedJenis: 0,
+    nominal: 0,
     dataTransaksi: {
       dompet: 0,
       kategori: [],
@@ -133,6 +153,7 @@ export default {
       pengeluaran: 0,
       tanggal_transaksi: ''
     },
+    dataKegiatan: {},
     dataKategori: [],
     dataDompet: [],
     context: null
@@ -152,10 +173,14 @@ export default {
     onContext(ctx) {
       this.context = ctx
     },
-    async tambahTransaksi() {
+    tambahTransaksi() {
       const data = this.dataTransaksi
+      this.selectedJenis === 0
+        ? (data.pemasukan = this.nominal)
+        : (data.pengeluaran = this.nominal)
+      console.log(data)
       if (this.tipe === 'Edit') {
-        await window.axios
+        window.axios
           .patch(`/transaksi/${this.transaksi.id}`, data)
           .then((res) => {
             if (res.status === 200) {
@@ -163,9 +188,21 @@ export default {
             }
           })
       } else {
-        await window.axios.post('/transaksi', data).then((res) => {
-          if (res.status === 200) {
-            this.$parent.loadData()
+        window.axios.post('/transaksi', data).then((transaksi) => {
+          if (transaksi.status === 200) {
+            if (this.isAktivitas) {
+              window.axios
+                .post('/transaksi-kegiatan', {
+                  kegiatan_id: this.$route.params.id,
+                  transaksi_id: transaksi.data.data.id
+                })
+                .then((res) => {
+                  console.log(res.data)
+                  if (res.data.status === 'OK') {
+                    this.$parent.loadTransaksi()
+                  }
+                })
+            }
           }
         })
       }
@@ -178,22 +215,12 @@ export default {
         }
       })
       // load kategori
-<<<<<<< HEAD
-      axios
-        .get('/kategori')
-        .then(res => {
-          console.log(res);
-          if (res.status == 200){
-            this.dataKategori = res.data;
-          }
-        });
-=======
       window.axios.get('/kategori').then((res) => {
-        if (res.status == 200) {
+        console.log(res)
+        if (res.status === 200) {
           this.dataKategori = res.data.data
         }
       })
->>>>>>> 899e21ed182040ef0255c17f43eefa6d1569098c
     }
   }
 }

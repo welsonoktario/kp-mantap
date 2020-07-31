@@ -57,6 +57,13 @@
           >
             Edit
           </b-button>
+          <b-button
+            size="sm"
+            class="mx-1"
+            @click="hapus(row.item, row.index, $event.target)"
+          >
+            Hapus
+          </b-button>
         </template>
       </b-table>
     </div>
@@ -111,6 +118,11 @@ export default {
     meta: {
       type: Object,
       required: true
+    },
+    isAktivitas: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {
@@ -157,6 +169,13 @@ export default {
       this.selectedTrans = this.items[index]
       const transaksi = this.selectedTrans
       console.log(transaksi)
+      if (transaksi.pemasukan == 0) {
+        this.$refs.modalEdit.$data.nominal = transaksi.pengeluaran
+        this.$refs.modalEdit.$data.selectedJenis = 1
+      } else {
+        this.$refs.modalEdit.$data.nominal = transaksi.pemasukan
+        this.$refs.modalEdit.$data.selectedJenis = 0
+      }
       this.$refs.modalEdit.$data.dataTransaksi.dompet = transaksi.dompet
       this.$refs.modalEdit.$data.dataTransaksi.kategori = transaksi.kategori
       this.$refs.modalEdit.$data.dataTransaksi.keterangan = transaksi.keterangan
@@ -165,6 +184,19 @@ export default {
         transaksi.pengeluaran
       this.$refs.modalEdit.$data.dataTransaksi.tanggal_transaksi =
         transaksi.tanggal_transaksi
+    },
+    // eslint-disable-next-line no-unused-vars
+    hapus(item, index, button) {
+      window.axios.delete(`/transaksi/${this.items[index].id}`).then((res) => {
+        console.log(res.data)
+        if (res.status === 200) {
+          if (this.isAktivitas) {
+            this.$parent.$data.aktivitas.transaksi.splice(index, 1)
+          } else {
+            this.$parent.$data.transaksis.splice(index, 1)
+          }
+        }
+      })
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN
     //KITA GUNAKAN DEBOUNCE UNTUK MEMBUAT DELAY, DIMANA FUNGSI INI AKAN DIJALANKAN

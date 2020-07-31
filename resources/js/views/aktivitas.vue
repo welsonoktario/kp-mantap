@@ -58,7 +58,7 @@ export default {
       }
     ],
     aktivitas: [],
-    meta: [], //JUGA BERLAKU UNTUK META
+    meta: {}, //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
     search: '',
@@ -75,7 +75,7 @@ export default {
       axios
         .get('/aktivitas')
         // eslint-disable-next-x  line prettier/prettier
-        .then(res => {
+        .then((res) => {
           console.log(res.data)
           this.aktivitas = res.data.data
         })
@@ -100,7 +100,6 @@ export default {
     },
     load() {
       window.axios.get('/kegiatan').then((res) => {
-        console.log(res)
         this.aktivitas = res.data.data
       })
     }
