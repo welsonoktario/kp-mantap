@@ -44,6 +44,7 @@ export default {
     CModal
   },
   data: () => ({
+    user: {},
     columns: [
       {
         key: 'tanggal_transaksi',
@@ -91,11 +92,12 @@ export default {
   methods: {
     loadTransaksi() {
       const id = this.$route.params.id
-      // eslint-disable-next-line no-undef
-      axios.get(`/aktivitas/${id}`).then((res) => {
-        console.log('data aktivitas transaksi')
-        console.log(res.data)
-        this.aktivitas = res.data.data[0]
+      window.axios.get('/user').then((res) => {
+        this.user = res.data
+        window.axios.get(`/aktivitas/${id}`).then((res) => {
+          console.log(res)
+          this.aktivitas = res.data.data
+        })
       })
     },
     handlePerPage(val) {

@@ -20,5 +20,4 @@
 
     <!-- Admin Footer -->
     @include('layouts.admin.footer')
-
 @endsection

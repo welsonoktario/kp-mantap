@@ -175,7 +175,7 @@ class TransaksiController extends Controller
 
     public function addAktivitas(Request $request) {
         $kegiatan = Kegiatan::find($request->get('kegiatan_id'))->first();
-        $transaksi = Transaksi::find($request->get('transaksi_id'))->first();
+        $transaksi = Transaksi::where('id', $request->get('transaksi_id'))->first();
 
         if (!$kegiatan->transaksi()->sync($transaksi, false)) {
             return response()->json([
@@ -184,7 +184,14 @@ class TransaksiController extends Controller
         }
 
         return response()->json([
-            'status' => 'OK'
+            'status' => 'OK',
+            'kegiatan' => $kegiatan,
+            'transaksi' => $transaksi,
         ]);
+    }
+
+    public function testTransaksi($id)
+    {
+        return Transaksi::where('id', $id)->first();
     }
 }

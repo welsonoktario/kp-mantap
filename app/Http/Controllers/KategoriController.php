@@ -63,7 +63,7 @@ class KategoriController extends Controller
      */
     public function show($id)
     {
-        if (!$kategori = Kategori::find($id)) {
+        if (!$kategori = Kategori::where('id', $id)->with('transaksi')->get()) {
             return response()->json([
                 'status' => 'GAGAL',
                 'pesan' => 'Kategori tidak ditemukan'
@@ -72,7 +72,7 @@ class KategoriController extends Controller
 
         return response()->json([
             'status' => 'OK',
-            'data' => Kategori::findOrFail($id),
+            'data' => $kategori,
         ]);
     }
 

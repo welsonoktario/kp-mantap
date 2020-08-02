@@ -65,11 +65,7 @@ class KegiatanController extends Controller
     {
         return response()->json([
             'status' => 'OK',
-            'data' => [
-                Kegiatan::find($id)->with(['transaksi', 'transaksi.dompet', 'transaksi.kategori'])->first()
-                /* 'kegiatan' => Kegiatan::find($id),
-                'transaksi' => Kegiatan::find($id)->transaksi */
-            ],
+            'data' => Kegiatan::where('id', $id)->with(['transaksi', 'transaksi.dompet', 'transaksi.kategori'])->first(),
         ]);
     }
 

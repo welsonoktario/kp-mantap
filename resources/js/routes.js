@@ -18,6 +18,11 @@ let routes = [
     name: 'Dompet'
   },
   {
+    path: '/dompet/:id/',
+    component: require('./views/detail-dompet').default,
+    name: 'Detail Dompet'
+  },
+  {
     path: '/kategori',
     component: require('./views/kategori').default,
     name: 'Kategori'

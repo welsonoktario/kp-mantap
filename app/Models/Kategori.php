@@ -8,6 +8,6 @@ class Kategori extends Model
 {
     public function transaksi()
     {
-        return $this->hasMany('App\Models\Transaksi', 'kategori_transaksis');
+        return $this->belongsToMany('App\Models\Transaksi', 'kategori_transaksis');
     }
 }

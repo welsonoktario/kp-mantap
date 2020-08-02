@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,11 +34,16 @@ Route::get('/users', 'UsersController@index');
 Route::post('/users', 'UsersController@create');
 
 Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
+    Route::get('user', function() {
+        return Auth::user();
+    });
+
+    Route::post('transaksi-kegiatan', 'TransaksiController@addAktivitas');
+    Route::get('transaksi-test/{id}', 'TransaksiController@testTransaksi');
     Route::resource('dompet', 'DompetController');
     Route::resource('kategori', 'KategoriController');
     Route::resource('transaksi', 'TransaksiController');
     Route::resource('aktivitas', 'KegiatanController');
-    Route::post('transaksi-kegiatan', 'TransaksiController@addAktivitas');
 });
 
 Route::get('/admin/transaksi', function () {

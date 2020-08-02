@@ -6,7 +6,7 @@
         <div class="col-10">
           <h4 class="ml-2 mt-2">List Kategori</h4>
         </div>
-        <div class="col-2 pb-4">
+        <div v-if="user.role === 'Bendahara'" class="col-2 pb-4">
           <button
             class="btn btn-block btn-primary"
             data-toggle="modal"
@@ -26,7 +26,11 @@
         @sort="handleSort"
       />
     </div>
-    <CModal :id-modal="'modalTambah'" :tipe="'Tambah'" />
+    <CModal
+      v-if="user.role === 'Bendahara'"
+      :id-modal="'modalTambah'"
+      :tipe="'Tambah'"
+    />
   </div>
 </template>
 
@@ -42,6 +46,7 @@ export default {
     CModal
   },
   data: () => ({
+    user: {},
     columns: [
       {
         key: 'nama',
@@ -66,13 +71,15 @@ export default {
   },
   methods: {
     loadData() {
-      // eslint-disable-next-line no-undef
-      axios
-        .get('/kategori')
-        // eslint-disable-next-line prettier/prettier
+      window.axios.get('/user').then((res) => {
+        this.user = res.data
+        window.axios
+          .get('/kategori')
+          // eslint-disable-next-line prettier/prettier
         .then(res => {
-          this.kategori = res.data.data
-        })
+            this.kategori = res.data.data
+          })
+      })
     },
     handlePerPage(val) {
       this.per_page = val

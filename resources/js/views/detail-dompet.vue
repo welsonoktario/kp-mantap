@@ -4,21 +4,21 @@
     <div class="bg-white rounded shadow p-2">
       <div class="row">
         <div class="col-10">
-          <h4 class="ml-2 mt-2">List Transaksi</h4>
+          <h4 class="ml-2 mt-2">Bank</h4>
         </div>
-        <div v-if="user.role === 'Bendahara'" class="col-2 pb-4">
-          <button
+        <div class="col-2 pb-4">
+          <!-- <button
             class="btn btn-block btn-primary"
             data-toggle="modal"
             data-target="#modalTambah"
           >
             Tambah Transaksi
-          </button>
+          </button> -->
         </div>
       </div>
       <DataTable
         :fields="columns"
-        :items="transaksis"
+        :items="dompet"
         :meta="meta"
         @per_page="handlePerPage"
         @pagination="handlePagination"
@@ -26,11 +26,7 @@
         @sort="handleSort"
       />
     </div>
-    <CModal
-      v-if="user.role === 'Bendahara'"
-      :id-modal="'modalTambah'"
-      :tipe="'Tambah'"
-    />
+    <CModal :id-modal="'modalTambah'" :tipe="'Tambah'" />
   </div>
 </template>
 
@@ -38,7 +34,6 @@
 import CHeader from '../components/Header'
 import DataTable from '../components/DataTable'
 import CModal from '../components/ModalTransaksi'
-
 export default {
   components: {
     CHeader,
@@ -46,7 +41,6 @@ export default {
     CModal
   },
   data: () => ({
-    user: {},
     columns: [
       {
         key: 'tanggal_transaksi',
@@ -65,13 +59,7 @@ export default {
         sortable: true
       },
       {
-        key: 'kategori[0].nama',
-        label: 'Kategori',
-        sortable: true
-      },
-      {
-        key: 'dompet.nama',
-        label: 'Dompet',
+        key: 'kategori',
         sortable: true
       },
       {
@@ -80,8 +68,8 @@ export default {
         sortable: false
       }
     ],
-    transaksis: [],
-    meta: {}, //JUGA BERLAKU UNTUK META
+    dompet: [],
+    meta: [], //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
     search: '',
@@ -89,17 +77,20 @@ export default {
     sortByDesc: false //ASCEDING
   }),
   mounted() {
-    this.loadData()
+    this.loadTransaksi()
   },
   methods: {
-    loadData() {
-      window.axios.get('/user').then((res) => {
-        this.user = res.data
-        window.axios.get('/transaksi').then((res) => {
+    loadTransaksi() {
+      const id = this.$route.params.id
+      // eslint-disable-next-line no-undef
+      axios
+        .get(`/dompet/${id}`)
+        // eslint-disable-next-line prettier/prettier
+        .then(res => {
+          console.log('=============DATA=================')
           console.log(res.data)
-          this.transaksis = res.data.data
+          this.dompet = res.data.data
         })
-      })
     },
     handlePerPage(val) {
       this.per_page = val
