@@ -17,8 +17,9 @@
         </div>
       </div>
       <DataTable
+        v-if="dompet.transaksi"
         :fields="columns"
-        :items="dompet"
+        :items="dompet.transaksi"
         :meta="meta"
         @per_page="handlePerPage"
         @pagination="handlePagination"
@@ -59,7 +60,8 @@ export default {
         sortable: true
       },
       {
-        key: 'kategori',
+        key: 'kategori[0].nama',
+        label: 'Kategori',
         sortable: true
       },
       {
@@ -69,7 +71,7 @@ export default {
       }
     ],
     dompet: [],
-    meta: [], //JUGA BERLAKU UNTUK META
+    meta: {}, //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
     search: '',
@@ -82,15 +84,11 @@ export default {
   methods: {
     loadTransaksi() {
       const id = this.$route.params.id
-      // eslint-disable-next-line no-undef
-      axios
-        .get(`/dompet/${id}`)
-        // eslint-disable-next-line prettier/prettier
-        .then(res => {
-          console.log('=============DATA=================')
-          console.log(res.data)
-          this.dompet = res.data.data
-        })
+      window.axios.get(`/dompet/${id}`).then((res) => {
+        console.log('=============DATA=================')
+        console.log(res.data)
+        this.dompet = res.data.data
+      })
     },
     handlePerPage(val) {
       this.per_page = val

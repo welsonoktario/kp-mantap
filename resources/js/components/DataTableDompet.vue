@@ -49,9 +49,29 @@
             data-target="#modalEdit"
             size="sm"
             class="mr-1"
+            variant="primary"
             @click="edit(row.item, row.index, $event.target)"
           >
             Edit
+          </b-button>
+          <b-button
+            size="sm"
+            class="mr-1"
+            variant="secondary"
+            @click="detail(items[row.index].id, row.index)"
+          >
+            Detail
+          </b-button>
+          <b-button
+            v-if="items && items[row.index].transaksi.length == 0"
+            data-toggle="modal"
+            data-target="#modalDel"
+            size="sm"
+            class="mr-1"
+            variant="danger"
+            @click="hapus(row.item, row.index, $event.target)"
+          >
+            Delete
           </b-button>
         </template>
       </b-table>
@@ -155,6 +175,14 @@ export default {
       this.$refs.modalEdit.$data.dataDompet.id = dompet.id
       this.$refs.modalEdit.$data.dataDompet.nama = dompet.nama
       this.$refs.modalEdit.$data.dataDompet.keterangan = dompet.keterangan
+    },
+
+    detail(id, index) {
+      this.selectedDompet = this.items[index]
+      this.$router.push({
+        name: 'Detail Dompet',
+        params: { id: id }
+      })
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN
     //KITA GUNAKAN DEBOUNCE UNTUK MEMBUAT DELAY, DIMANA FUNGSI INI AKAN DIJALANKAN

@@ -53,6 +53,7 @@
             data-target="#modalEdit"
             size="sm"
             class="mr-1"
+            variant="primary"
             @click="edit(row.item, row.index, $event.target)"
           >
             Edit
@@ -60,6 +61,7 @@
           <b-button
             size="sm"
             class="mx-1"
+            variant="danger"
             @click="hapus(row.item, row.index, $event.target)"
           >
             Hapus

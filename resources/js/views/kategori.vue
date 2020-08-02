@@ -53,6 +53,10 @@ export default {
         sortable: true
       },
       {
+        key: 'keterangan',
+        sortable: true
+      },
+      {
         key: 'actions',
         label: 'Aksi',
         sortable: false
