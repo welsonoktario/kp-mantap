@@ -44,6 +44,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
     Route::resource('kategori', 'KategoriController');
     Route::resource('transaksi', 'TransaksiController');
     Route::resource('aktivitas', 'KegiatanController');
+    Route::get('laporan', 'LaporanController@load');
 });
 
 Route::get('/admin/transaksi', function () {
