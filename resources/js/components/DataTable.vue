@@ -42,6 +42,11 @@
         :sort-desc.sync="sortDesc"
         show-empty
       >
+        <template v-slot:cell(kategori)="data">
+          <b-badge v-for="kat in data.value" :key="kat.id" class="mx-1">
+            {{ kat.nama }}
+          </b-badge>
+        </template>
         <template v-slot:cell(pemasukan)="data">{{
           data.value | rupiah
         }}</template>
@@ -55,7 +60,7 @@
             data-target="#modalEdit"
             size="sm"
             class="mr-1"
-            variant="primary"
+            variant="secondary"
             @click="edit(row.item, row.index, $event.target)"
           >
             Edit
@@ -73,9 +78,9 @@
     </div>
 
     <!-- BAGIAN INI AKAN MENAMPILKAN JUMLAH DATA YANG DI-LOAD -->
-    <!-- <div class="col-md-6">
+    <div class="col-md-6">
       <p>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.total }} items</p>
-    </div> -->
+    </div>
 
     <!-- BLOCK INI AKAN MENJADI PAGINATION DARI DATA YANG DITAMPILKAN -->
     <div class="col-md-6">
@@ -122,6 +127,11 @@ export default {
     meta: {
       type: Object,
       required: true
+    },
+    isDetail: {
+      type: String,
+      required: false,
+      default: undefined
     }
   },
   data() {
@@ -189,8 +199,14 @@ export default {
       window.axios.delete(`/transaksi/${this.items[index].id}`).then((res) => {
         console.log(res.data)
         if (res.status === 200) {
-          if (this.isAktivitas) {
-            this.$parent.$data.aktivitas.transaksi.splice(index, 1)
+          if (this.isDetail) {
+            if (this.isDetail === 'Dompet') {
+              this.$parent.$data.dompet.transaksi.splice(index, 1)
+            } else if (this.isDetail === 'Kegiatan') {
+              this.$parent.$data.aktivitas.transaksi.splice(index, 1)
+            } else if (this.isDetail === 'Kategori') {
+              this.$parent.$data.kategori.transaksi.splice(index, 1)
+            }
           } else {
             this.$parent.$data.transaksis.splice(index, 1)
           }

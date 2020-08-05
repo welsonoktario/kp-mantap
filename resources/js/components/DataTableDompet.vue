@@ -45,22 +45,22 @@
         <!-- eslint-disable-next-line vue/no-unused-vars -->
         <template v-slot:cell(actions)="row">
           <b-button
+            size="sm"
+            class="mr-1"
+            variant="primary"
+            @click="detail(items[row.index].id, row.index)"
+          >
+            Detail
+          </b-button>
+          <b-button
             data-toggle="modal"
             data-target="#modalEdit"
             size="sm"
             class="mr-1"
-            variant="primary"
+            variant="secondary"
             @click="edit(row.item, row.index, $event.target)"
           >
             Edit
-          </b-button>
-          <b-button
-            size="sm"
-            class="mr-1"
-            variant="secondary"
-            @click="detail(items[row.index].id, row.index)"
-          >
-            Detail
           </b-button>
           <b-button
             v-if="items && items[row.index].transaksi.length == 0"

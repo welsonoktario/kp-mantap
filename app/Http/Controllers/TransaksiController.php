@@ -26,11 +26,20 @@ class TransaksiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->get('q')) {
+            $data = Transaksi::with(['dompet', 'kategori'])
+                ->where('keterangan', 'like', '%'.$request->get('q').'%')
+                ->paginate($request->get('per_page'));
+        } else {
+            $data = Transaksi::with(['dompet', 'kategori'])
+                ->paginate($request->get('per_page'));
+        }
+
         return response()->json([
             'status' => 'OK',
-            'data' => Transaksi::with(['dompet', 'kategori'])->get(),
+            'data' => $data,
         ]);
     }
 

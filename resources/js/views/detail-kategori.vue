@@ -21,6 +21,7 @@
         :fields="columns"
         :items="kategori.transaksi"
         :meta="meta"
+        :is-detail="'Kategori'"
         @per_page="handlePerPage"
         @pagination="handlePagination"
         @search="handleSearch"

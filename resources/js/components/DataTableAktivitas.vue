@@ -44,7 +44,12 @@
       >
         <!-- eslint-disable-next-line vue/no-unused-vars -->
         <template v-slot:cell(actions)="row">
-          <b-button size="sm" class="mr-1" @click="detail(items[row.index].id)">
+          <b-button
+            size="sm"
+            variant="primary"
+            class="mr-1"
+            @click="detail(items[row.index].id)"
+          >
             Detail
           </b-button>
           <b-button
@@ -52,12 +57,14 @@
             data-target="#modalEdit"
             size="sm"
             class="mr-1"
+            variant="secondary"
             @click="edit(row.item, row.index, $event.target)"
           >
             Edit
           </b-button>
           <b-button
             size="sm"
+            variant="danger"
             class="mx-1"
             @click="hapus(row.item, row.index, $event.target)"
           >

@@ -65,7 +65,7 @@ export default {
         sortable: true
       },
       {
-        key: 'kategori[0].nama',
+        key: 'kategori',
         label: 'Kategori',
         sortable: true
       },
@@ -89,29 +89,48 @@ export default {
     sortByDesc: false //ASCEDING
   }),
   mounted() {
+    window.axios.get('/user').then((res) => {
+      this.user = res.data
+    })
     this.loadData()
   },
   methods: {
     loadData() {
-      window.axios.get('/user').then((res) => {
-        this.user = res.data
-        window.axios.get('/transaksi').then((res) => {
-          console.log(res.data)
-          this.transaksis = res.data.data
+      let current_page = this.search == '' ? this.current_page : 1
+      window.axios
+        .get('/transaksi', {
+          params: {
+            page: current_page,
+            per_page: this.per_page,
+            q: this.search
+          }
         })
-      })
+        .then((res) => {
+          console.log(res.data)
+          const data = res.data.data
+          this.transaksis = data.data
+          this.meta = {
+            total: data.total,
+            current_page: data.current_page,
+            per_page: data.per_page,
+            from: data.from,
+            to: data.to
+          }
+        })
     },
     handlePerPage(val) {
       this.per_page = val
+      this.loadData()
     },
     //JIKA ADA EMIT PAGINATION YANG DIKIRIM, MAKA FUNGSI INI AKAN DIEKSEKUSI
     handlePagination(val) {
       this.current_page = val //SET CURRENT PAGE YANG AKTIF
-      this.loadPostsData()
+      this.loadData()
     },
     //JIKA ADA DATA PENCARIAN
     handleSearch(val) {
       this.search = val
+      this.loadData()
     },
     //JIKA ADA EMIT SORT
     handleSort(val) {

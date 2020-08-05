@@ -21,6 +21,7 @@
         :fields="columns"
         :items="aktivitas.transaksi"
         :meta="meta"
+        :is-detail="'Kegiatan'"
         @per_page="handlePerPage"
         @pagination="handlePagination"
         @search="handleSearch"
@@ -67,7 +68,7 @@ export default {
         sortable: true
       },
       {
-        key: 'kategori[0].nama',
+        key: 'kategori',
         label: 'Kategori',
         sortable: true
       },
@@ -82,7 +83,7 @@ export default {
         sortable: false
       }
     ],
-    aktivitas: [],
+    aktivitas: {},
     meta: {}, //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
