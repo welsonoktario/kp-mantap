@@ -35,20 +35,7 @@
             </div>
             <div class="form-group">
               <label for="dompet">Dompet</label>
-              <select
-                id="dompet"
-                v-model="dataTransaksi.dompet"
-                class="form-control"
-                name="dompet"
-              >
-                <option
-                  v-for="(dompet, index) in dataDompet"
-                  :key="index"
-                  :value="dompet.id"
-                  :selected="dompet.id == dataTransaksi.dompet.id"
-                  >{{ dompet.nama }}</option
-                >
-              </select>
+              <b-form-select v-model="dataTransaksi.dompet" :options="dataDompet"></b-form-select>
             </div>
             <div v-if="dataKategori !== []" class="form-group">
               <label for="kategori">Kategori</label>
@@ -93,6 +80,7 @@
           </div>
           <div class="modal-footer">
             <button
+              ref="closeModal"
               type="button"
               class="btn btn-secondary"
               data-dismiss="modal"
@@ -121,10 +109,10 @@ export default {
       required: false,
       default: undefined
     },
-    isAktivitas: {
-      type: Boolean,
+    isDetail: {
+      type: String,
       required: false,
-      default: false
+      default: undefined
     },
     tipe: {
       type: String,
@@ -178,40 +166,54 @@ export default {
       this.selectedJenis === 0
         ? (data.pemasukan = this.nominal)
         : (data.pengeluaran = this.nominal)
-      console.log(data)
       if (this.tipe === 'Edit') {
         window.axios
           .patch(`/transaksi/${this.transaksi.id}`, data)
           .then((res) => {
             if (res.status === 200) {
-              this.$parent.$parent.loadData()
+              this.$parent.$parent.loadTransaksi()
+              this.$refs.closeModal.click()
             }
           })
       } else {
-        window.axios.post('/transaksi', data).then((transaksi) => {
-          if (transaksi.status === 200) {
-            if (this.isAktivitas) {
-              window.axios
-                .post('/transaksi-kegiatan', {
-                  kegiatan_id: this.$route.params.id,
-                  transaksi_id: transaksi.data.data.id
-                })
-                .then((res) => {
-                  console.log(res.data)
-                  if (res.data.status === 'OK') {
-                    this.$parent.loadTransaksi()
-                  }
-                })
-            }
+        if (this.isDetail) {
+          if (this.isDetail == 'Kegiatan') {
+            window.axios.post('/transaksi', data).then((transaksi) => {
+              if (transaksi.status === 200) {
+                window.axios
+                  .post('/transaksi-kegiatan', {
+                    kegiatan_id: this.$route.params.id,
+                    transaksi_id: transaksi.data.data.id
+                  })
+                  .then((res) => {
+                    console.log(res)
+                    if (res.data.status === 'OK') {
+                      this.$parent.$parent.loadTransaksi()
+                    }
+                  })
+              }
+            })
           }
-        })
+        } else {
+          window.axios.post('/transaksi', data).then((res) => {
+            if (res.status === 200) {
+              this.$parent.loadData()
+            }
+          })
+        }
       }
     },
     loadForm() {
       // load dompet
       window.axios.get('/dompet').then((res) => {
         if (res.status == 200) {
-          this.dataDompet = res.data.data
+          res.data.data.forEach((d) => {
+            const dompet = {
+              value: d.id,
+              text: d.nama
+            }
+            this.dataDompet.push(dompet)
+          })
         }
       })
       // load kategori

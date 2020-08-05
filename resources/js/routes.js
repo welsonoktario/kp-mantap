@@ -28,6 +28,11 @@ let routes = [
     name: 'Kategori'
   },
   {
+    path: '/kategori/:id',
+    component: require('./views/detail-kategori').default,
+    name: 'Detail Kategori'
+  },
+  {
     path: '/transaksi',
     component: require('./views/transaksi').default,
     name: 'Transaksi'

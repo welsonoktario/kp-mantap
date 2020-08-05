@@ -75,15 +75,15 @@ export default {
   },
   methods: {
     loadData() {
-      window.axios.get('/user').then((res) => {
-        this.user = res.data
-        window.axios
-          .get('/kategori')
-          // eslint-disable-next-line prettier/prettier
-        .then(res => {
-            this.kategori = res.data.data
-          })
-      })
+      window.axios
+        .get('/user')
+        .then((res) => {
+          this.user = res.data
+          return window.axios.get('/kategori')
+        })
+        .then((res) => {
+          this.kategori = res.data.data
+        })
     },
     handlePerPage(val) {
       this.per_page = val

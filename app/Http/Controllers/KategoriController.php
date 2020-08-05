@@ -16,7 +16,7 @@ class KategoriController extends Controller
     {
         return response()->json([
             'status' => 'OK',
-            'data' => Kategori::all()
+            'data' => Kategori::with('transaksi')->get()
         ]);
     }
 
@@ -63,7 +63,7 @@ class KategoriController extends Controller
      */
     public function show($id)
     {
-        if (!$kategori = Kategori::where('id', $id)->with('transaksi')->get()) {
+        if (!$kategori = Kategori::where('id', $id)->with(['transaksi', 'transaksi.kategori', 'transaksi.dompet'])->first()) {
             return response()->json([
                 'status' => 'GAGAL',
                 'pesan' => 'Kategori tidak ditemukan'

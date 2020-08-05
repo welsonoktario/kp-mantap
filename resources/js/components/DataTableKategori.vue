@@ -49,9 +49,31 @@
             data-target="#modalEdit"
             size="sm"
             class="mr-1"
+            variant="primary"
             @click="edit(row.item, row.index, $event.target)"
           >
             Edit
+          </b-button>
+
+          <b-button
+            size="sm"
+            class="mr-1"
+            variant="secondary"
+            @click="detail(items[row.index].id, row.index)"
+          >
+            Detail
+          </b-button>
+
+          <b-button
+            v-if="items && items[row.index].transaksi.length == 0"
+            data-toggle="modal"
+            data-target="#modalDel"
+            size="sm"
+            class="mr-1"
+            variant="danger"
+            @click="del(row.item, row.index, $event.target)"
+          >
+            Delete
           </b-button>
         </template>
       </b-table>
@@ -80,13 +102,18 @@
       :tipe="'Edit'"
       :transaksi="selectedKategori"
     />
+    <CModal
+      ref="modalDel"
+      :id-modal="'modalDel'"
+      :tipe="'Delete'"
+      :transaksi="selectedKategori"
+    />
   </div>
 </template>
 
 <script>
 import _ from 'lodash' //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
 import CModal from './ModalKategori'
-
 export default {
   components: {
     CModal
@@ -155,6 +182,21 @@ export default {
       this.$refs.modalEdit.$data.dataKategori.id = kategori.id
       this.$refs.modalEdit.$data.dataKategori.nama = kategori.nama
       this.$refs.modalEdit.$data.dataKategori.keterangan = kategori.keterangan
+    },
+    // eslint-disable-next-line no-unused-vars
+    del(item, index, button) {
+      this.selectedKategori = this.items[index]
+      const kategori = this.selectedKategori
+      this.$refs.modalDel.$data.dataKategori.id = kategori.id
+      this.$refs.modalDel.$data.dataKategori.nama = kategori.nama
+      this.$refs.modalDel.$data.dataKategori.keterangan = kategori.keterangan
+    },
+    detail(id, index) {
+      this.selectedKategori = this.items[index]
+      this.$router.push({
+        name: 'Detail Kategori',
+        params: { id: id }
+      })
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN
     //KITA GUNAKAN DEBOUNCE UNTUK MEMBUAT DELAY, DIMANA FUNGSI INI AKAN DIJALANKAN

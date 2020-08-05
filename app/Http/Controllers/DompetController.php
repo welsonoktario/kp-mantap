@@ -63,7 +63,7 @@ class DompetController extends Controller
      */
     public function show($id)
     {
-        if (!$dompet = Dompet::find($id)->with(['transaksi', 'transaksi.kategori'])->first()) {
+        if (!$dompet = Dompet::where('id', $id)->with(['transaksi', 'transaksi.kategori', 'transaksi.dompet'])->first()) {
             return response()->json([
                 'status' => 'GAGAL',
                 'pesan' => 'Dompet tidak ditemukan'

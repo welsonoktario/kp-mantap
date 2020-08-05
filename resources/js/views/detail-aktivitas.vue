@@ -18,7 +18,6 @@
       </div>
       <DataTable
         v-if="aktivitas.transaksi"
-        :is-aktivitas="true"
         :fields="columns"
         :items="aktivitas.transaksi"
         :meta="meta"
@@ -28,7 +27,12 @@
         @sort="handleSort"
       />
     </div>
-    <CModal :id-modal="'modalTambah'" :tipe="'Tambah'" :is-aktivitas="true" />
+    <CModal
+      :is-detail="'Kegiatan'"
+      :id-modal="'modalTambah'"
+      :tipe="'Tambah'"
+      :is-aktivitas="true"
+    />
   </div>
 </template>
 

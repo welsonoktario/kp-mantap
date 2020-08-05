@@ -35,6 +35,7 @@
 import CHeader from '../components/Header'
 import DataTable from '../components/DataTable'
 import CModal from '../components/ModalTransaksi'
+
 export default {
   components: {
     CHeader,
@@ -85,8 +86,6 @@ export default {
     loadTransaksi() {
       const id = this.$route.params.id
       window.axios.get(`/dompet/${id}`).then((res) => {
-        console.log('=============DATA=================')
-        console.log(res.data)
         this.dompet = res.data.data
       })
     },

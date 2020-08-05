@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Throwable;
 use App\Models\Dompet;
 use App\Models\Kategori;
 use App\Models\Kegiatan;
@@ -150,7 +151,7 @@ class TransaksiController extends Controller
             $transaksi->kegiatan()->sync($kegiatan, false);
         }
 
-        if ($transaksi->save()) {
+        if (!$transaksi->save()) {
             return response()->json([
                 'status' => 'GAGAL',
                 'pesan' => 'Gagal mengubah transaksi'

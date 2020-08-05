@@ -122,11 +122,6 @@ export default {
     meta: {
       type: Object,
       required: true
-    },
-    isAktivitas: {
-      type: Boolean,
-      required: false,
-      default: false
     }
   },
   data() {
@@ -180,7 +175,7 @@ export default {
         this.$refs.modalEdit.$data.nominal = transaksi.pemasukan
         this.$refs.modalEdit.$data.selectedJenis = 0
       }
-      this.$refs.modalEdit.$data.dataTransaksi.dompet = transaksi.dompet
+      this.$refs.modalEdit.$data.dataTransaksi.dompet = transaksi.dompet.id
       this.$refs.modalEdit.$data.dataTransaksi.kategori = transaksi.kategori
       this.$refs.modalEdit.$data.dataTransaksi.keterangan = transaksi.keterangan
       this.$refs.modalEdit.$data.dataTransaksi.pemasukan = transaksi.pemasukan
