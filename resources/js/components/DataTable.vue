@@ -42,11 +42,13 @@
         :sort-desc.sync="sortDesc"
         show-empty
       >
-        <!-- <template v-slot:cell(kategori)="data">
-          {{ data.value.last.toUpperCase() }}, <b>{{ data.value.first }}</b>
-        </template> -->
+        <template v-slot:cell(pemasukan)="data">{{
+          data.value | rupiah
+        }}</template>
+        <template v-slot:cell(pengeluaran)="data">{{
+          data.value | rupiah
+        }}</template>
 
-        <!-- eslint-disable-next-line vue/no-unused-vars -->
         <template v-slot:cell(actions)="row">
           <b-button
             data-toggle="modal"

@@ -17,7 +17,7 @@
         </div>
       </div>
       <DataTable
-        v-if="aktivitas != []"
+        v-if="aktivitas.transaksi"
         :is-aktivitas="true"
         :fields="columns"
         :items="aktivitas.transaksi"

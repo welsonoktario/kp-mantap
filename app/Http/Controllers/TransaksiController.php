@@ -8,6 +8,16 @@ use App\Models\Kegiatan;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 
+class Bulan {
+    public $value;
+    public $text;
+
+    public function __construct($value, $text) {
+        $this->value = $value;
+        $this->text = $text;
+    }
+}
+
 class TransaksiController extends Controller
 {
     /**
@@ -174,7 +184,7 @@ class TransaksiController extends Controller
     }
 
     public function addAktivitas(Request $request) {
-        $kegiatan = Kegiatan::find($request->get('kegiatan_id'))->first();
+        $kegiatan = Kegiatan::where('id', $request->get('kegiatan_id'))->first();
         $transaksi = Transaksi::where('id', $request->get('transaksi_id'))->first();
 
         if (!$kegiatan->transaksi()->sync($transaksi, false)) {
@@ -190,8 +200,19 @@ class TransaksiController extends Controller
         ]);
     }
 
-    public function testTransaksi($id)
+    public function tanggalTransaksi()
     {
-        return Transaksi::where('id', $id)->first();
+        $data = Transaksi::all();
+        $tahun = [];
+        $bulan = [];
+        foreach ($data as $trans) {
+            $tgl = strtotime($trans->tanggal_transaksi);
+            array_push($tahun, date('Y', $tgl));
+            array_push($bulan, new Bulan(date('m', $tgl), date('F', $tgl)));
+        }
+        return response()->json([
+            'tahun' => $tahun,
+            'bulan' => $bulan,
+        ]);
     }
 }

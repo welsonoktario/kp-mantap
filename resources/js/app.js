@@ -18,6 +18,17 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.component('multiselect', Multiselect)
 
+Vue.filter('rupiah', function (value) {
+  if (isNaN(value)) return
+  else if (value === 0) return value
+  const formatter = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  })
+  return formatter.format(value)
+})
+
 new Vue({
   el: '#app',
   router

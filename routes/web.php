@@ -27,8 +27,8 @@ Route::get('/admin/', function () {
     return redirect('/login');
 });
 
-Route::get('/export', 'ExportController@index');
-Route::get('/export/pdf', 'ExportController@export');
+Route::get('/laporan', 'LaporanController@load');
+Route::get('/laporan/pdf', 'LaporanController@pdf');
 
 Route::get('/users', 'UsersController@index');
 Route::post('/users', 'UsersController@create');
@@ -39,7 +39,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
     });
 
     Route::post('transaksi-kegiatan', 'TransaksiController@addAktivitas');
-    Route::get('transaksi-test/{id}', 'TransaksiController@testTransaksi');
+    Route::get('transaksi-tanggal', 'TransaksiController@tanggalTransaksi');
     Route::resource('dompet', 'DompetController');
     Route::resource('kategori', 'KategoriController');
     Route::resource('transaksi', 'TransaksiController');
