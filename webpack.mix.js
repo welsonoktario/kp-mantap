@@ -24,6 +24,9 @@ mix.webpackConfig({
       },
     ],
   },
+  output:{
+    chunkFilename:'js/vuejs_code_split/[name].js',
+  }
 });
 
 mix

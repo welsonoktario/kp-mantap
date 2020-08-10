@@ -80,7 +80,6 @@ export default {
         this.user = res.data
 
         window.axios.get('/aktivitas').then((res) => {
-          console.log(res.data)
           this.aktivitas = res.data.data
         })
       })

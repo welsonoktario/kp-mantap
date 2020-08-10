@@ -86,9 +86,6 @@ export default {
     },
     context: null
   }),
-  mounted() {
-    console.log(this.kategori)
-  },
   methods: {
     onContext(ctx) {
       this.context = ctx

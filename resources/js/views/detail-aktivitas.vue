@@ -100,7 +100,6 @@ export default {
       window.axios.get('/user').then((res) => {
         this.user = res.data
         window.axios.get(`/aktivitas/${id}`).then((res) => {
-          console.log(res)
           this.aktivitas = res.data.data
         })
       })

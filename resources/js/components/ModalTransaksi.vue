@@ -186,7 +186,6 @@ export default {
                     transaksi_id: transaksi.data.data.id
                   })
                   .then((res) => {
-                    console.log(res)
                     if (res.data.status === 'OK') {
                       this.$parent.$parent.loadTransaksi()
                     }
@@ -218,7 +217,6 @@ export default {
       })
       // load kategori
       window.axios.get('/kategori').then((res) => {
-        console.log(res)
         if (res.status === 200) {
           this.dataKategori = res.data.data
         }

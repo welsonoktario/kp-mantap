@@ -4,52 +4,52 @@ import VueRouter from 'vue-router'
 let routes = [
   {
     path: '/home',
-    component: require('./views/dashboard').default,
+    component: import('./views/dashboard'),
     name: 'Home'
   },
   {
     path: '/user',
-    component: require('./views/users').default,
+    component: import('./views/users'),
     name: 'User'
   },
   {
     path: '/dompet',
-    component: require('./views/dompet').default,
+    component: import('./views/dompet'),
     name: 'Dompet'
   },
   {
     path: '/dompet/:id/',
-    component: require('./views/detail-dompet').default,
+    component: import('./views/detail-dompet'),
     name: 'Detail Dompet'
   },
   {
     path: '/kategori',
-    component: require('./views/kategori').default,
+    component: import('./views/kategori'),
     name: 'Kategori'
   },
   {
     path: '/kategori/:id',
-    component: require('./views/detail-kategori').default,
+    component: import('./views/detail-kategori'),
     name: 'Detail Kategori'
   },
   {
     path: '/transaksi',
-    component: require('./views/transaksi').default,
+    component: import('./views/transaksi'),
     name: 'Transaksi'
   },
   {
     path: '/aktivitas',
-    component: require('./views/aktivitas').default,
+    component: import('./views/aktivitas'),
     name: 'Aktivitas'
   },
   {
     path: '/aktivitas/:id',
-    component: require('./views/detail-aktivitas').default,
+    component: import('./views/detail-aktivitas'),
     name: 'Detail Aktivitas'
   },
   {
     path: '/laporan',
-    component: require('./views/laporan').default,
+    component: import('./views/laporan'),
     name: 'Laporan'
   }
 ]

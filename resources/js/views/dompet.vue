@@ -79,7 +79,6 @@ export default {
         this.user = res.data
 
         window.axios.get('/dompet').then((res) => {
-          console.log(res.data)
           this.dompet = res.data.data
         })
       })

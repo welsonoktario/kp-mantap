@@ -93,7 +93,6 @@ export default {
     save() {
       if (this.tipe == 'Tambah') {
         window.axios.post('/dompet', this.dataDompet).then((res) => {
-          console.log(res)
           if (res.status === 200) {
             this.$parent.loadData()
           }
@@ -102,7 +101,6 @@ export default {
         window.axios
           .patch(`/dompet/${this.dataDompet.id}`, this.dataDompet)
           .then((res) => {
-            console.log(res)
             if (res.status === 200) {
               this.$parent.$parent.loadData()
             }

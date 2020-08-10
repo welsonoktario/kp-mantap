@@ -177,7 +177,6 @@ export default {
     edit(item, index, button) {
       this.selectedTrans = this.items[index]
       const transaksi = this.selectedTrans
-      console.log(transaksi)
       if (transaksi.pemasukan == 0) {
         this.$refs.modalEdit.$data.nominal = transaksi.pengeluaran
         this.$refs.modalEdit.$data.selectedJenis = 1
@@ -197,7 +196,6 @@ export default {
     // eslint-disable-next-line no-unused-vars
     hapus(item, index, button) {
       window.axios.delete(`/transaksi/${this.items[index].id}`).then((res) => {
-        console.log(res.data)
         if (res.status === 200) {
           if (this.isDetail) {
             if (this.isDetail === 'Dompet') {

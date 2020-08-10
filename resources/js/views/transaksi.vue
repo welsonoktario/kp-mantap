@@ -106,7 +106,6 @@ export default {
           }
         })
         .then((res) => {
-          console.log(res.data)
           const data = res.data.data
           this.transaksis = data.data
           this.meta = {
