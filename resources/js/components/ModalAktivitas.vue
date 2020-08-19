@@ -100,7 +100,7 @@ export default {
         })
       } else if (this.tipe === 'Edit') {
         window.axios
-          .put(`/dompet/${this.dataAktivitas.id}`, this.dataAktivitas)
+          .put(`/aktivitas/${this.dataAktivitas.id}`, this.dataAktivitas)
           .then((res) => {
             if (res.status === 200) {
               this.$parent.$parent.loadData()

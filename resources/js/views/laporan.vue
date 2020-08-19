@@ -58,7 +58,7 @@
         >
       </div>
 
-      <div v-if="!laporan.isHidden">
+      <div v-if="!laporan.isHidden" class="pr-4">
         <h4>Preview</h4>
         <div v-if="laporan.data && !laporan.isLoading">
           <b-table
@@ -91,7 +91,10 @@
               <div class="col-2">{{ getTotal | rupiah }}</div>
             </div>
           </div>
-          <b-button class="col align-self-end" variant="primary" @click="pdf"
+          <b-button
+            class="col align-self-end mt-2"
+            variant="primary"
+            @click="pdf"
             >PDF</b-button
           >
         </div>

@@ -7,13 +7,18 @@
           <h4 class="ml-2 mt-2">{{ aktivitas.keterangan }}</h4>
         </div>
         <div class="col-2 pb-4">
-          <button
-            class="btn btn-block btn-primary"
-            data-toggle="modal"
-            data-target="#modalTambah"
+          <b-dropdown
+            variant="primary"
+            text="Tambah Transaksi"
+            class="btn-block"
           >
-            Tambah Transaksi
-          </button>
+            <b-dropdown-item-btn data-toggle="modal" data-target="#modalTambah"
+              >Transaksi Baru</b-dropdown-item-btn
+            >
+            <b-dropdown-item-btn v-b-modal.modal-pilih
+              >Pilih Transaksi</b-dropdown-item-btn
+            >
+          </b-dropdown>
         </div>
       </div>
       <DataTable
@@ -34,6 +39,9 @@
       :tipe="'Tambah'"
       :is-aktivitas="true"
     />
+    <b-modal id="modal-pilih" title="Pilih Transaksi">
+      <ModalTransaksiTambah />
+    </b-modal>
   </div>
 </template>
 
@@ -41,12 +49,14 @@
 import CHeader from '../components/Header'
 import DataTable from '../components/DataTable'
 import CModal from '../components/ModalTransaksi'
+import ModalTransaksiTambah from '../components/ModalTransaksiTambah'
 
 export default {
   components: {
     CHeader,
     DataTable,
-    CModal
+    CModal,
+    ModalTransaksiTambah
   },
   data: () => ({
     user: {},

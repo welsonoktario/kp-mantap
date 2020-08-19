@@ -225,4 +225,11 @@ class TransaksiController extends Controller
             'bulan' => $bulan,
         ]);
     }
+
+    public function all() {
+        return response()->json([
+            'status' => 'OK',
+            'data' => Transaksi::orderBy('id')->get()
+        ]);
+    }
 }

@@ -38,6 +38,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
         return Auth::user();
     });
 
+    Route::get('transaksi-all', 'TransaksiController@all');
     Route::post('transaksi-kegiatan', 'TransaksiController@addAktivitas');
     Route::get('transaksi-tanggal', 'TransaksiController@tanggalTransaksi');
     Route::resource('dompet', 'DompetController');

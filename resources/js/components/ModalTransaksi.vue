@@ -29,6 +29,7 @@
                 id="btn-jenis"
                 v-model="selectedJenis"
                 :options="optionsJenis"
+                button-variant="outline-primary"
                 buttons
                 name="radios-btn-default"
               ></b-form-radio-group>
@@ -162,6 +163,10 @@ export default {
       this.context = ctx
     },
     tambahTransaksi() {
+      if (!this.dataTransaksi.tanggal_transaksi) {
+        alert('Pilih tanggal transaksi')
+        return
+      }
       const data = this.dataTransaksi
       this.selectedJenis === 0
         ? (data.pemasukan = this.nominal)
@@ -187,7 +192,8 @@ export default {
                   })
                   .then((res) => {
                     if (res.data.status === 'OK') {
-                      this.$parent.$parent.loadTransaksi()
+                      this.$parent.loadTransaksi()
+                      this.$refs.closeModal.click()
                     }
                   })
               }
@@ -197,6 +203,7 @@ export default {
           window.axios.post('/transaksi', data).then((res) => {
             if (res.status === 200) {
               this.$parent.loadData()
+              this.$refs.closeModal.click()
             }
           })
         }
@@ -225,5 +232,3 @@ export default {
   }
 }
 </script>
-
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
