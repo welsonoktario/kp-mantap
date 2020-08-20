@@ -35,20 +35,6 @@
           :options="dataBulan"
         ></b-form-select>
       </div>
-      <div v-else-if="selectedJenis === 'tanggal'" class="row w-100 mb-4">
-        <span class="col-3 my-auto">Pilih Tanggal Mulai: </span>
-        <b-form-datepicker
-          v-model="tanggal_mulai"
-          locale="id"
-          class="col-3"
-        ></b-form-datepicker>
-        <span class="col-3 my-auto">Pilih Tanggal Akhir: </span>
-        <b-form-datepicker
-          v-model="tanggal_akhir"
-          locale="id"
-          class="col-3"
-        ></b-form-datepicker>
-      </div>
       <div class="row pl-2 w-100" :class="{ 'mb-4': !laporan.isHidden }">
         <b-button
           class="col align-self-end"
@@ -118,15 +104,12 @@ export default {
     selectedJenis: '',
     tahun: 0,
     bulan: 0,
-    tanggal_mulai: '',
-    tanggal_akhir: '',
     dataDompet: [],
     dataTahun: [],
     dataBulan: [],
     dataJenis: [
       { value: 'tahun', text: 'Tahun' },
-      { value: 'bulan', text: 'Bulan' },
-      { value: 'tanggal', text: 'Tanggal' }
+      { value: 'bulan', text: 'Bulan' }
     ],
     laporan: {
       isHidden: true,
@@ -167,6 +150,8 @@ export default {
         })
     },
     filterLaporan() {
+      this.laporan.totalPemasukan = 0
+      this.laporan.totalPengeluaran = 0
       this.laporan.isLoading = true
       var url = `/laporan?dompet=${this.selectedDompet}&jenis=${this.selectedJenis}`
       this.url = `/laporan/pdf?dompet=${this.selectedDompet}&jenis=${this.selectedJenis}`
@@ -176,11 +161,6 @@ export default {
       } else if (this.selectedJenis === 'bulan') {
         url = url + `&bulan=${this.bulan}`
         this.url += `&bulan=${this.bulan}`
-      } else {
-        url =
-          url +
-          `&tanggal_mulai=${this.tanggal_mulai}&tanggal_akhir=${this.tanggal_akhir}`
-        this.url += `&tanggal_mulai=${this.tanggal_mulai}&tanggal_akhir=${this.tanggal_akhir}`
       }
 
       this.laporan.isHidden = false

@@ -20,6 +20,14 @@
             <p>Home</p>
           </router-link>
         </li>
+        @if (Auth::user()->role == 'Kajur')
+        <li class="nav-item">
+          <router-link tag="a" to="/pegawai" class="nav-link">
+            <i class="nav-icon fas fa-user"></i>
+            <p>Pegawai</p>
+          </router-link>
+        </li>
+        @endif
         <li class="nav-item">
           <router-link tag="a" to="/dompet" class="nav-link">
             <i class="nav-icon fas fa-wallet"></i>

@@ -15,7 +15,7 @@
             <b-dropdown-item-btn data-toggle="modal" data-target="#modalTambah"
               >Transaksi Baru</b-dropdown-item-btn
             >
-            <b-dropdown-item-btn v-b-modal.modal-pilih
+            <b-dropdown-item-btn @click="$bvModal.show('modal-pilih')"
               >Pilih Transaksi</b-dropdown-item-btn
             >
           </b-dropdown>
@@ -39,9 +39,7 @@
       :tipe="'Tambah'"
       :is-aktivitas="true"
     />
-    <b-modal id="modal-pilih" title="Pilih Transaksi">
-      <ModalTransaksiTambah />
-    </b-modal>
+    <ModalTransaksiTambah />
   </div>
 </template>
 

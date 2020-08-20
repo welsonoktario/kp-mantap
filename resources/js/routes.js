@@ -8,9 +8,9 @@ let routes = [
     name: 'Home'
   },
   {
-    path: '/user',
-    component: () => import('./views/users'),
-    name: 'User'
+    path: '/pegawai',
+    component: () => import('./views/pegawai'),
+    name: 'Pegawai'
   },
   {
     path: '/dompet',

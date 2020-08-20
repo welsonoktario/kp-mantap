@@ -20,7 +20,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/admin/', function () {
+Route::get('admin', function () {
     if (Auth::check()) {
         return view('admin.index');
     }
@@ -40,12 +40,21 @@ Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
 
     Route::get('transaksi-all', 'TransaksiController@all');
     Route::post('transaksi-kegiatan', 'TransaksiController@addAktivitas');
+    Route::post('transaksi-pilih', 'TransaksiController@addAktivitasPilih');
     Route::get('transaksi-tanggal', 'TransaksiController@tanggalTransaksi');
     Route::resource('dompet', 'DompetController');
+    Route::resource('pegawai', 'PegawaiController');
     Route::resource('kategori', 'KategoriController');
     Route::resource('transaksi', 'TransaksiController');
     Route::resource('aktivitas', 'KegiatanController');
     Route::get('laporan', 'LaporanController@load');
+});
+
+Route::get('/admin/pegawai', function () {
+    if (Auth::user()->role != 'Kajur') {
+        return redirect('admin');
+    }
+    return view('admin.pegawai.index');
 });
 
 Route::get('/admin/transaksi', function () {

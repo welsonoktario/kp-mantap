@@ -210,6 +210,28 @@ class TransaksiController extends Controller
         ]);
     }
 
+    public function addAktivitasPilih(Request $request) {
+        $kegiatan = Kegiatan::where('id', $request->kegiatan)->first();
+        $transaksis = $request->transaksi;
+
+        try {
+            $kegiatan->transaksi()->sync($transaksis, false);
+        } catch(Throwable $err) {
+            return response()->json([
+                'status' => 'ERR',
+                'msg' => $err
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'OK',
+            'data' => [
+                'kegiatan' => $kegiatan,
+                'transaksi' => $transaksis
+            ]
+        ]);
+    }
+
     public function tanggalTransaksi()
     {
         $data = Transaksi::all();
@@ -229,7 +251,7 @@ class TransaksiController extends Controller
     public function all() {
         return response()->json([
             'status' => 'OK',
-            'data' => Transaksi::orderBy('id')->get()
+            'data' => Transaksi::orderBy('id', 'DESC')->get()
         ]);
     }
 }

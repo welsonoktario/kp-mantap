@@ -61,13 +61,7 @@
             </div>
             <div class="form-group">
               <label for="nominal">Nominal</label>
-              <input
-                id="nominal"
-                v-model="nominal"
-                type="text"
-                class="form-control"
-                name="nominal"
-              />
+              <currency-input v-model="nominal" class="form-control" />
             </div>
             <div class="form-group w-100">
               <label for="tanggal_transaksi">Tanggal</label>
