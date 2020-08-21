@@ -125,6 +125,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
  //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
 
 
@@ -651,24 +652,30 @@ var render = function() {
                       [_vm._v("\n          Detail\n        ")]
                     ),
                     _vm._v(" "),
-                    _c(
-                      "b-button",
-                      {
-                        staticClass: "mr-1",
-                        attrs: {
-                          "data-toggle": "modal",
-                          "data-target": "#modalEdit",
-                          size: "sm",
-                          variant: "secondary"
-                        },
-                        on: {
-                          click: function($event) {
-                            return _vm.edit(row.item, row.index, $event.target)
-                          }
-                        }
-                      },
-                      [_vm._v("\n          Edit\n        ")]
-                    ),
+                    _vm.$parent.$data.user.role === "Bendahara"
+                      ? _c(
+                          "b-button",
+                          {
+                            staticClass: "mr-1",
+                            attrs: {
+                              "data-toggle": "modal",
+                              "data-target": "#modalEdit",
+                              size: "sm",
+                              variant: "secondary"
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.edit(
+                                  row.item,
+                                  row.index,
+                                  $event.target
+                                )
+                              }
+                            }
+                          },
+                          [_vm._v("\n          Edit\n        ")]
+                        )
+                      : _vm._e(),
                     _vm._v(" "),
                     _vm.items && _vm.items[row.index].transaksi.length == 0
                       ? _c(

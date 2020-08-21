@@ -54,6 +54,7 @@
           </b-button>
 
           <b-button
+            v-if="$parent.$data.user.role === 'Bendahara'"
             data-toggle="modal"
             data-target="#modalEdit"
             size="sm"

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Throwable;
 
 class PegawaiController extends Controller
@@ -46,7 +47,14 @@ class PegawaiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = new User();
+        $user->id = $request->npk;
+        $user->name = $request->nama;
+        $user->email = $request->email;
+        $user->role = $request->role;
+        $user->aktif = $request->aktif;
+        $user->password = Hash::make($request->password);
+        $user->save();
     }
 
     /**
@@ -80,11 +88,11 @@ class PegawaiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $pegawai = User::find($id)->first();
-        $status = $request->status;
+        $pegawai = User::where('id', $id)->first();
 
         try {
-            $pegawai->aktif = $status;
+            $pegawai->aktif = $request->aktif;
+            $pegawai->role = $request->role;
             $pegawai->save();
         } catch(Throwable $err) {
             return response()->json([

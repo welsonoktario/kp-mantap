@@ -31,7 +31,7 @@ Vue.component('multiselect', Multiselect)
 
 Vue.filter('rupiah', function (value) {
   if (isNaN(value)) return
-  else if (value === 0) return value
+  else if (value === 0 || value === 0.0) return value
   const formatter = new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',

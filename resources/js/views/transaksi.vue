@@ -17,7 +17,7 @@
         </div>
       </div>
       <DataTable
-        :fields="columns"
+        :fields="transaksiColumn"
         :items="transaksis"
         :meta="meta"
         @per_page="handlePerPage"
@@ -88,6 +88,14 @@ export default {
     sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false //ASCEDING
   }),
+  computed: {
+    transaksiColumn() {
+      var col = this.columns
+      if (this.user.role === 'Bendahara') return this.columns
+      col.pop()
+      return col
+    }
+  },
   mounted() {
     window.axios.get('/user').then((res) => {
       this.user = res.data

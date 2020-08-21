@@ -18,7 +18,7 @@
       </div>
       <DataTable
         v-if="dompet.transaksi"
-        :fields="columns"
+        :fields="transaksiColumn"
         :items="dompet.transaksi"
         :meta="meta"
         :is-detail="'Dompet'"
@@ -72,6 +72,7 @@ export default {
         sortable: false
       }
     ],
+    user: {},
     dompet: {},
     meta: {}, //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
@@ -80,14 +81,25 @@ export default {
     sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false //ASCEDING
   }),
+  computed: {
+    transaksiColumn() {
+      var col = this.columns
+      if (this.user.role === 'Bendahara') return this.columns
+      col.pop()
+      return col
+    }
+  },
   mounted() {
     this.loadTransaksi()
   },
   methods: {
     loadTransaksi() {
       const id = this.$route.params.id
-      window.axios.get(`/dompet/${id}`).then((res) => {
-        this.dompet = res.data.data
+      window.axios.get('/user').then((res) => {
+        this.user = res.data
+        window.axios.get(`/dompet/${id}`).then((res) => {
+          this.dompet = res.data.data
+        })
       })
     },
     handlePerPage(val) {

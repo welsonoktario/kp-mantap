@@ -40,7 +40,7 @@ export default {
   },
   mounted() {
     window.axios
-      .get('/transaksi-all')
+      .get(`/transaksi-all?id=${this.$route.params.id}`)
       .then((res) => (this.transaksis = res.data.data))
   },
   methods: {

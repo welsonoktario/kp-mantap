@@ -248,10 +248,13 @@ class TransaksiController extends Controller
         ]);
     }
 
-    public function all() {
+    public function all(Request $request) {
+        $transaksi = Transaksi::orderBy('id', 'DESC')->get();
+        $kegiatan_transaksi = Kegiatan::with('transaksi')->where('id', $request->id)->first();
+
         return response()->json([
             'status' => 'OK',
-            'data' => Transaksi::orderBy('id', 'DESC')->get()
+            'data' => $transaksi->diff($kegiatan_transaksi->transaksi)
         ]);
     }
 }

@@ -23,19 +23,16 @@
         @sort="handleSort"
       />
     </div>
-    <b-modal id="modal-pegawai" :title="modal.tipe + ' Pegawai'">
-      <CModal
-        :selected="modal.selected"
-        :tipe="modal.tipe"
-        @status="handleStatus"
-      />
-      <template v-slot:modal-footer="{ cancel }">
-        <b-button size="sm" variant="primary" @click="action()">
-          {{ modal.tipe }}
-        </b-button>
-        <b-button size="sm" variant="secondary" @click="cancel()">
-          Batal
-        </b-button>
+    <b-modal
+      id="modal-pegawai"
+      :hide-footer="true"
+      :title="modal.tipe + ' Pegawai'"
+    >
+      <template v-if="modal.tipe === 'Edit'">
+        <FormEdit :selected="modal.selected" @submit="edit" />
+      </template>
+      <template v-else>
+        <FormTambah @submit="tambah" />
       </template>
     </b-modal>
   </div>
@@ -43,20 +40,22 @@
 
 <script>
 import CHeader from '../components/Header'
-import CModal from '../components/ModalPegawai'
 import DataTable from '../components/DataTablePegawai'
+import FormEdit from '../components/FormPegawaiEdit'
+import FormTambah from '../components/FormPegawaiTambah'
 
 export default {
   components: {
     CHeader,
     DataTable,
-    CModal
+    FormEdit,
+    FormTambah
   },
   data: () => ({
     user: {},
     columns: [
       {
-        key: 'npk',
+        key: 'id',
         sortable: true,
         label: 'NPK'
       },
@@ -86,7 +85,6 @@ export default {
       selected: undefined,
       tipe: 'Add'
     },
-    aktif: 0,
     meta: {}, //JUGA BERLAKU UNTUK META
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
@@ -124,33 +122,35 @@ export default {
         })
     },
     open(type) {
+      this.modal.open = true
       this.modal.tipe = type
       if (type === 'Tambah') this.modal.selected = undefined
       this.$bvModal.show('modal-pegawai')
     },
     action() {
-      if (this.modal.tipe === 'Edit') {
-        this.edit()
-      } else {
-        this.tambah()
-      }
+      if (this.modal.tipe === 'Edit') this.edit()
+      else if (this.modal.tipe === 'Tambah') this.tambah()
     },
-    tambah() {
-      // TODO
+    tambah(data) {
+      window.axios.post('/pegawai', data).then((res) => {
+        console.log(res)
+      })
     },
-    edit() {
+    edit(data) {
       window.axios
-        .put(`/pegawai/${this.modal.selected.id}`, { status: this.aktif })
+        .put(`/pegawai/${this.modal.selected.id}`, {
+          aktif: data.aktif,
+          role: data.role
+        })
         .then((res) => {
-          console.log(res)
           if (res.status === 200) {
             this.loadData()
             this.$bvModal.hide('modal-pegawai')
           }
         })
     },
-    handleSelected(id) {
-      this.modal.selected = id
+    handleSelected(selected) {
+      this.modal.selected = selected
       this.open('Edit')
     },
     handleStatus(status) {

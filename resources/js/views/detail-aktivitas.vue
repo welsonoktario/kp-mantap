@@ -6,7 +6,7 @@
         <div class="col-10">
           <h4 class="ml-2 mt-2">{{ aktivitas.keterangan }}</h4>
         </div>
-        <div class="col-2 pb-4">
+        <div v-if="user.role === 'Bendahara'" class="col-2 pb-4">
           <b-dropdown
             variant="primary"
             text="Tambah Transaksi"
@@ -23,7 +23,7 @@
       </div>
       <DataTable
         v-if="aktivitas.transaksi"
-        :fields="columns"
+        :fields="transaksiColumn"
         :items="aktivitas.transaksi"
         :meta="meta"
         :is-detail="'Kegiatan'"
@@ -99,6 +99,14 @@ export default {
     sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false //ASCEDING
   }),
+  computed: {
+    transaksiColumn() {
+      var col = this.columns
+      if (this.user.role === 'Bendahara') return this.columns
+      col.pop()
+      return col
+    }
+  },
   mounted() {
     this.loadTransaksi()
   },

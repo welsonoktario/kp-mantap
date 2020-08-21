@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <b-modal id="modal-pegawai" lazy :title="tipe + ' Pegawai'">
     <template v-if="tipe === 'Edit'">
       <b-form-group label="Status">
         <b-form-radio-group
@@ -9,7 +9,15 @@
         ></b-form-radio-group>
       </b-form-group>
     </template>
-  </div>
+    <template v-slot:modal-footer="{ cancel }">
+      <b-button size="sm" variant="primary" @click="action()">
+        {{ tipe }}
+      </b-button>
+      <b-button size="sm" variant="secondary" @click="cancel()">
+        Batal
+      </b-button>
+    </template>
+  </b-modal>
 </template>
 
 <script>
@@ -24,6 +32,11 @@ export default {
       type: String,
       required: true,
       default: undefined
+    },
+    open: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data: () => ({
@@ -34,14 +47,32 @@ export default {
     ],
     dataPegawai: {}
   }),
-  watch: {
-    aktif() {
-      this.$emit('status', this.aktif)
+  mounted() {
+    if (this.tipe === 'Edit') {
+      this.aktif = this.selected.aktif
     }
   },
-  created() {
-    if (this.selected) {
-      this.aktif = this.selected.aktif
+  methods: {
+    action() {
+      if (this.tipe === 'Edit') {
+        this.edit()
+      } else {
+        this.tambah()
+      }
+    },
+    tambah() {
+      // TODO
+    },
+    edit() {
+      window.axios
+        .put(`/pegawai/${this.modal.selected.id}`, { status: this.aktif })
+        .then((res) => {
+          console.log(res)
+          if (res.status === 200) {
+            this.loadData()
+            this.$bvModal.hide('modal-pegawai')
+          }
+        })
     }
   }
 }

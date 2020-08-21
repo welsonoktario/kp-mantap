@@ -18,7 +18,7 @@
       </div>
       <DataTable
         v-if="kategori.transaksi"
-        :fields="columns"
+        :fields="transaksiColumn"
         :items="kategori.transaksi"
         :meta="meta"
         :is-detail="'Kategories'"
@@ -44,6 +44,7 @@ export default {
     CModal
   },
   data: () => ({
+    user: {},
     columns: [
       {
         key: 'tanggal_transaksi',
@@ -75,14 +76,25 @@ export default {
     sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false //ASCEDING
   }),
+  computed: {
+    transaksiColumn() {
+      var col = this.columns
+      if (this.user.role === 'Bendahara') return this.columns
+      col.pop()
+      return col
+    }
+  },
   mounted() {
     this.loadTransaksi()
   },
   methods: {
     loadTransaksi() {
       const id = this.$route.params.id
-      window.axios.get(`/kategori/${id}`).then((res) => {
-        this.kategori = res.data.data
+      window.axios.get('/user').then((res) => {
+        this.user = res.data
+        window.axios.get(`/kategori/${id}`).then((res) => {
+          this.kategori = res.data.data
+        })
       })
     },
     handlePerPage(val) {
