@@ -117,6 +117,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
  //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
 
 
@@ -190,14 +193,16 @@ __webpack_require__.r(__webpack_exports__);
     },
     // eslint-disable-next-line no-unused-vars
     edit: function edit(item, index, button) {
-      this.selectedTrans = this.items[index];
+      this.selectedTrans = this.items.find(function (i) {
+        return i.id === item.id;
+      });
       var transaksi = this.selectedTrans;
 
       if (transaksi.pemasukan == 0) {
-        this.$refs.modalEdit.$data.nominal = transaksi.pengeluaran;
+        this.$refs.modalEdit.$data.nominal = Math.trunc(transaksi.pengeluaran);
         this.$refs.modalEdit.$data.selectedJenis = 1;
       } else {
-        this.$refs.modalEdit.$data.nominal = transaksi.pemasukan;
+        this.$refs.modalEdit.$data.nominal = Math.trunc(transaksi.pemasukan);
         this.$refs.modalEdit.$data.selectedJenis = 0;
       }
 
@@ -453,15 +458,25 @@ __webpack_require__.r(__webpack_exports__);
     onContext: function onContext(ctx) {
       this.context = ctx;
     },
+    validate: function validate() {
+      var error = [];
+      if (!this.dataTransaksi.dompet) error.push('Dompet transaksi tidak boleh kosong');else if (this.dataTransaksi.kategori.length == 0) error.push('Kategori transaksi tidak boleh kosong');else if (!this.nominal) error.push('Nominal tidak boleh kosong');else if (!this.dataTransaksi.kategori) error.push('Pilih tanggal transaksi');
+      return error;
+    },
+    toast: function toast(title, body) {
+      var variant = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'primary';
+      this.$bvToast.toast(body, {
+        title: title,
+        variant: variant,
+        autoHideDelay: 2500
+      });
+    },
     tambahTransaksi: function tambahTransaksi() {
       var _this = this;
 
-      if (!this.dataTransaksi.tanggal_transaksi) {
-        alert('Pilih tanggal transaksi');
-        return;
-      }
-
       var data = this.dataTransaksi;
+      var error = this.validate();
+      if (error.length != 0) return alert(error);
       this.selectedJenis === 0 ? data.pemasukan = this.nominal : data.pengeluaran = this.nominal;
 
       if (this.tipe === 'Edit') {
@@ -470,6 +485,10 @@ __webpack_require__.r(__webpack_exports__);
             _this.$parent.$parent.loadTransaksi();
 
             _this.$refs.closeModal.click();
+
+            return _this.toast('Transaksi', 'Berhasil mengubah transaksi', 'success');
+          } else {
+            return _this.toast('Transaksi', 'Gagal mengubah transaksi', 'danger');
           }
         });
       } else {
@@ -485,8 +504,14 @@ __webpack_require__.r(__webpack_exports__);
                     _this.$parent.loadTransaksi();
 
                     _this.$refs.closeModal.click();
+
+                    return _this.toast('Transaksi', 'Berhasil menambah transaksi ke aktivitas', 'success');
+                  } else {
+                    return _this.toast('Transaksi', 'Gagal menambah transaksi ke aktivitas', 'danger');
                   }
                 });
+              } else {
+                return _this.toast('Transaksi', 'Gagal menambah transaksi', 'danger');
               }
             });
           }
@@ -496,6 +521,10 @@ __webpack_require__.r(__webpack_exports__);
               _this.$parent.loadData();
 
               _this.$refs.closeModal.click();
+
+              return _this.toast('Transaksi', 'Berhasil menambah transaksi', 'success');
+            } else {
+              return _this.toast('Transaksi', 'Gagal menambah transaksi', 'danger');
             }
           });
         }
@@ -640,69 +669,89 @@ var render = function() {
                 _vm.sortDesc = $event
               }
             },
-            scopedSlots: _vm._u([
-              {
-                key: "cell(kategori)",
-                fn: function(data) {
-                  return _vm._l(data.value, function(kat) {
-                    return _c("b-badge", { key: kat.id, staticClass: "mx-1" }, [
-                      _vm._v("\n          " + _vm._s(kat.nama) + "\n        ")
-                    ])
-                  })
-                }
-              },
-              {
-                key: "cell(pemasukan)",
-                fn: function(data) {
-                  return [_vm._v(_vm._s(_vm._f("rupiah")(data.value)))]
-                }
-              },
-              {
-                key: "cell(pengeluaran)",
-                fn: function(data) {
-                  return [_vm._v(_vm._s(_vm._f("rupiah")(data.value)))]
-                }
-              },
-              {
-                key: "cell(actions)",
-                fn: function(row) {
-                  return [
-                    _c(
-                      "b-button",
-                      {
-                        staticClass: "mr-1",
-                        attrs: {
-                          "data-toggle": "modal",
-                          "data-target": "#modalEdit",
-                          size: "sm",
-                          variant: "secondary"
-                        },
-                        on: {
-                          click: function($event) {
-                            return _vm.edit(row.item, row.index, $event.target)
-                          }
-                        }
-                      },
-                      [_vm._v("\n          Edit\n        ")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "b-button",
-                      {
-                        staticClass: "mx-1",
-                        attrs: { size: "sm", variant: "danger" },
-                        on: {
-                          click: function($event) {
-                            return _vm.hapus(row.item, row.index, $event.target)
-                          }
-                        }
-                      },
-                      [_vm._v("\n          Hapus\n        ")]
-                    )
-                  ]
-                }
-              }
-            ])
+            scopedSlots: _vm._u(
+              [
+                {
+                  key: "cell(kategori)",
+                  fn: function(data) {
+                    return _vm._l(data.value, function(kat) {
+                      return _c(
+                        "b-badge",
+                        { key: kat.id, staticClass: "mx-1" },
+                        [
+                          _vm._v(
+                            "\n          " + _vm._s(kat.nama) + "\n        "
+                          )
+                        ]
+                      )
+                    })
+                  }
+                },
+                {
+                  key: "cell(pemasukan)",
+                  fn: function(data) {
+                    return [_vm._v(_vm._s(_vm._f("rupiah")(data.value)))]
+                  }
+                },
+                {
+                  key: "cell(pengeluaran)",
+                  fn: function(data) {
+                    return [_vm._v(_vm._s(_vm._f("rupiah")(data.value)))]
+                  }
+                },
+                _vm.$parent.user.role === "Bendahara"
+                  ? {
+                      key: "cell(actions)",
+                      fn: function(row) {
+                        return [
+                          _c(
+                            "b-button",
+                            {
+                              staticClass: "mr-1",
+                              attrs: {
+                                "data-toggle": "modal",
+                                "data-target": "#modalEdit",
+                                size: "sm",
+                                variant: "secondary"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.edit(
+                                    row.item,
+                                    row.index,
+                                    $event.target
+                                  )
+                                }
+                              }
+                            },
+                            [_vm._v("\n          Edit\n        ")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "b-button",
+                            {
+                              staticClass: "mx-1",
+                              attrs: { size: "sm", variant: "danger" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.hapus(
+                                    row.item,
+                                    row.index,
+                                    $event.target
+                                  )
+                                }
+                              }
+                            },
+                            [_vm._v("\n          Hapus\n        ")]
+                          )
+                        ]
+                      }
+                    }
+                  : null
+              ],
+              null,
+              true
+            )
           })
         ],
         1

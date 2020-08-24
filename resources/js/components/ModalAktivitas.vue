@@ -46,6 +46,7 @@
           </div>
           <div class="modal-footer">
             <button
+              ref="closeModal"
               type="button"
               class="btn btn-secondary"
               data-dismiss="modal"
@@ -91,11 +92,25 @@ export default {
     onContext(ctx) {
       this.context = ctx
     },
+    validate() {
+      const error = []
+      if (!this.dataAktivitas.keterangan)
+        error.push('Keterangan tidak boleh kosong')
+      else if (!this.dataAktivitas.pic) error.push('Pilih minimal 1 PIC')
+
+      return error
+    },
     save() {
+      const error = this.validate()
+      if (error.length != 0) return alert(error)
       if (this.tipe == 'Tambah') {
         window.axios.post('/aktivitas', this.dataAktivitas).then((res) => {
           if (res.status === 200) {
             this.$parent.loadData()
+            this.$refs.closeModal.click()
+            return alert('Berhasil menambah aktivitas')
+          } else {
+            return alert('Gagal menambah aktivitas')
           }
         })
       } else if (this.tipe === 'Edit') {
@@ -104,6 +119,10 @@ export default {
           .then((res) => {
             if (res.status === 200) {
               this.$parent.$parent.loadData()
+              this.$refs.closeModal.click()
+              return alert('Berhasil mengubah aktivitas')
+            } else {
+              return alert('Gagal mengubah aktivitas')
             }
           })
       }

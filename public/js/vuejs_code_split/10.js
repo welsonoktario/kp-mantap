@@ -99,24 +99,16 @@ __webpack_require__.r(__webpack_exports__);
 
     };
   },
-  computed: {
-    transaksiColumn: function transaksiColumn() {
-      var col = this.columns;
-      if (this.user.role === 'Bendahara') return this.columns;
-      col.pop();
-      return col;
-    }
-  },
   mounted: function mounted() {
     var _this = this;
 
     window.axios.get('/user').then(function (res) {
       _this.user = res.data;
     });
-    this.loadData();
+    this.loadTransaksi();
   },
   methods: {
-    loadData: function loadData() {
+    loadTransaksi: function loadTransaksi() {
       var _this2 = this;
 
       var current_page = this.search == '' ? this.current_page : 1;
@@ -124,7 +116,9 @@ __webpack_require__.r(__webpack_exports__);
         params: {
           page: current_page,
           per_page: this.per_page,
-          q: this.search
+          q: this.search,
+          sortby: this.sortBy,
+          sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
         }
       }).then(function (res) {
         var data = res.data.data;
@@ -211,7 +205,7 @@ var render = function() {
           _vm._v(" "),
           _c("DataTable", {
             attrs: {
-              fields: _vm.transaksiColumn,
+              fields: _vm.columns,
               items: _vm.transaksis,
               meta: _vm.meta
             },

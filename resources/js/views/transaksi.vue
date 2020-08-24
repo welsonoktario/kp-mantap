@@ -17,7 +17,7 @@
         </div>
       </div>
       <DataTable
-        :fields="transaksiColumn"
+        :fields="columns"
         :items="transaksis"
         :meta="meta"
         @per_page="handlePerPage"
@@ -88,29 +88,23 @@ export default {
     sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false //ASCEDING
   }),
-  computed: {
-    transaksiColumn() {
-      var col = this.columns
-      if (this.user.role === 'Bendahara') return this.columns
-      col.pop()
-      return col
-    }
-  },
   mounted() {
     window.axios.get('/user').then((res) => {
       this.user = res.data
     })
-    this.loadData()
+    this.loadTransaksi()
   },
   methods: {
-    loadData() {
+    loadTransaksi() {
       let current_page = this.search == '' ? this.current_page : 1
       window.axios
         .get('/transaksi', {
           params: {
             page: current_page,
             per_page: this.per_page,
-            q: this.search
+            q: this.search,
+            sortby: this.sortBy,
+            sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
           }
         })
         .then((res) => {

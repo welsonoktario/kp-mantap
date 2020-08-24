@@ -32,6 +32,7 @@
         id="role"
         v-model="dataPegawai.role"
         :options="dataRole"
+        required
       ></b-form-select>
     </b-form-group>
     <b-button type="submit" variant="primary">Tambah</b-button>

@@ -45,6 +45,7 @@
           </div>
           <div class="modal-footer">
             <button
+              ref="closeModal"
               type="button"
               class="btn btn-secondary"
               data-dismiss="modal"
@@ -90,11 +91,24 @@ export default {
     onContext(ctx) {
       this.context = ctx
     },
+    validate() {
+      const error = []
+      if (!this.dataDompet.nama) error.push('Nama tidak boleh kosong')
+      else if (!this.dataDompet.keterangan)
+        error.push('Keterangan tidak boleh kosong')
+      return error
+    },
     save() {
+      const error = this.validate()
+      if (error.length != 0) return alert(error)
       if (this.tipe == 'Tambah') {
         window.axios.post('/dompet', this.dataDompet).then((res) => {
           if (res.status === 200) {
             this.$parent.loadData()
+            this.$refs.closeModal.click()
+            return alert('Berhasil menambah dompet')
+          } else {
+            return alert('Gagal menambah dompet')
           }
         })
       } else if (this.tipe === 'Edit') {
@@ -103,6 +117,10 @@ export default {
           .then((res) => {
             if (res.status === 200) {
               this.$parent.$parent.loadData()
+              this.$refs.closeModal.click()
+              return alert('Berhasil mengubah dompet')
+            } else {
+              return alert('Gagal mengubah dompet')
             }
           })
       }

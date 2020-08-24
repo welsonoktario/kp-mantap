@@ -31,6 +31,7 @@ class TransaksiController extends Controller
         if ($request->get('q')) {
             $data = Transaksi::with(['dompet', 'kategori'])
                 ->where('keterangan', 'like', '%'.$request->get('q').'%')
+                ->orderBy(request()->sortby, request()->sortbydesc)
                 ->paginate($request->get('per_page'));
         } else {
             $data = Transaksi::with(['dompet', 'kategori'])

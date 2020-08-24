@@ -54,7 +54,10 @@
           data.value | rupiah
         }}</template>
 
-        <template v-slot:cell(actions)="row">
+        <template
+          v-if="$parent.user.role === 'Bendahara'"
+          v-slot:cell(actions)="row"
+        >
           <b-button
             data-toggle="modal"
             data-target="#modalEdit"
@@ -175,13 +178,13 @@ export default {
     },
     // eslint-disable-next-line no-unused-vars
     edit(item, index, button) {
-      this.selectedTrans = this.items[index]
+      this.selectedTrans = this.items.find((i) => i.id === item.id)
       const transaksi = this.selectedTrans
       if (transaksi.pemasukan == 0) {
-        this.$refs.modalEdit.$data.nominal = transaksi.pengeluaran
+        this.$refs.modalEdit.$data.nominal = Math.trunc(transaksi.pengeluaran)
         this.$refs.modalEdit.$data.selectedJenis = 1
       } else {
-        this.$refs.modalEdit.$data.nominal = transaksi.pemasukan
+        this.$refs.modalEdit.$data.nominal = Math.trunc(transaksi.pemasukan)
         this.$refs.modalEdit.$data.selectedJenis = 0
       }
       this.$refs.modalEdit.$data.dataTransaksi.dompet = transaksi.dompet.id

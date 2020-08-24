@@ -156,12 +156,29 @@ export default {
     onContext(ctx) {
       this.context = ctx
     },
+    validate() {
+      const error = []
+      if (!this.dataTransaksi.dompet)
+        error.push('Dompet transaksi tidak boleh kosong')
+      else if (this.dataTransaksi.kategori.length == 0)
+        error.push('Kategori transaksi tidak boleh kosong')
+      else if (!this.nominal) error.push('Nominal tidak boleh kosong')
+      else if (!this.dataTransaksi.kategori)
+        error.push('Pilih tanggal transaksi')
+
+      return error
+    },
+    toast(title, body, variant = 'primary') {
+      this.$bvToast.toast(body, {
+        title: title,
+        variant,
+        autoHideDelay: 2500
+      })
+    },
     tambahTransaksi() {
-      if (!this.dataTransaksi.tanggal_transaksi) {
-        alert('Pilih tanggal transaksi')
-        return
-      }
       const data = this.dataTransaksi
+      const error = this.validate()
+      if (error.length != 0) return alert(error)
       this.selectedJenis === 0
         ? (data.pemasukan = this.nominal)
         : (data.pengeluaran = this.nominal)
@@ -172,6 +189,17 @@ export default {
             if (res.status === 200) {
               this.$parent.$parent.loadTransaksi()
               this.$refs.closeModal.click()
+              return this.toast(
+                'Transaksi',
+                'Berhasil mengubah transaksi',
+                'success'
+              )
+            } else {
+              return this.toast(
+                'Transaksi',
+                'Gagal mengubah transaksi',
+                'danger'
+              )
             }
           })
       } else {
@@ -188,8 +216,25 @@ export default {
                     if (res.data.status === 'OK') {
                       this.$parent.loadTransaksi()
                       this.$refs.closeModal.click()
+                      return this.toast(
+                        'Transaksi',
+                        'Berhasil menambah transaksi ke aktivitas',
+                        'success'
+                      )
+                    } else {
+                      return this.toast(
+                        'Transaksi',
+                        'Gagal menambah transaksi ke aktivitas',
+                        'danger'
+                      )
                     }
                   })
+              } else {
+                return this.toast(
+                  'Transaksi',
+                  'Gagal menambah transaksi',
+                  'danger'
+                )
               }
             })
           }
@@ -198,6 +243,17 @@ export default {
             if (res.status === 200) {
               this.$parent.loadData()
               this.$refs.closeModal.click()
+              return this.toast(
+                'Transaksi',
+                'Berhasil menambah transaksi',
+                'success'
+              )
+            } else {
+              return this.toast(
+                'Transaksi',
+                'Gagal menambah transaksi',
+                'danger'
+              )
             }
           })
         }

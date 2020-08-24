@@ -45,6 +45,7 @@
           </div>
           <div class="modal-footer">
             <button
+              ref="closeModal"
               type="button"
               class="btn btn-secondary"
               data-dismiss="modal"
@@ -90,11 +91,26 @@ export default {
     onContext(ctx) {
       this.context = ctx
     },
+    validate() {
+      const error = []
+      if (!this.dataKategori.nama)
+        error.push('Nama kategori tidak boleh kosong')
+      else if (!this.dataKategori.keterangan)
+        error.push('Keterangan kategori tidak boleh kosong')
+
+      return error
+    },
     save() {
+      const error = this.validate()
+      if (error.length != 0) return alert(error)
       if (this.tipe == 'Tambah') {
         window.axios.post('/kategori', this.dataKategori).then((res) => {
           if (res.status === 200) {
             this.$parent.loadData()
+            this.$refs.closeModal.click()
+            return alert('Berhasil menambah kategori')
+          } else {
+            return alert('Gagal menambah kategori')
           }
         })
       } else if (this.tipe === 'Edit') {
@@ -103,6 +119,10 @@ export default {
           .then((res) => {
             if (res.status === 200) {
               this.$parent.$parent.loadData()
+              this.$refs.closeModal.click()
+              return alert('Berhasil mengubah kategori')
+            } else {
+              return alert('Gagal mengubah kategori')
             }
           })
       }
