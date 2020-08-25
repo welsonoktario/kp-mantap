@@ -380,6 +380,14 @@ __webpack_require__.r(__webpack_exports__);
       if (!this.dataKategori.nama) error.push('Nama kategori tidak boleh kosong');else if (!this.dataKategori.keterangan) error.push('Keterangan kategori tidak boleh kosong');
       return error;
     },
+    toast: function toast(title, body) {
+      var variant = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'success';
+      this.$bvToast.toast(body, {
+        title: title,
+        variant: variant,
+        autoHideDelay: 2500
+      });
+    },
     save: function save() {
       var _this = this;
 
@@ -393,9 +401,9 @@ __webpack_require__.r(__webpack_exports__);
 
             _this.$refs.closeModal.click();
 
-            return alert('Berhasil menambah kategori');
+            return _this.toast('Kategori', 'Berhasil menambah kategori');
           } else {
-            return alert('Gagal menambah kategori');
+            return _this.toast('Kategori', 'Gagal menambah kategori', 'danger');
           }
         });
       } else if (this.tipe === 'Edit') {
@@ -405,9 +413,9 @@ __webpack_require__.r(__webpack_exports__);
 
             _this.$refs.closeModal.click();
 
-            return alert('Berhasil mengubah kategori');
+            return _this.toast('Kategori', 'Berhasil mengubah kategori');
           } else {
-            return alert('Gagal mengubah kategori');
+            return _this.toast('Kategori', 'Gagal mengubah kategori', 'danger');
           }
         });
       }

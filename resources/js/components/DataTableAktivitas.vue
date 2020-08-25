@@ -42,6 +42,8 @@
         :sort-desc.sync="sortDesc"
         show-empty
       >
+        <template v-slot:cell(total)="data">{{ data.value | rupiah }}</template>
+
         <!-- eslint-disable-next-line vue/no-unused-vars -->
         <template v-slot:cell(actions)="row">
           <b-button
@@ -64,7 +66,11 @@
             Edit
           </b-button>
           <b-button
-            v-if="$parent.$data.user.role === 'Bendahara'"
+            v-if="
+              $parent.$data.user.role === 'Bendahara' &&
+              items &&
+              items[row.index]['jumlah'] == 0
+            "
             size="sm"
             variant="danger"
             class="mx-1"

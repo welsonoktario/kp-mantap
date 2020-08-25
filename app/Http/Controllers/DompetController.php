@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Dompet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DompetController extends Controller
 {
@@ -16,7 +17,11 @@ class DompetController extends Controller
     {
         return response()->json([
             'status' => 'OK',
-            'data' => Dompet::with('transaksi')->get(),
+            'data' => DB::select('
+                select d.id id, d.nama nama, d.keterangan, sum(t.pemasukan) pemasukan, sum(t.pengeluaran) pengeluaran, (sum(t.pemasukan)-sum(t.pengeluaran)) saldo, count(t.id) jumlah
+                from dompets d left JOIN transaksis t on d.id = t.dompet_id
+                GROUP by d.nama
+            '),
         ]);
     }
 

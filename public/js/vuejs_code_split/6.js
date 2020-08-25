@@ -146,6 +146,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -153,20 +167,24 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      selectedDompet: 1,
+      selectedDompet: 0,
       selectedJenis: '',
       tahun: 0,
       bulan: 0,
-      dataDompet: [],
+      tanggal_mulai: '',
+      tanggal_akhir: '',
+      dataDompet: [{
+        value: 0,
+        text: 'Semua'
+      }],
       dataTahun: [],
       dataBulan: [],
       dataJenis: [{
         value: 'tahun',
         text: 'Tahun'
-      }, {
-        value: 'bulan',
-        text: 'Bulan'
-      }],
+      } // { value: 'bulan', text: 'Bulan' },
+      // { value: 'tanggal', text: 'Tanggal' }
+      ],
       laporan: {
         isHidden: true,
         isLoading: true,
@@ -220,16 +238,20 @@ __webpack_require__.r(__webpack_exports__);
       } else if (this.selectedJenis === 'bulan') {
         url = url + "&bulan=".concat(this.bulan);
         this.url += "&bulan=".concat(this.bulan);
+      } else {
+        url = url + "&tanggal_mulai=".concat(this.tanggal_mulai, "&tanggal_akhir=").concat(this.tanggal_akhir);
+        this.url += "&tanggal_mulai=".concat(this.tanggal_mulai, "&tanggal_akhir=").concat(this.tanggal_akhir);
       }
 
       this.laporan.isHidden = false;
       window.axios.get(url).then(function (res) {
+        console.log(res.data);
         _this2.laporan.isLoading = false;
         _this2.laporan.data = res.data;
 
         _this2.laporan.data.forEach(function (trans) {
-          _this2.laporan.totalPemasukan += trans.pemasukan;
-          _this2.laporan.totalPengeluaran += trans.pengeluaran;
+          _this2.laporan.totalPemasukan += Number(trans.pemasukan);
+          _this2.laporan.totalPengeluaran += Number(trans.pengeluaran);
         });
       });
     },
@@ -399,6 +421,45 @@ var render = function() {
                       _vm.bulan = $$v
                     },
                     expression: "bulan"
+                  }
+                })
+              ],
+              1
+            )
+          : _vm.selectedJenis === "tanggal"
+          ? _c(
+              "div",
+              { staticClass: "row w-100 mb-4" },
+              [
+                _c("span", { staticClass: "col-3 my-auto" }, [
+                  _vm._v("Pilih Tanggal Mulai: ")
+                ]),
+                _vm._v(" "),
+                _c("b-form-datepicker", {
+                  staticClass: "col-3",
+                  attrs: { locale: "id" },
+                  model: {
+                    value: _vm.tanggal_mulai,
+                    callback: function($$v) {
+                      _vm.tanggal_mulai = $$v
+                    },
+                    expression: "tanggal_mulai"
+                  }
+                }),
+                _vm._v(" "),
+                _c("span", { staticClass: "col-3 my-auto" }, [
+                  _vm._v("Pilih Tanggal Akhir: ")
+                ]),
+                _vm._v(" "),
+                _c("b-form-datepicker", {
+                  staticClass: "col-3",
+                  attrs: { locale: "id" },
+                  model: {
+                    value: _vm.tanggal_akhir,
+                    callback: function($$v) {
+                      _vm.tanggal_akhir = $$v
+                    },
+                    expression: "tanggal_akhir"
                   }
                 })
               ],

@@ -116,6 +116,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
  //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
 
 
@@ -369,11 +375,19 @@ __webpack_require__.r(__webpack_exports__);
       if (!this.dataAktivitas.keterangan) error.push('Keterangan tidak boleh kosong');else if (!this.dataAktivitas.pic) error.push('Pilih minimal 1 PIC');
       return error;
     },
+    toast: function toast(title, body) {
+      var variant = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'success';
+      this.$bvToast.toast(body, {
+        title: title,
+        variant: variant,
+        autoHideDelay: 2500
+      });
+    },
     save: function save() {
       var _this = this;
 
       var error = this.validate();
-      if (error.length != 0) return alert(error);
+      if (error.length != 0) return this.toast(error);
 
       if (this.tipe == 'Tambah') {
         window.axios.post('/aktivitas', this.dataAktivitas).then(function (res) {
@@ -382,9 +396,9 @@ __webpack_require__.r(__webpack_exports__);
 
             _this.$refs.closeModal.click();
 
-            return alert('Berhasil menambah aktivitas');
+            return _this.toast('Aktivitas', 'Berhasil menambah aktivitas');
           } else {
-            return alert('Gagal menambah aktivitas');
+            return _this.toast('Aktivitas', 'Gagal menambah aktivitas', 'danger');
           }
         });
       } else if (this.tipe === 'Edit') {
@@ -394,9 +408,9 @@ __webpack_require__.r(__webpack_exports__);
 
             _this.$refs.closeModal.click();
 
-            return alert('Berhasil mengubah aktivitas');
+            return _this.toast('Aktivitas', 'Berhasil mengubah aktivitas');
           } else {
-            return alert('Gagal mengubah aktivitas');
+            return _this.toast('Aktivitas', 'Gagal mengubah aktivitas', 'danger');
           }
         });
       }
@@ -471,6 +485,9 @@ __webpack_require__.r(__webpack_exports__);
         sortable: false
       }, {
         key: 'pic',
+        sortable: true
+      }, {
+        key: 'total',
         sortable: true
       }, {
         key: 'actions',
@@ -649,6 +666,12 @@ var render = function() {
             },
             scopedSlots: _vm._u([
               {
+                key: "cell(total)",
+                fn: function(data) {
+                  return [_vm._v(_vm._s(_vm._f("rupiah")(data.value)))]
+                }
+              },
+              {
                 key: "cell(actions)",
                 fn: function(row) {
                   return [
@@ -691,7 +714,9 @@ var render = function() {
                         )
                       : _vm._e(),
                     _vm._v(" "),
-                    _vm.$parent.$data.user.role === "Bendahara"
+                    _vm.$parent.$data.user.role === "Bendahara" &&
+                    _vm.items &&
+                    _vm.items[row.index]["jumlah"] == 0
                       ? _c(
                           "b-button",
                           {

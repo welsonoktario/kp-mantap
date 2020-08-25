@@ -57,6 +57,10 @@ export default {
         sortable: true
       },
       {
+        key: 'total',
+        sortable: true
+      },
+      {
         key: 'actions',
         label: 'Aksi',
         sortable: false

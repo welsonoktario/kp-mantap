@@ -42,6 +42,8 @@
         :sort-desc.sync="sortDesc"
         show-empty
       >
+        <template v-slot:cell(saldo)="data">{{ data.value | rupiah }}</template>
+
         <!-- eslint-disable-next-line vue/no-unused-vars -->
         <template v-slot:cell(actions)="row">
           <b-button
@@ -64,7 +66,7 @@
             Edit
           </b-button>
           <b-button
-            v-if="items && items[row.index].transaksi.length == 0"
+            v-if="items && items[row.index]['jumlah'] == 0"
             data-toggle="modal"
             data-target="#modalDel"
             size="sm"

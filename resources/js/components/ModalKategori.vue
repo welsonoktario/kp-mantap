@@ -100,6 +100,13 @@ export default {
 
       return error
     },
+    toast(title, body, variant = 'success') {
+      this.$bvToast.toast(body, {
+        title: title,
+        variant,
+        autoHideDelay: 2500
+      })
+    },
     save() {
       const error = this.validate()
       if (error.length != 0) return alert(error)
@@ -108,9 +115,9 @@ export default {
           if (res.status === 200) {
             this.$parent.loadData()
             this.$refs.closeModal.click()
-            return alert('Berhasil menambah kategori')
+            return this.toast('Kategori', 'Berhasil menambah kategori')
           } else {
-            return alert('Gagal menambah kategori')
+            return this.toast('Kategori', 'Gagal menambah kategori', 'danger')
           }
         })
       } else if (this.tipe === 'Edit') {
@@ -120,9 +127,9 @@ export default {
             if (res.status === 200) {
               this.$parent.$parent.loadData()
               this.$refs.closeModal.click()
-              return alert('Berhasil mengubah kategori')
+              return this.toast('Kategori', 'Berhasil mengubah kategori')
             } else {
-              return alert('Gagal mengubah kategori')
+              return this.toast('Kategori', 'Gagal mengubah kategori', 'danger')
             }
           })
       }

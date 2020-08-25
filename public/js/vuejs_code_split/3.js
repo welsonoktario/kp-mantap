@@ -118,6 +118,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
  //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
 
 
@@ -364,6 +366,14 @@ __webpack_require__.r(__webpack_exports__);
       if (!this.dataDompet.nama) error.push('Nama tidak boleh kosong');else if (!this.dataDompet.keterangan) error.push('Keterangan tidak boleh kosong');
       return error;
     },
+    toast: function toast(title, body) {
+      var variant = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'success';
+      this.$bvToast.toast(body, {
+        title: title,
+        variant: variant,
+        autoHideDelay: 2500
+      });
+    },
     save: function save() {
       var _this = this;
 
@@ -377,9 +387,9 @@ __webpack_require__.r(__webpack_exports__);
 
             _this.$refs.closeModal.click();
 
-            return alert('Berhasil menambah dompet');
+            return _this.toast('Dompet', 'Berhasil menambah dompet');
           } else {
-            return alert('Gagal menambah dompet');
+            return _this.toast('Gagal menambah dompet', 'danger');
           }
         });
       } else if (this.tipe === 'Edit') {
@@ -389,9 +399,9 @@ __webpack_require__.r(__webpack_exports__);
 
             _this.$refs.closeModal.click();
 
-            return alert('Berhasil mengubah dompet');
+            return _this.toast('Dompet', 'Berhasil mengubah dompet');
           } else {
-            return alert('Gagal mengubah dompet');
+            return _this.toast('Dompet', 'Gagal mengubah dompet', 'danger');
           }
         });
       }
@@ -466,6 +476,9 @@ __webpack_require__.r(__webpack_exports__);
         sortable: true
       }, {
         key: 'keterangan',
+        sortable: true
+      }, {
+        key: 'saldo',
         sortable: true
       }, {
         key: 'actions',
@@ -637,6 +650,12 @@ var render = function() {
             },
             scopedSlots: _vm._u([
               {
+                key: "cell(saldo)",
+                fn: function(data) {
+                  return [_vm._v(_vm._s(_vm._f("rupiah")(data.value)))]
+                }
+              },
+              {
                 key: "cell(actions)",
                 fn: function(row) {
                   return [
@@ -682,7 +701,7 @@ var render = function() {
                         )
                       : _vm._e(),
                     _vm._v(" "),
-                    _vm.items && _vm.items[row.index].transaksi.length == 0
+                    _vm.items && _vm.items[row.index]["jumlah"] == 0
                       ? _c(
                           "b-button",
                           {

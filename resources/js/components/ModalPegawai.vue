@@ -63,6 +63,13 @@ export default {
     tambah() {
       // TODO
     },
+    toast(title, body, variant = 'success') {
+      this.$bvToast.toast(body, {
+        title: title,
+        variant,
+        autoHideDelay: 2500
+      })
+    },
     edit() {
       window.axios
         .put(`/pegawai/${this.modal.selected.id}`, { status: this.aktif })
@@ -70,7 +77,10 @@ export default {
           console.log(res)
           if (res.status === 200) {
             this.loadData()
+            this.toast('Pegawai', 'Berhasil menambah pegawai')
             this.$bvModal.hide('modal-pegawai')
+          } else {
+            this.toast('Pegawai', 'Gagal menambah pegawai', 'danger')
           }
         })
     }

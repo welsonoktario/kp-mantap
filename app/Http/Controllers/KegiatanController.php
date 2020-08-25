@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KegiatanController extends Controller
 {
@@ -17,7 +18,11 @@ class KegiatanController extends Controller
         return response()->json([
             'status' => 'OK',
 
-            'data' => Kegiatan::with('transaksi')->get()
+            'data' => DB::select(
+                'select k.id id, k.pic pic, k.keterangan keterangan, (sum(t.pemasukan)-sum(t.pengeluaran)) total, count(t.id) jumlah
+                from kegiatans k left join (kegiatan_transaksis kt inner join transaksis t on kt.transaksi_id = t.id) on k.id = kt.kegiatan_id
+                group by k.id'
+            )
         ]);
     }
 

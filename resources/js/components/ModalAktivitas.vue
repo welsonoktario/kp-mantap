@@ -100,17 +100,24 @@ export default {
 
       return error
     },
+    toast(title, body, variant = 'success') {
+      this.$bvToast.toast(body, {
+        title: title,
+        variant,
+        autoHideDelay: 2500
+      })
+    },
     save() {
       const error = this.validate()
-      if (error.length != 0) return alert(error)
+      if (error.length != 0) return this.toast(error)
       if (this.tipe == 'Tambah') {
         window.axios.post('/aktivitas', this.dataAktivitas).then((res) => {
           if (res.status === 200) {
             this.$parent.loadData()
             this.$refs.closeModal.click()
-            return alert('Berhasil menambah aktivitas')
+            return this.toast('Aktivitas', 'Berhasil menambah aktivitas')
           } else {
-            return alert('Gagal menambah aktivitas')
+            return this.toast('Aktivitas', 'Gagal menambah aktivitas', 'danger')
           }
         })
       } else if (this.tipe === 'Edit') {
@@ -120,9 +127,13 @@ export default {
             if (res.status === 200) {
               this.$parent.$parent.loadData()
               this.$refs.closeModal.click()
-              return alert('Berhasil mengubah aktivitas')
+              return this.toast('Aktivitas', 'Berhasil mengubah aktivitas')
             } else {
-              return alert('Gagal mengubah aktivitas')
+              return this.toast(
+                'Aktivitas',
+                'Gagal mengubah aktivitas',
+                'danger'
+              )
             }
           })
       }

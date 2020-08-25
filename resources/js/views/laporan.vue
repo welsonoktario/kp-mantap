@@ -35,6 +35,20 @@
           :options="dataBulan"
         ></b-form-select>
       </div>
+      <div v-else-if="selectedJenis === 'tanggal'" class="row w-100 mb-4">
+        <span class="col-3 my-auto">Pilih Tanggal Mulai: </span>
+        <b-form-datepicker
+          v-model="tanggal_mulai"
+          locale="id"
+          class="col-3"
+        ></b-form-datepicker>
+        <span class="col-3 my-auto">Pilih Tanggal Akhir: </span>
+        <b-form-datepicker
+          v-model="tanggal_akhir"
+          locale="id"
+          class="col-3"
+        ></b-form-datepicker>
+      </div>
       <div class="row pl-2 w-100" :class="{ 'mb-4': !laporan.isHidden }">
         <b-button
           class="col align-self-end"
@@ -100,16 +114,24 @@ export default {
     CHeader
   },
   data: () => ({
-    selectedDompet: 1,
+    selectedDompet: 0,
     selectedJenis: '',
     tahun: 0,
     bulan: 0,
-    dataDompet: [],
+    tanggal_mulai: '',
+    tanggal_akhir: '',
+    dataDompet: [
+      {
+        value: 0,
+        text: 'Semua'
+      }
+    ],
     dataTahun: [],
     dataBulan: [],
     dataJenis: [
-      { value: 'tahun', text: 'Tahun' },
-      { value: 'bulan', text: 'Bulan' }
+      { value: 'tahun', text: 'Tahun' }
+      // { value: 'bulan', text: 'Bulan' },
+      // { value: 'tanggal', text: 'Tanggal' }
     ],
     laporan: {
       isHidden: true,
@@ -161,16 +183,22 @@ export default {
       } else if (this.selectedJenis === 'bulan') {
         url = url + `&bulan=${this.bulan}`
         this.url += `&bulan=${this.bulan}`
+      } else {
+        url =
+          url +
+          `&tanggal_mulai=${this.tanggal_mulai}&tanggal_akhir=${this.tanggal_akhir}`
+        this.url += `&tanggal_mulai=${this.tanggal_mulai}&tanggal_akhir=${this.tanggal_akhir}`
       }
 
       this.laporan.isHidden = false
 
       window.axios.get(url).then((res) => {
+        console.log(res.data)
         this.laporan.isLoading = false
         this.laporan.data = res.data
         this.laporan.data.forEach((trans) => {
-          this.laporan.totalPemasukan += trans.pemasukan
-          this.laporan.totalPengeluaran += trans.pengeluaran
+          this.laporan.totalPemasukan += Number(trans.pemasukan)
+          this.laporan.totalPengeluaran += Number(trans.pengeluaran)
         })
       })
     },

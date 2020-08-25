@@ -181,10 +181,10 @@ export default {
       this.selectedTrans = this.items.find((i) => i.id === item.id)
       const transaksi = this.selectedTrans
       if (transaksi.pemasukan == 0) {
-        this.$refs.modalEdit.$data.nominal = Math.trunc(transaksi.pengeluaran)
+        this.$refs.modalEdit.$data.nominal = Number(transaksi.pengeluaran)
         this.$refs.modalEdit.$data.selectedJenis = 1
       } else {
-        this.$refs.modalEdit.$data.nominal = Math.trunc(transaksi.pemasukan)
+        this.$refs.modalEdit.$data.nominal = Number(transaksi.pemasukan)
         this.$refs.modalEdit.$data.selectedJenis = 0
       }
       this.$refs.modalEdit.$data.dataTransaksi.dompet = transaksi.dompet.id

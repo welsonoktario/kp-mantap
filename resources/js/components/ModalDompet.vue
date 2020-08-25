@@ -98,6 +98,13 @@ export default {
         error.push('Keterangan tidak boleh kosong')
       return error
     },
+    toast(title, body, variant = 'success') {
+      this.$bvToast.toast(body, {
+        title: title,
+        variant,
+        autoHideDelay: 2500
+      })
+    },
     save() {
       const error = this.validate()
       if (error.length != 0) return alert(error)
@@ -106,9 +113,9 @@ export default {
           if (res.status === 200) {
             this.$parent.loadData()
             this.$refs.closeModal.click()
-            return alert('Berhasil menambah dompet')
+            return this.toast('Dompet', 'Berhasil menambah dompet')
           } else {
-            return alert('Gagal menambah dompet')
+            return this.toast('Gagal menambah dompet', 'danger')
           }
         })
       } else if (this.tipe === 'Edit') {
@@ -118,9 +125,9 @@ export default {
             if (res.status === 200) {
               this.$parent.$parent.loadData()
               this.$refs.closeModal.click()
-              return alert('Berhasil mengubah dompet')
+              return this.toast('Dompet', 'Berhasil mengubah dompet')
             } else {
-              return alert('Gagal mengubah dompet')
+              return this.toast('Dompet', 'Gagal mengubah dompet', 'danger')
             }
           })
       }
