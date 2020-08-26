@@ -70,7 +70,7 @@
             v-if="
               $parent.$data.user.role === 'Bendahara' &&
               items &&
-              items[row.index]['jumlah'] == 0
+              items[row.index].jumlah == 0
             "
             size="sm"
             variant="danger"

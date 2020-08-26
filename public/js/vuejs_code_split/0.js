@@ -456,7 +456,7 @@ __webpack_require__.r(__webpack_exports__);
       selectedJenis: 0,
       nominal: 0,
       dataTransaksi: {
-        dompet: 0,
+        dompet: 1,
         kategori: [],
         keterangan: '',
         pemasukan: 0,

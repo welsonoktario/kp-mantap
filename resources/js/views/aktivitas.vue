@@ -95,6 +95,7 @@ export default {
             }
           })
           .then((res) => {
+            this.aktivitas = []
             const data = res.data.data
             this.meta = {
               total: data.total,
@@ -110,7 +111,8 @@ export default {
                 id: a.id,
                 keterangan: a.keterangan,
                 pic: a.pic,
-                total
+                total,
+                jumlah: a.transaksi_count
               })
             })
           })
