@@ -67,7 +67,11 @@
             Edit
           </b-button>
           <b-button
-            v-if="items && items[row.index]['jumlah'] == 0"
+            v-if="
+              items &&
+              items[row.index]['jumlah'] == 0 &&
+              $parent.user.role === 'Bendahara'
+            "
             data-toggle="modal"
             data-target="#modalDel"
             size="sm"

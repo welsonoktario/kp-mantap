@@ -104,7 +104,7 @@ export default {
             per_page: this.per_page,
             q: this.search,
             sortby: this.sortBy,
-            sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
+            sortbydesc: this.sortByDesc ? 'ASC' : 'DESC'
           }
         })
         .then((res) => {
