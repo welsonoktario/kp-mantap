@@ -85,7 +85,7 @@ export default {
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
     search: '',
-    sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
+    sortBy: 'id', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false //ASCEDING
   }),
   mounted() {
@@ -121,23 +121,24 @@ export default {
     },
     handlePerPage(val) {
       this.per_page = val
-      this.loadData()
+      this.loadTransaksi()
     },
     //JIKA ADA EMIT PAGINATION YANG DIKIRIM, MAKA FUNGSI INI AKAN DIEKSEKUSI
     handlePagination(val) {
       this.current_page = val //SET CURRENT PAGE YANG AKTIF
-      this.loadData()
+      this.loadTransaksi()
     },
     //JIKA ADA DATA PENCARIAN
     handleSearch(val) {
       this.search = val
-      this.loadData()
+      this.loadTransaksi()
     },
     //JIKA ADA EMIT SORT
     handleSort(val) {
       //MAKA SET SORT-NYA
       this.sortBy = val.sortBy
       this.sortByDesc = val.sortDesc
+      this.loadTransaksi()
     }
   }
 }

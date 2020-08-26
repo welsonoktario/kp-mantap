@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Dompet;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class DompetController extends Controller
 {
@@ -13,15 +12,26 @@ class DompetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->q) {
+            $data = Dompet::where('nama', 'like', '%'.$request->q.'%')
+                ->withCount('transaksi')
+                ->withSum(['transaksi:pemasukan as total_pemasukan','transaksi:pengeluaran as total_pengeluaran'])
+                //->orderBy($request->sortby, $request->sortbydesc)
+                ->paginate($request->get('per_page'));
+        } else if ($request->per_page) {
+            $data = Dompet::withCount('transaksi')
+                ->withSum(['transaksi:pemasukan as total_pemasukan','transaksi:pengeluaran as total_pengeluaran'])
+                ->orderBy($request->sortby, $request->sortbydesc)
+                ->paginate($request->per_page);
+        } else {
+            $data = Dompet::all();
+        }
+
         return response()->json([
             'status' => 'OK',
-            'data' => DB::select('
-                select d.id id, d.nama nama, d.keterangan, sum(t.pemasukan) pemasukan, sum(t.pengeluaran) pengeluaran, (sum(t.pemasukan)-sum(t.pengeluaran)) saldo, count(t.id) jumlah
-                from dompets d left JOIN transaksis t on d.id = t.dompet_id
-                GROUP by d.nama
-            '),
+            'data' => $data,
         ]);
     }
 

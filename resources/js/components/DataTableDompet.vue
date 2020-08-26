@@ -41,6 +41,7 @@
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc"
         show-empty
+        no-local-sorting
       >
         <template v-slot:cell(saldo)="data">{{ data.value | rupiah }}</template>
 
@@ -50,7 +51,7 @@
             size="sm"
             class="mr-1"
             variant="primary"
-            @click="detail(items[row.index].id, row.index)"
+            @click="detail(row.item, row.index, $event.target)"
           >
             Detail
           </b-button>
@@ -81,9 +82,13 @@
     </div>
 
     <!-- BAGIAN INI AKAN MENAMPILKAN JUMLAH DATA YANG DI-LOAD -->
-    <!-- <div class="col-md-6">
-      <p>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.total }} items</p>
-    </div> -->
+    <div class="col-md-6">
+      <p>
+        Showing <strong>{{ meta.from }}</strong> to
+        <strong>{{ meta.to }}</strong> of
+        <strong>{{ meta.total }}</strong> items
+      </p>
+    </div>
 
     <!-- BLOCK INI AKAN MENJADI PAGINATION DARI DATA YANG DITAMPILKAN -->
     <div class="col-md-6">
@@ -171,20 +176,56 @@ export default {
       //KIRIM EMIT DENGAN NAMA PAGINATION DAN VALUENYA ADALAH HALAMAN YANG DIPILIH OLEH USER
       this.$emit('pagination', val)
     },
+    toast(title, body, variant = 'success') {
+      this.$bvToast.toast(body, {
+        title: title,
+        variant,
+        autoHideDelay: 2500
+      })
+    },
     // eslint-disable-next-line no-unused-vars
     edit(item, index, button) {
-      this.selectedDompet = this.items[index]
+      this.selectedDompet = this.items.find((i) => i.id === item.id)
       const dompet = this.selectedDompet
       this.$refs.modalEdit.$data.dataDompet.id = dompet.id
       this.$refs.modalEdit.$data.dataDompet.nama = dompet.nama
       this.$refs.modalEdit.$data.dataDompet.keterangan = dompet.keterangan
     },
-
-    detail(id, index) {
-      this.selectedDompet = this.items[index]
+    hapus(item, index, button) {
+      const selected = this.items.findIndex((i) => i.id === item.id)
+      this.$bvModal
+        .msgBoxConfirm(`Apakah anda yakin menghapus dompet ${item.nama}?`, {
+          title: 'Peringatan',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'Hapus',
+          cancelTitle: 'Batal',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+        .then((value) => {
+          if (value) {
+            window.axios.delete(`/dompet/${item.id}`).then((res) => {
+              if (res.status === 200) {
+                this.items.splice(selected, 1)
+                this.toast('Dompet', 'Berhasil menghapus dompet')
+              } else {
+                this.toast('Dompet', 'Gagal menghapus dompet', 'danger')
+              }
+            })
+          }
+        })
+        .catch((err) => {
+          alert(err)
+        })
+    },
+    detail(item, index, button) {
+      this.selectedDompet = this.items.find((i) => i.id === item.id)
       this.$router.push({
         name: 'Detail Dompet',
-        params: { id: id }
+        params: { id: this.selectedDompet.id }
       })
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN

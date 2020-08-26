@@ -71,7 +71,7 @@ export default {
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
     search: '',
-    sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
+    sortBy: 'id', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false //ASCEDING
   }),
 
@@ -80,36 +80,62 @@ export default {
   },
   methods: {
     loadData() {
+      let current_page = this.search == '' ? this.current_page : 1
       window.axios.get('/user').then((res) => {
         this.user = res.data
 
-        window.axios.get('/aktivitas').then((res) => {
-          this.aktivitas = res.data.data
-        })
+        window.axios
+          .get('/aktivitas', {
+            params: {
+              page: current_page,
+              per_page: this.per_page,
+              q: this.search,
+              sortby: this.sortBy,
+              sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
+            }
+          })
+          .then((res) => {
+            const data = res.data.data
+            this.meta = {
+              total: data.total,
+              current_page: data.current_page,
+              per_page: data.per_page,
+              from: data.from,
+              to: data.to
+            }
+            data.data.forEach((a) => {
+              const total =
+                Number(a.total_pemasukan) - Number(a.total_pengeluaran)
+              this.aktivitas.push({
+                id: a.id,
+                keterangan: a.keterangan,
+                pic: a.pic,
+                total
+              })
+            })
+          })
       })
     },
     handlePerPage(val) {
       this.per_page = val
+      this.loadData()
     },
     //JIKA ADA EMIT PAGINATION YANG DIKIRIM, MAKA FUNGSI INI AKAN DIEKSEKUSI
     handlePagination(val) {
       this.current_page = val //SET CURRENT PAGE YANG AKTIF
-      this.loadPostsData()
+      this.loadData()
     },
     //JIKA ADA DATA PENCARIAN
     handleSearch(val) {
       this.search = val
+      this.loadData()
     },
     //JIKA ADA EMIT SORT
     handleSort(val) {
       //MAKA SET SORT-NYA
       this.sortBy = val.sortBy
       this.sortByDesc = val.sortDesc
-    },
-    load() {
-      window.axios.get('/kegiatan').then((res) => {
-        this.aktivitas = res.data.data
-      })
+      this.loadData()
     }
   }
 }

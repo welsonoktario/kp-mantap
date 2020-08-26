@@ -12,11 +12,20 @@ class KategoriController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->has('q')) {
+            $data = Kategori::where('nama', 'like', '%'.$request->q.'%')
+                ->withCount('transaksi')
+                ->orderBy($request->sortby, $request->sortbydesc)
+                ->paginate($request->per_page);
+        } else {
+            $data = Kategori::withCount('transaksi')->get();
+        }
+
         return response()->json([
             'status' => 'OK',
-            'data' => Kategori::with('transaksi')->get()
+            'data' => $data
         ]);
     }
 

@@ -41,6 +41,7 @@
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc"
         show-empty
+        no-local-sorting
       >
         <template v-slot:cell(kategori)="data">
           <b-badge v-for="kat in data.value" :key="kat.id" class="mx-1">
@@ -82,7 +83,11 @@
 
     <!-- BAGIAN INI AKAN MENAMPILKAN JUMLAH DATA YANG DI-LOAD -->
     <div class="col-md-6">
-      <p>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.total }} items</p>
+      <p>
+        Showing <strong>{{ meta.from }}</strong> to
+        <strong>{{ meta.to }}</strong> of
+        <strong>{{ meta.total }}</strong> items
+      </p>
     </div>
 
     <!-- BLOCK INI AKAN MENJADI PAGINATION DARI DATA YANG DITAMPILKAN -->
@@ -176,6 +181,13 @@ export default {
       //KIRIM EMIT DENGAN NAMA PAGINATION DAN VALUENYA ADALAH HALAMAN YANG DIPILIH OLEH USER
       this.$emit('pagination', val)
     },
+    toast(title, body, variant = 'success') {
+      this.$bvToast.toast(body, {
+        title: title,
+        variant,
+        autoHideDelay: 2500
+      })
+    },
     // eslint-disable-next-line no-unused-vars
     edit(item, index, button) {
       this.selectedTrans = this.items.find((i) => i.id === item.id)
@@ -198,21 +210,36 @@ export default {
     },
     // eslint-disable-next-line no-unused-vars
     hapus(item, index, button) {
-      window.axios.delete(`/transaksi/${this.items[index].id}`).then((res) => {
-        if (res.status === 200) {
-          if (this.isDetail) {
-            if (this.isDetail === 'Dompet') {
-              this.$parent.$data.dompet.transaksi.splice(index, 1)
-            } else if (this.isDetail === 'Kegiatan') {
-              this.$parent.$data.aktivitas.transaksi.splice(index, 1)
-            } else if (this.isDetail === 'Kategori') {
-              this.$parent.$data.kategori.transaksi.splice(index, 1)
-            }
-          } else {
-            this.$parent.$data.transaksis.splice(index, 1)
+      const selected = this.items.findIndex((i) => i.id === item.id)
+      this.$bvModal
+        .msgBoxConfirm(`Apakah anda yakin menghapus transaksi ini?`, {
+          title: 'Peringatan',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'Hapus',
+          cancelTitle: 'Batal',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+        .then((value) => {
+          if (value) {
+            window.axios
+              .delete(`/transaksi/${this.items[index].id}`)
+              .then((res) => {
+                if (res.status === 200) {
+                  this.items.splice(selected, 1)
+                  this.toast('Transaksi', 'Transaksi berhasil dihapus')
+                } else {
+                  this.toast('Transaksi', 'Gagal menghapus transaksi', 'danger')
+                }
+              })
           }
-        }
-      })
+        })
+        .catch((err) => {
+          alert(err)
+        })
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN
     //KITA GUNAKAN DEBOUNCE UNTUK MEMBUAT DELAY, DIMANA FUNGSI INI AKAN DIJALANKAN

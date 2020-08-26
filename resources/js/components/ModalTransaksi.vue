@@ -168,7 +168,7 @@ export default {
 
       return error
     },
-    toast(title, body, variant = 'primary') {
+    toast(title, body, variant = 'success') {
       this.$bvToast.toast(body, {
         title: title,
         variant,
@@ -218,8 +218,7 @@ export default {
                       this.$refs.closeModal.click()
                       return this.toast(
                         'Transaksi',
-                        'Berhasil menambah transaksi ke aktivitas',
-                        'success'
+                        'Berhasil menambah transaksi ke aktivitas'
                       )
                     } else {
                       return this.toast(
@@ -243,11 +242,7 @@ export default {
             if (res.status === 200) {
               this.$parent.loadData()
               this.$refs.closeModal.click()
-              return this.toast(
-                'Transaksi',
-                'Berhasil menambah transaksi',
-                'success'
-              )
+              return this.toast('Transaksi', 'Berhasil menambah transaksi')
             } else {
               return this.toast(
                 'Transaksi',

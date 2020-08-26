@@ -44,6 +44,13 @@ export default {
       .then((res) => (this.transaksis = res.data.data))
   },
   methods: {
+    toast(title, body, variant = 'success') {
+      this.$bvToast.toast(body, {
+        title: title,
+        variant,
+        autoHideDelay: 2500
+      })
+    },
     tambah() {
       window.axios
         .post('/transaksi-pilih', {
@@ -54,8 +61,9 @@ export default {
           if (res.status === 200) {
             this.$bvModal.hide('modal-pilih')
             this.$parent.loadTransaksi()
+            this.toast('Aktivitas', 'Berhasil menambah transaksi ke aktivitas')
           } else {
-            console.log(res.data)
+            this.toast('Aktivitas', 'Gagal memuat data transaksi', 'danger')
           }
         })
     }

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Alexmg86\LaravelSubQuery\Traits\LaravelSubQueryTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
+    use LaravelSubQueryTrait;
+
     protected $hidden = ['created_at', 'updated_at'];
 
     public function dompet()

@@ -71,7 +71,11 @@
 
     <!-- BAGIAN INI AKAN MENAMPILKAN JUMLAH DATA YANG DI-LOAD -->
     <div class="col-md-6">
-      <p>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.total }} items</p>
+      <p>
+        Showing <strong>{{ meta.from }}</strong> to
+        <strong>{{ meta.to }}</strong> of
+        <strong>{{ meta.total }}</strong> items
+      </p>
     </div>
 
     <!-- BLOCK INI AKAN MENJADI PAGINATION DARI DATA YANG DITAMPILKAN -->

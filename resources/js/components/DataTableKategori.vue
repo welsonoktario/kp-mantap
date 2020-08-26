@@ -41,6 +41,7 @@
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc"
         show-empty
+        no-local-sorting
       >
         <!-- eslint-disable-next-line vue/no-unused-vars -->
         <template v-slot:cell(actions)="row">
@@ -48,7 +49,7 @@
             size="sm"
             class="mr-1"
             variant="primary"
-            @click="detail(items[row.index].id, row.index)"
+            @click="detail(row.item, row.index, $event.target)"
           >
             Detail
           </b-button>
@@ -66,7 +67,7 @@
           </b-button>
 
           <b-button
-            v-if="items && items[row.index].transaksi.length == 0"
+            v-if="items && items[row.index].transaksi_count === 0"
             data-toggle="modal"
             data-target="#modalDel"
             size="sm"
@@ -81,9 +82,13 @@
     </div>
 
     <!-- BAGIAN INI AKAN MENAMPILKAN JUMLAH DATA YANG DI-LOAD -->
-    <!-- <div class="col-md-6">
-      <p>Showing {{ meta.from }} to {{ meta.to }} of {{ meta.total }} items</p>
-    </div> -->
+    <div class="col-md-6">
+      <p>
+        Showing <strong>{{ meta.from }}</strong> to
+        <strong>{{ meta.to }}</strong> of
+        <strong>{{ meta.total }}</strong> items
+      </p>
+    </div>
 
     <!-- BLOCK INI AKAN MENJADI PAGINATION DARI DATA YANG DITAMPILKAN -->
     <div class="col-md-6">
@@ -101,12 +106,6 @@
       ref="modalEdit"
       :id-modal="'modalEdit'"
       :tipe="'Edit'"
-      :transaksi="selectedKategori"
-    />
-    <CModal
-      ref="modalDel"
-      :id-modal="'modalDel'"
-      :tipe="'Delete'"
       :transaksi="selectedKategori"
     />
   </div>
@@ -176,9 +175,16 @@ export default {
       //KIRIM EMIT DENGAN NAMA PAGINATION DAN VALUENYA ADALAH HALAMAN YANG DIPILIH OLEH USER
       this.$emit('pagination', val)
     },
+    toast(title, body, variant = 'success') {
+      this.$bvToast.toast(body, {
+        title: title,
+        variant,
+        autoHideDelay: 2500
+      })
+    },
     // eslint-disable-next-line no-unused-vars
     edit(item, index, button) {
-      this.selectedKategori = this.items[index]
+      this.selectedKategori = this.items.find((i) => i.id === item.id)
       const kategori = this.selectedKategori
       this.$refs.modalEdit.$data.dataKategori.id = kategori.id
       this.$refs.modalEdit.$data.dataKategori.nama = kategori.nama
@@ -186,17 +192,40 @@ export default {
     },
     // eslint-disable-next-line no-unused-vars
     del(item, index, button) {
-      this.selectedKategori = this.items[index]
-      const kategori = this.selectedKategori
-      this.$refs.modalDel.$data.dataKategori.id = kategori.id
-      this.$refs.modalDel.$data.dataKategori.nama = kategori.nama
-      this.$refs.modalDel.$data.dataKategori.keterangan = kategori.keterangan
+      const selected = this.items.findIndex((i) => i.id === item.id)
+      this.$bvModal
+        .msgBoxConfirm(`Apakah anda yakin menghapus kategori ${item.nama}?`, {
+          title: 'Peringatan',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'Hapus',
+          cancelTitle: 'Batal',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+        .then((value) => {
+          if (value) {
+            window.axios.delete(`/kategori/${item.id}`).then((res) => {
+              if (res.status === 200) {
+                this.items.splice(selected, 1)
+                this.toast('Kategori', 'Berhasil menghapus kategori')
+              } else {
+                this.toast('Kategori', 'Gagal menghapus kategori', 'danger')
+              }
+            })
+          }
+        })
+        .catch((err) => {
+          alert(err)
+        })
     },
-    detail(id, index) {
-      this.selectedKategori = this.items[index]
+    detail(item, index, e) {
+      this.selectedKategori = this.items.find((i) => i.id === item.id)
       this.$router.push({
         name: 'Detail Kategori',
-        params: { id: id }
+        params: { id: this.selectedKategori.id }
       })
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN

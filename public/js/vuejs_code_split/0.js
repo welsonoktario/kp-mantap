@@ -120,6 +120,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
  //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
 
 
@@ -191,6 +196,14 @@ __webpack_require__.r(__webpack_exports__);
       //KIRIM EMIT DENGAN NAMA PAGINATION DAN VALUENYA ADALAH HALAMAN YANG DIPILIH OLEH USER
       this.$emit('pagination', val);
     },
+    toast: function toast(title, body) {
+      var variant = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'success';
+      this.$bvToast.toast(body, {
+        title: title,
+        variant: variant,
+        autoHideDelay: 2500
+      });
+    },
     // eslint-disable-next-line no-unused-vars
     edit: function edit(item, index, button) {
       this.selectedTrans = this.items.find(function (i) {
@@ -217,20 +230,33 @@ __webpack_require__.r(__webpack_exports__);
     hapus: function hapus(item, index, button) {
       var _this = this;
 
-      window.axios["delete"]("/transaksi/".concat(this.items[index].id)).then(function (res) {
-        if (res.status === 200) {
-          if (_this.isDetail) {
-            if (_this.isDetail === 'Dompet') {
-              _this.$parent.$data.dompet.transaksi.splice(index, 1);
-            } else if (_this.isDetail === 'Kegiatan') {
-              _this.$parent.$data.aktivitas.transaksi.splice(index, 1);
-            } else if (_this.isDetail === 'Kategori') {
-              _this.$parent.$data.kategori.transaksi.splice(index, 1);
+      var selected = this.items.findIndex(function (i) {
+        return i.id === item.id;
+      });
+      this.$bvModal.msgBoxConfirm("Apakah anda yakin menghapus transaksi ini?", {
+        title: 'Peringatan',
+        size: 'sm',
+        buttonSize: 'sm',
+        okVariant: 'danger',
+        okTitle: 'Hapus',
+        cancelTitle: 'Batal',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      }).then(function (value) {
+        if (value) {
+          window.axios["delete"]("/transaksi/".concat(_this.items[index].id)).then(function (res) {
+            if (res.status === 200) {
+              _this.items.splice(selected, 1);
+
+              _this.toast('Transaksi', 'Transaksi berhasil dihapus');
+            } else {
+              _this.toast('Transaksi', 'Gagal menghapus transaksi', 'danger');
             }
-          } else {
-            _this.$parent.$data.transaksis.splice(index, 1);
-          }
+          });
         }
+      })["catch"](function (err) {
+        alert(err);
       });
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN
@@ -464,7 +490,7 @@ __webpack_require__.r(__webpack_exports__);
       return error;
     },
     toast: function toast(title, body) {
-      var variant = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'primary';
+      var variant = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'success';
       this.$bvToast.toast(body, {
         title: title,
         variant: variant,
@@ -505,7 +531,7 @@ __webpack_require__.r(__webpack_exports__);
 
                     _this.$refs.closeModal.click();
 
-                    return _this.toast('Transaksi', 'Berhasil menambah transaksi ke aktivitas', 'success');
+                    return _this.toast('Transaksi', 'Berhasil menambah transaksi ke aktivitas');
                   } else {
                     return _this.toast('Transaksi', 'Gagal menambah transaksi ke aktivitas', 'danger');
                   }
@@ -522,7 +548,7 @@ __webpack_require__.r(__webpack_exports__);
 
               _this.$refs.closeModal.click();
 
-              return _this.toast('Transaksi', 'Berhasil menambah transaksi', 'success');
+              return _this.toast('Transaksi', 'Berhasil menambah transaksi');
             } else {
               return _this.toast('Transaksi', 'Gagal menambah transaksi', 'danger');
             }
@@ -653,7 +679,8 @@ var render = function() {
               fields: _vm.fields,
               "sort-by": _vm.sortBy,
               "sort-desc": _vm.sortDesc,
-              "show-empty": ""
+              "show-empty": "",
+              "no-local-sorting": ""
             },
             on: {
               "update:sortBy": function($event) {
@@ -759,15 +786,13 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "col-md-6" }, [
         _c("p", [
-          _vm._v(
-            "Showing " +
-              _vm._s(_vm.meta.from) +
-              " to " +
-              _vm._s(_vm.meta.to) +
-              " of " +
-              _vm._s(_vm.meta.total) +
-              " items"
-          )
+          _vm._v("\n      Showing "),
+          _c("strong", [_vm._v(_vm._s(_vm.meta.from))]),
+          _vm._v(" to\n      "),
+          _c("strong", [_vm._v(_vm._s(_vm.meta.to))]),
+          _vm._v(" of\n      "),
+          _c("strong", [_vm._v(_vm._s(_vm.meta.total))]),
+          _vm._v(" items\n    ")
         ])
       ]),
       _vm._v(" "),

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,16 +14,28 @@ class KegiatanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        /* $data = DB::select(
+            'select k.id id, k.pic pic, k.keterangan keterangan, (sum(t.pemasukan)-sum(t.pengeluaran)) total, count(t.id) jumlah
+            from kegiatans k left join (kegiatan_transaksis kt inner join transaksis t on kt.transaksi_id = t.id) on k.id = kt.kegiatan_id
+            group by k.id'
+        ); */
+        if ($request->has('q')) {
+            $data = Kegiatan::where('keterangan', 'like', '%'.$request->q.'%')
+                ->orderBy($request->sortby, $request->sortbydesc)
+                ->withCount('transaksi')
+                ->withSum(['transaksi:pemasukan as total_pemasukan', 'transaksi:pengeluaran as total_pengeluaran'])
+                ->paginate($request->per_page);
+        } else {
+            $data = Kegiatan::withCount('transaksi')
+                ->withSum(['transaksi:pemasukan as total_pemasukan', 'transaksi:pengeluaran as total_pengeluaran'])
+                ->paginate($request->per_page);
+        }
+
         return response()->json([
             'status' => 'OK',
-
-            'data' => DB::select(
-                'select k.id id, k.pic pic, k.keterangan keterangan, (sum(t.pemasukan)-sum(t.pengeluaran)) total, count(t.id) jumlah
-                from kegiatans k left join (kegiatan_transaksis kt inner join transaksis t on kt.transaksi_id = t.id) on k.id = kt.kegiatan_id
-                group by k.id'
-            )
+            'data' => $data
         ]);
     }
 
@@ -66,11 +79,28 @@ class KegiatanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        if ($request->get('q')) {
+            $data = Transaksi::with(['dompet', 'kategori'])
+                ->whereHas('kegiatan', function($q) use($id) {
+                    return $q->where('id', '=', $id);
+                })
+                ->where('keterangan', 'like', '%'.$request->get('q').'%')
+                ->orderBy(request()->sortby, request()->sortbydesc)
+                ->paginate($request->get('per_page'));
+        } else {
+            $data = Transaksi::with(['dompet', 'kategori'])
+                ->whereHas('kegiatan', function($q) use($id) {
+                    return $q->where('id', '=', $id);
+                })
+                ->paginate($request->get('per_page'));
+        }
+
         return response()->json([
             'status' => 'OK',
-            'data' => Kegiatan::where('id', $id)->with(['transaksi', 'transaksi.dompet', 'transaksi.kategori'])->first(),
+            'data' => $data,
+            'kegiatan' => Kegiatan::where('id', $id)->first()
         ]);
     }
 

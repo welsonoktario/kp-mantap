@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Alexmg86\LaravelSubQuery\Traits\LaravelSubQueryTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, LaravelSubQueryTrait;
 
     /**
      * The attributes that are mass assignable.
