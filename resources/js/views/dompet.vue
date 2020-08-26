@@ -79,7 +79,6 @@ export default {
   },
   methods: {
     loadData() {
-      this.dompet = []
       let current_page = this.search == '' ? this.current_page : 1
       window.axios.get('/user').then((res) => {
         this.user = res.data
@@ -95,6 +94,7 @@ export default {
           })
           .then((res) => {
             res.data.data.data.forEach((d) => {
+              this.dompet = []
               const saldo =
                 Number(d.total_pemasukan) - Number(d.total_pengeluaran)
               this.dompet.push({
