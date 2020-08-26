@@ -240,7 +240,7 @@ export default {
         } else {
           window.axios.post('/transaksi', data).then((res) => {
             if (res.status === 200) {
-              this.$parent.loadData()
+              this.$parent.loadTransaksi()
               this.$refs.closeModal.click()
               return this.toast('Transaksi', 'Berhasil menambah transaksi')
             } else {

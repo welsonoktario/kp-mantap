@@ -544,7 +544,7 @@ __webpack_require__.r(__webpack_exports__);
         } else {
           window.axios.post('/transaksi', data).then(function (res) {
             if (res.status === 200) {
-              _this.$parent.loadData();
+              _this.$parent.loadTransaksi();
 
               _this.$refs.closeModal.click();
 
