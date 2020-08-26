@@ -94,7 +94,6 @@ export default {
             }
           })
           .then((res) => {
-            console.log(res)
             res.data.data.data.forEach((d) => {
               const saldo =
                 Number(d.total_pemasukan) - Number(d.total_pengeluaran)

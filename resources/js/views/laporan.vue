@@ -193,7 +193,6 @@ export default {
       this.laporan.isHidden = false
 
       window.axios.get(url).then((res) => {
-        console.log(res.data)
         this.laporan.isLoading = false
         this.laporan.data = res.data
         this.laporan.data.forEach((trans) => {

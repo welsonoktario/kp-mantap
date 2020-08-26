@@ -22,6 +22,9 @@
     /* tr {
       line-height: 14px;
     } */
+    tr .keterangan {
+      height: 10px;
+    }
   </style>
 </head>
 
@@ -40,15 +43,19 @@
   <table class="table table-sm table-striped">
     <thead class="thead-dark">
       <tr>
-        <th>Tanggal Transaksi</th>
+        <th align="center">Tanggal Transaksi</th>
         <th>Keterangan</th>
-        <th>Pemasukan</th>
-        <th>Pengeluaran</th>
+        <th align="right">Pemasukan (Rupiah)</th>
+        <th align="right">Pengeluaran (Rupiah)</th>
       </tr>
     </thead>
     <tbody>
 
       <?php
+        function rupiah($uang){
+          $hasil = number_format($uang,2,',','.');
+          return $hasil;
+        }
 
         function konversi_bulan($nomor_bulan) {
           $nomor_bulan = intval($nomor_bulan);
@@ -80,14 +87,14 @@
           }
           return $nama_bulan;
         }
-
         $counter = 0;
+        $counter_bulan = 0;
         $bulan = 0;
         $pemasukan_bulanan = 0.0;
         $pengeluaran_bulanan = 0.0;
-        $saldo_bulanan = $tahun_sebelum;
-        $saldo_sebelumnya = $tahun_sebelum;
-        $total_bulanan = 0.0;
+        $saldo_bulanan = doubleval($tahun_sebelum[0]->transaksi_sebelumnya);
+        $saldo_sebelumnya = doubleval($tahun_sebelum[0]->transaksi_sebelumnya);
+        $total_bulanan = $saldo_sebelumnya;
         $data_json = json_decode($data, true);
         $len = count($data_json);
         $data_rvrs = array_reverse(json_decode($data, true));
@@ -97,25 +104,37 @@
           @if($counter != 0)
             <tr class="table-light">
               <td align='right' colspan='3'>Saldo Sebelumnya</td>
-              <td align='right'> Rp {{ number_format(floatval($saldo_sebelumnya), 0, ',', '.')}}</td>
+              <!-- <td align='right'> Rp {{ number_format(floatval($saldo_sebelumnya), 0, ',', '.')}}</td> -->
+              <td align='right'> Rp
+              <?php
+              if($counter_bulan == 0){
+                // echo $tahun_sebelum[0]->transaksi_sebelumnya;
+                $counter_bulan++;
+                $sblm = $tahun_sebelum[0]->transaksi_sebelumnya;
+                // echo(gettype($sblm));
+                echo rupiah(doubleval($sblm), 0, ',', '.');
+              } else {
+                echo rupiah(doubleval($saldo_sebelumnya), 0, ',', '.');
+              }
+              ?></td>
             </tr>
-            <tr class="table-light">
+            <tr class="table-light keterangan">
               <td align='right' colspan='3'>Pemasukan Bulanan</td>
-              <td align='right'>Rp {{ number_format(floatval($pemasukan_bulanan), 0, ',', '.')}}</td>
+              <td align='right'>Rp {{ rupiah(floatval($pemasukan_bulanan), 0, ',', '.')}}</td>
             </tr>
-            <tr class="table-light">
+            <tr class="table-light keterangan">
               <td align='right' colspan='3'>Pengeluaran Bulanan</td>
-              <td align='right'> Rp {{ number_format(floatval($pengeluaran_bulanan), 0, ',', '.')}}</td>
+              <td align='right'> Rp {{ rupiah(floatval($pengeluaran_bulanan), 0, ',', '.')}}</td>
             </tr>
-            <tr class="table-light">
+            <tr class="table-light keterangan">
               <td align='right' colspan='3'>Saldo Bulanan</td>
-              <td align='right'> Rp {{ number_format(floatval($saldo_bulanan), 0, ',', '.')}}</td>
+              <td align='right'> Rp {{ rupiah(floatval($saldo_bulanan), 0, ',', '.')}}</td>
             </tr>
-            <tr class="table-light">
+            <tr class="table-light keterangan">
               <td align='right' colspan='3'>Total Bulanan</td>
-              <td align='right'> Rp {{ number_format(floatval($total_bulanan), 0, ',', '.')}}</td>
+              <td align='right'> Rp {{ rupiah(floatval($total_bulanan), 0, ',', '.')}}</td>
             </tr>
-            <tr class="table-light">
+            <tr class="table-light keterangan">
               <td align='right' colspan='4'><p></p></td>
             </tr>
           @endif
@@ -142,48 +161,67 @@
           <th scope="row">{{ $transaksi->tanggal_transaksi }}</th>
           <td>{{ $transaksi->keterangan }}</td>
           @if ($transaksi->pemasukan != '0')
-          <td align='right'>Rp {{ number_format(floatval($transaksi->pemasukan), 0, ',', '.')}}</td>
+          <td align='right'>{{ rupiah(floatval($transaksi->pemasukan), 0, ',', '.')}}</td>
           @else
-          <td align='right'>{{ number_format(floatval($transaksi->pemasukan), 0, ',', '.')}}</td>
+          <td align='right'>{{ rupiah(floatval($transaksi->pemasukan), 0, ',', '.')}}</td>
           @endif
           @if ($transaksi->pengeluaran != '0')
-          <td align='right'>Rp {{ number_format(floatval($transaksi->pengeluaran), 0, ',', '.')}}</td>
+          <td align='right'>{{ rupiah(floatval($transaksi->pengeluaran), 0, ',', '.')}}</td>
           @else
-          <td align='right'>{{ number_format(floatval($transaksi->pengeluaran), 0, ',', '.') }}</td>
+          <td align='right'>{{ rupiah(floatval($transaksi->pengeluaran), 0, ',', '.') }}</td>
           @endif
         </tr>
       @endforeach
 
       <tr class="table-light">
         <td align='right' colspan='3'>Saldo Sebelumnya</td>
-        <td align='right'> Rp {{ number_format(floatval($saldo_sebelumnya), 0, ',', '.') }}</td>
+        <td align='right'> Rp {{ rupiah(floatval($saldo_sebelumnya), 0, ',', '.') }}</td>
       </tr>
       <tr class="table-light">
         <td align='right' colspan='3'>Pemasukan Bulanan</td>
-        <td align='right'>Rp {{ number_format(floatval($pemasukan_bulanan), 0, ',', '.') }}</td>
+        <td align='right'>Rp {{ rupiah(floatval($pemasukan_bulanan), 0, ',', '.') }}</td>
       </tr>
       <tr class="table-light">
         <td align='right' colspan='3'>Pengeluaran Bulanan</td>
-        <td align='right'> Rp {{ number_format(floatval($pengeluaran_bulanan), 0, ',', '.') }}</td>
+        <td align='right'> Rp {{ rupiah(floatval($pengeluaran_bulanan), 0, ',', '.') }}</td>
       </tr>
       <tr class="table-light">
         <td align='right' colspan='3'>Pengeluaran Bulanan</td>
-        <td align='right'> Rp {{ number_format(floatval($saldo_bulanan), 0, ',', '.') }}</td>
+        <td align='right'> Rp {{ rupiah(floatval($saldo_bulanan), 0, ',', '.') }}</td>
       </tr>
       <tr class="table-light">
-              <td align='right' colspan='3'>Saldo Bulanan</td>
-              <td align='right'> Rp {{ number_format(floatval($saldo_bulanan), 0, ',', '.')}}</td>
-            </tr>
+        <td align='right' colspan='3'>Saldo Bulanan</td>
+        <td align='right'> Rp {{ rupiah(floatval($saldo_bulanan), 0, ',', '.')}}</td>
+      </tr>
       <tr class="table-light">
         <td align='right' colspan='3'>Total Bulanan</td>
-        <td align='right'> Rp {{ number_format(floatval($total_bulanan), 0, ',', '.')}}</td>
+        <td align='right'> Rp {{ rupiah(floatval($total_bulanan), 0, ',', '.')}}</td>
       </tr>
       <tr class="table-light">
         <td align='right' colspan='4'></td>
       </tr>
-
+      <tr class="table-light">
+        <td align='right' colspan='4'></td>
+      </tr>
+      <tr class="table-light">
+        <td align='right' colspan='4'><b>Ringkasan Tahunan</b></td>
+      </tr>
+      <tr class="table-light">
+        <td align='right' colspan='3'>Total pemasukan:</td>
+        <td align='right'> Rp {{ rupiah(floatval($pemasukan), 0, ',', '.')}}</td>
+      </tr>
+      <tr class="table-light">
+        <td align='right' colspan='3'>Total pengeluaran:</td>
+        <td align='right'> Rp {{ rupiah(floatval($pengeluaran), 0, ',', '.') }}</td>
+      </tr>
+      <tr class="table-light">
+        <td align='right' colspan='3'>Total:</td>
+        <td align='right'> Rp {{ rupiah(floatval($total), 0, ',', '.') }}</td>
+      </tr>
     </tbody>
   </table>
+
+              <!--
   <div class="col text-right">
     <div class="row">
       <span align='right' class="col-12">
@@ -200,7 +238,8 @@
         Total: Rp {{ number_format(floatval($total), 0, ',', '.') }}
       </span>
     </div>
-  </div>
+  </div> -->
+
   </div>
 
 

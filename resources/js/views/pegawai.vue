@@ -132,9 +132,7 @@ export default {
       else if (this.modal.tipe === 'Tambah') this.tambah()
     },
     tambah(data) {
-      window.axios.post('/pegawai', data).then((res) => {
-        console.log(res)
-      })
+      window.axios.post('/pegawai', data).then((res) => {})
     },
     edit(data) {
       window.axios

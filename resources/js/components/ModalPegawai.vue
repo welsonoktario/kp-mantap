@@ -74,7 +74,6 @@ export default {
       window.axios
         .put(`/pegawai/${this.modal.selected.id}`, { status: this.aktif })
         .then((res) => {
-          console.log(res)
           if (res.status === 200) {
             this.loadData()
             this.toast('Pegawai', 'Berhasil menambah pegawai')

@@ -112,7 +112,6 @@ export default {
       let current_page = this.search == '' ? this.current_page : 1
       window.axios.get('/user').then((res) => {
         this.user = res.data
-        console.log(this.user)
         window.axios
           .get(`/aktivitas/${id}`, {
             params: {
