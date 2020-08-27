@@ -34,7 +34,7 @@ class TransaksiController extends Controller
                 ->orderBy(request()->sortby, request()->sortbydesc)
                 ->paginate($request->get('per_page'));
         } else {
-            $data = Transaksi::with(['dompet', 'kategori'])
+            $data = Transaksi::with(['dompet', 'kategori'])->orderBy('id','DESC')
                 //->orderBy(request()->sortby, request()->sortbydesc)
                 ->paginate($request->get('per_page'));
         }
