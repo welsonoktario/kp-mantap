@@ -176,15 +176,18 @@ export default {
       })
     },
     tambahTransaksi() {
-      const data = this.dataTransaksi
       const error = this.validate()
       if (error.length != 0) return alert(error)
-      this.selectedJenis === 0
-        ? (data.pemasukan = this.nominal)
-        : (data.pengeluaran = this.nominal)
+      if (this.selectedJenis === 0) {
+        this.dataTransaksi.pengeluaran = 0
+        this.dataTransaksi.pemasukan = this.nominal
+      } else {
+        this.dataTransaksi.pemasukan = 0
+        this.dataTransaksi.pengeluaran = this.nominal
+      }
       if (this.tipe === 'Edit') {
         window.axios
-          .patch(`/transaksi/${this.transaksi.id}`, data)
+          .patch(`/transaksi/${this.transaksi.id}`, this.dataTransaksi)
           .then((res) => {
             if (res.status === 200) {
               this.$parent.$parent.loadTransaksi()
@@ -205,40 +208,42 @@ export default {
       } else {
         if (this.isDetail) {
           if (this.isDetail == 'Kegiatan') {
-            window.axios.post('/transaksi', data).then((transaksi) => {
-              if (transaksi.status === 200) {
-                window.axios
-                  .post('/transaksi-kegiatan', {
-                    kegiatan_id: this.$route.params.id,
-                    transaksi_id: transaksi.data.data.id
-                  })
-                  .then((res) => {
-                    if (res.data.status === 'OK') {
-                      this.$parent.loadTransaksi()
-                      this.$refs.closeModal.click()
-                      return this.toast(
-                        'Transaksi',
-                        'Berhasil menambah transaksi ke aktivitas'
-                      )
-                    } else {
-                      return this.toast(
-                        'Transaksi',
-                        'Gagal menambah transaksi ke aktivitas',
-                        'danger'
-                      )
-                    }
-                  })
-              } else {
-                return this.toast(
-                  'Transaksi',
-                  'Gagal menambah transaksi',
-                  'danger'
-                )
-              }
-            })
+            window.axios
+              .post('/transaksi', this.dataTransaksi)
+              .then((transaksi) => {
+                if (transaksi.status === 200) {
+                  window.axios
+                    .post('/transaksi-kegiatan', {
+                      kegiatan_id: this.$route.params.id,
+                      transaksi_id: transaksi.data.data.id
+                    })
+                    .then((res) => {
+                      if (res.data.status === 'OK') {
+                        this.$parent.loadTransaksi()
+                        this.$refs.closeModal.click()
+                        return this.toast(
+                          'Transaksi',
+                          'Berhasil menambah transaksi ke aktivitas'
+                        )
+                      } else {
+                        return this.toast(
+                          'Transaksi',
+                          'Gagal menambah transaksi ke aktivitas',
+                          'danger'
+                        )
+                      }
+                    })
+                } else {
+                  return this.toast(
+                    'Transaksi',
+                    'Gagal menambah transaksi',
+                    'danger'
+                  )
+                }
+              })
           }
         } else {
-          window.axios.post('/transaksi', data).then((res) => {
+          window.axios.post('/transaksi', this.dataTransaksi).then((res) => {
             if (res.status === 200) {
               this.$parent.loadTransaksi()
               this.$refs.closeModal.click()
