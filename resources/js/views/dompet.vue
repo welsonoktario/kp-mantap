@@ -93,8 +93,8 @@ export default {
             }
           })
           .then((res) => {
+            this.dompet = []
             res.data.data.data.forEach((d) => {
-              this.dompet = []
               const saldo =
                 Number(d.total_pemasukan) - Number(d.total_pengeluaran)
               this.dompet.push({
