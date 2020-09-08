@@ -129,9 +129,9 @@ export default {
     dataTahun: [],
     dataBulan: [],
     dataJenis: [
-      { value: 'tahun', text: 'Tahun' },
+      { value: 'tahun', text: 'Tahun' }
       // { value: 'bulan', text: 'Bulan' },
-      { value: 'tanggal', text: 'Range Tanggal' }
+      // { value: 'tanggal', text: 'Tanggal' }
     ],
     laporan: {
       isHidden: true,

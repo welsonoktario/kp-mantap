@@ -16,7 +16,7 @@ class CreateTransaksisTable extends Migration
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal_transaksi');
-            $table->string('keterangan', 45);
+            $table->string('keterangan', 225);
             $table->decimal('pemasukan', 12, 2);
             $table->decimal('pengeluaran', 12, 2);
             $table->foreignId('dompet_id')->constrained('dompets')->cascadeOnDelete();

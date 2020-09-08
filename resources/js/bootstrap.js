@@ -11,8 +11,8 @@ try {
 }
 
 window.axios = axios.create({
-  baseURL: 'http://erlanggagatum.com/api'
-  //baseURL: 'http://localhost:8000/api'
+  // baseURL: 'http://erlanggagatum.com/api'
+  baseURL: 'http://localhost:8000/api'
 })
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
