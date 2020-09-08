@@ -129,12 +129,14 @@ export default {
     selectedJenis: 0,
     nominal: 0,
     dataTransaksi: {
+      terverifikasi: 1,
       dompet: 1,
       kategori: [],
       keterangan: '',
       pemasukan: 0,
       pengeluaran: 0,
-      tanggal_transaksi: ''
+      tanggal_transaksi: '',
+      link: '',
     },
     dataKegiatan: {},
     dataKategori: [],
@@ -176,6 +178,18 @@ export default {
       })
     },
     tambahTransaksi() {
+
+      // if (this.$parent.data.user.role === 'PAJ'){
+      //   this.dataTransaksi.terverifikasi = 0
+      //   alert(this.$parent.data.user.role)
+      // }
+      
+      window.axios.get('/user').then((res) => {
+        if (res.data.role === 'PAJ'){
+          this.dataTransaksi.terverifikasi = 0
+          alert("benar")
+        }
+      })
       const error = this.validate()
       if (error.length != 0) return alert(error)
       if (this.selectedJenis === 0) {

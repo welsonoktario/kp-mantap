@@ -77,6 +77,15 @@
           >
             Hapus
           </b-button>
+          <b-button
+            v-if="row.item.terverifikasi === 0"
+            size="sm"
+            class="mx-1"
+            variant="warning"
+            @click="verif(row.item, row.index, $event.target)"
+          >
+            Verifikasi
+          </b-button>
         </template>
       </b-table>
     </div>
@@ -207,6 +216,41 @@ export default {
         transaksi.pengeluaran
       this.$refs.modalEdit.$data.dataTransaksi.tanggal_transaksi =
         transaksi.tanggal_transaksi
+    },
+    // eslint-disable-next-line no-unused-vars
+    verif(item, index, button) {
+      const selected = this.items.findIndex((i) => i.id === item.id)
+      this.$bvModal
+        .msgBoxConfirm(`Apakah anda yakin ingin memverifikasi transaksi ini?`, {
+          title: 'Peringatan',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'warning',
+          okTitle: 'Verifikasi',
+          cancelTitle: 'Batal',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+        .then((value) => {
+          var transaksis = this.items[index]
+          console.log(transaksis)
+          transaksis.terverifikasi = 1
+          if (value) {
+            window.axios
+              .patch(`/transaksi/${this.items[index].id}`, transaksis)
+              .then((res) => {
+                if (res.status === 200) {
+                  this.toast('Transaksi', 'Transaksi berhasil diverifikasi')
+                } else {
+                  this.toast('Transaksi', 'Gagal memverifikasi transaksi', 'danger')
+                }
+              })
+          }
+        })
+        .catch((err) => {
+          alert(err)
+        })
     },
     // eslint-disable-next-line no-unused-vars
     hapus(item, index, button) {

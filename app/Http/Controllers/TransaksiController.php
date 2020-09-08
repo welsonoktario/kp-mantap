@@ -69,6 +69,7 @@ class TransaksiController extends Controller
     {
         $transaksi = new Transaksi();
         $transaksi->tanggal_transaksi = $request->get('tanggal_transaksi');
+        $transaksi->terverifikasi = $request->get('terverifikasi');
         $transaksi->keterangan = $request->get('keterangan');
         $transaksi->pemasukan = $request->get('pemasukan');
         $transaksi->pengeluaran = $request->get('pengeluaran');
@@ -143,11 +144,20 @@ class TransaksiController extends Controller
     public function update(Request $request, $id)
     {
         $transaksi = Transaksi::find($id);
+        if($request->get('terverifikasi')){
+            $transaksi->terverifikasi = $request->get('terverifikasi');
+            $transaksi->save();
+            return response()->json([
+                'status' => 'OK',
+                'data' => $transaksi
+            ]);
+        }
         $transaksi->tanggal_transaksi = $request->get('tanggal_transaksi');
         $transaksi->keterangan = $request->get('keterangan');
         $transaksi->pemasukan = $request->get('pemasukan');
         $transaksi->pengeluaran = $request->get('pengeluaran');
         $transaksi->keterangan = $request->get('keterangan');
+
 
         $dompet = Dompet::find($request->get('dompet'));
         $transaksi->dompet()->associate($dompet);
