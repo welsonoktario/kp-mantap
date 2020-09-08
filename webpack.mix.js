@@ -1,6 +1,5 @@
 // eslint-disable-next-line no-undef
-const mix = require('laravel-mix');
-require('laravel-mix-purgecss');
+const mix = require('laravel-mix')
 
 /*
  |--------------------------------------------------------------------------
@@ -13,23 +12,7 @@ require('laravel-mix-purgecss');
  |
  */
 
-mix.webpackConfig({
-  module: {
-    rules: [
-      {
-        enforce: 'pre',
-        exclude: /node_modules/,
-        loader: 'eslint-loader',
-        test: /\.(js|vue)?$/,
-      },
-    ],
-  },
-  output:{
-    chunkFilename:'js/vuejs_code_split/[name].js',
-  }
-});
-
 mix
   .js('resources/js/app.js', 'public/js')
   .sass('resources/sass/app.scss', 'public/css')
-  .copy('resources/assets/images', 'public/images');
+  .copy('resources/assets/images', 'public/images')

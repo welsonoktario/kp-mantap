@@ -78,8 +78,8 @@ export default {
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
     search: '',
-    sortBy: 'tanggal', //DEFAULT SORTNYA ADALAH CREATED_AT
-    sortByDesc: false //ASCEDING
+    sortBy: 'tanggal_transaksi', //DEFAULT SORTNYA ADALAH CREATED_AT
+    sortByDesc: true //ASCEDING
   }),
   computed: {
     transaksiColumn() {
@@ -95,11 +95,30 @@ export default {
   methods: {
     loadTransaksi() {
       const id = this.$route.params.id
+      let current_page = this.search == '' ? this.current_page : 1
       window.axios.get('/user').then((res) => {
         this.user = res.data
-        window.axios.get(`/dompet/${id}`).then((res) => {
-          this.dompet = res.data.data
-        })
+        window.axios
+          .get(`/dompet/${id}`, {
+            params: {
+              page: current_page,
+              per_page: this.per_page,
+              q: this.search,
+              sortby: this.sortBy,
+              sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
+            }
+          })
+          .then((res) => {
+            this.dompet = res.data.dompet
+            this.dompet.transaksi = res.data.data.data
+            this.meta = {
+              total: res.data.data.total,
+              current_page: res.data.data.current_page,
+              per_page: res.data.data.per_page,
+              from: res.data.data.from,
+              to: res.data.data.to
+            }
+          })
       })
     },
     handlePerPage(val) {

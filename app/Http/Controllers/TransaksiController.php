@@ -28,16 +28,20 @@ class TransaksiController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->get('q')) {
+        /* if ($request->q) {
             $data = Transaksi::with(['dompet', 'kategori'])
                 ->where('keterangan', 'like', '%'.$request->q.'%')
-                ->orderBy(request()->sortby, request()->sortbydesc)
-                ->paginate($request->get('per_page'));
+                ->orderBy($request->sortby, $request->sortbydesc)
+                ->paginate($request->per_page);
         } else {
-            $data = Transaksi::with(['dompet', 'kategori'])->orderBy('id','DESC')
-                //->orderBy(request()->sortby, request()->sortbydesc)
-                ->paginate($request->get('per_page'));
-        }
+            $data = Transaksi::with(['dompet', 'kategori'])
+                ->orderBy($request->sortby, $request->sortbydesc)
+                ->paginate($request->per_page);
+        } */
+        $data = Transaksi::with(['dompet', 'kategori'])
+                ->where('keterangan', 'like', '%'.$request->q.'%')
+                ->orderBy($request->sortby, $request->sortbydesc)
+                ->paginate($request->per_page);
 
         return response()->json([
             'status' => 'OK',

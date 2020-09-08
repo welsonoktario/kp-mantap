@@ -85,8 +85,8 @@ export default {
     current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
     search: '',
-    sortBy: 'id', //DEFAULT SORTNYA ADALAH CREATED_AT
-    sortByDesc: false //ASCEDING
+    sortBy: 'tanggal_transaksi', //DEFAULT SORTNYA ADALAH CREATED_AT
+    sortByDesc: true //ASCEDING
   }),
   mounted() {
     window.axios.get('/user').then((res) => {

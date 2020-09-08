@@ -86,15 +86,16 @@ class KegiatanController extends Controller
                 ->whereHas('kegiatan', function($q) use($id) {
                     return $q->where('id', '=', $id);
                 })
-                ->where('keterangan', 'like', '%'.$request->get('q').'%')
-                ->orderBy(request()->sortby, request()->sortbydesc)
-                ->paginate($request->get('per_page'));
+                ->where('keterangan', 'like', '%'.$request->q.'%')
+                ->orderBy($request->sortby, $request->sortbydesc)
+                ->paginate($request->per_page);
         } else {
             $data = Transaksi::with(['dompet', 'kategori'])
                 ->whereHas('kegiatan', function($q) use($id) {
                     return $q->where('id', '=', $id);
                 })
-                ->paginate($request->get('per_page'));
+                ->orderBy($request->sortby, $request->sortbydesc)
+                ->paginate($request->per_page);
         }
 
         return response()->json([

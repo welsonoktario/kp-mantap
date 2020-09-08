@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dompet;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DompetController extends Controller
 {
@@ -14,17 +16,25 @@ class DompetController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->q) {
-            $data = Dompet::where('nama', 'like', '%'.$request->q.'%')
-                ->withCount('transaksi')
-                ->withSum(['transaksi:pemasukan as total_pemasukan','transaksi:pengeluaran as total_pengeluaran'])
-                //->orderBy($request->sortby, $request->sortbydesc)
-                ->paginate($request->get('per_page'));
-        } else if ($request->per_page) {
+        if ($request->has('q')) {
+            if ($request->sortby == 'saldo') {
+                $data = Dompet::where('nama', 'like', '%'.$request->q.'%')
+                    ->withCount('transaksi')
+                    ->withSum(['transaksi:pemasukan as total_pemasukan','transaksi:pengeluaran as total_pengeluaran'])
+                    ->orderBy(DB::raw("`total_pemasukan` - `total_pengeluaran`"), $request->sortbydesc)
+                    ->paginate($request->get('per_page'));
+            } else {
+                $data = Dompet::where('nama', 'like', '%'.$request->q.'%')
+                    ->withCount('transaksi')
+                    ->withSum(['transaksi:pemasukan as total_pemasukan','transaksi:pengeluaran as total_pengeluaran'])
+                    ->orderBy($request->sortby, $request->sortbydesc)
+                    ->paginate($request->get('per_page'));
+            }
+        /* } else if ($request->per_page) {
             $data = Dompet::withCount('transaksi')
                 ->withSum(['transaksi:pemasukan as total_pemasukan','transaksi:pengeluaran as total_pengeluaran'])
                 ->orderBy($request->sortby, $request->sortbydesc)
-                ->paginate($request->per_page);
+                ->paginate($request->per_page); */
         } else {
             $data = Dompet::all();
         }
@@ -76,18 +86,20 @@ class DompetController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        if (!$dompet = Dompet::where('id', $id)->with(['transaksi', 'transaksi.kategori', 'transaksi.dompet'])->first()) {
-            return response()->json([
-                'status' => 'GAGAL',
-                'pesan' => 'Dompet tidak ditemukan'
-            ], 404);
-        }
+        $data = Transaksi::with(['dompet', 'kategori'])
+            ->whereHas('dompet', function($q) use($id) {
+                return $q->where('id', '=', $id);
+            })
+            ->where('keterangan', 'like', '%'.$request->q.'%')
+            ->orderBy($request->sortby, $request->sortbydesc)
+            ->paginate($request->per_page);
 
         return response()->json([
             'status' => 'OK',
-            'data' => $dompet,
+            'data' => $data,
+            'dompet' => Dompet::where('id', $id)->first()
         ]);
     }
 

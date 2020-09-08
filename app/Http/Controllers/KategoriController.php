@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kategori;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
 
 class KategoriController extends Controller
@@ -70,18 +71,27 @@ class KategoriController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        if (!$kategori = Kategori::where('id', $id)->with(['transaksi', 'transaksi.kategori', 'transaksi.dompet'])->first()) {
+        /* if (!$kategori = Kategori::where('id', $id)->with(['transaksi', 'transaksi.kategori', 'transaksi.dompet'])->first()) {
             return response()->json([
                 'status' => 'GAGAL',
                 'pesan' => 'Kategori tidak ditemukan'
             ], 404);
-        }
+        }*/
+
+        $data = Transaksi::with(['dompet', 'kategori'])
+            ->whereHas('kategori', function($q) use($id) {
+                return $q->where('id', '=', $id);
+            })
+            ->where('keterangan', 'like', '%'.$request->q.'%')
+            ->orderBy($request->sortby, $request->sortbydesc)
+            ->paginate($request->per_page);
 
         return response()->json([
             'status' => 'OK',
-            'data' => $kategori,
+            'data' => $data,
+            'kategori' => Kategori::where('id', $id)->first()
         ]);
     }
 

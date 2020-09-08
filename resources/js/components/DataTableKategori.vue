@@ -67,7 +67,11 @@
           </b-button>
 
           <b-button
-            v-if="items && items[row.index].transaksi_count === 0"
+            v-if="
+              items &&
+              items[row.index].transaksi_count === 0 &&
+              $parent.user.role === 'Bendahara'
+            "
             data-toggle="modal"
             data-target="#modalDel"
             size="sm"
