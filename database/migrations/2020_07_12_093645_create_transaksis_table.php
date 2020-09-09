@@ -19,6 +19,7 @@ class CreateTransaksisTable extends Migration
             $table->string('keterangan', 45);
             $table->decimal('pemasukan', 12, 2);
             $table->decimal('pengeluaran', 12, 2);
+            $table->boolean('terverifikasi')->default(1);
             $table->foreignId('dompet_id')->constrained('dompets')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();

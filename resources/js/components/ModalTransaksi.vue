@@ -129,12 +129,14 @@ export default {
     selectedJenis: 0,
     nominal: 0,
     dataTransaksi: {
+      terverifikasi: 1,
       dompet: 1,
       kategori: [],
       keterangan: '',
       pemasukan: 0,
       pengeluaran: 0,
-      tanggal_transaksi: ''
+      tanggal_transaksi: '',
+      link: ''
     },
     dataKegiatan: {},
     dataKategori: [],

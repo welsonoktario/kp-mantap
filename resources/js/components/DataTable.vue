@@ -54,9 +54,21 @@
         <template v-slot:cell(pengeluaran)="data">{{
           data.value | rupiah
         }}</template>
+        <template v-slot:cell(terverifikasi)="data">
+          <b-badge
+            v-if="data.value === 1"
+            class="text-center"
+            variant="primary"
+          >
+            Ya
+          </b-badge>
+          <b-badge v-else class="text-center" variant="warning">
+            Tidak
+          </b-badge>
+        </template>
 
         <template
-          v-if="$parent.user.role === 'Bendahara'"
+          v-if="$parent.user.role !== 'Kajur'"
           v-slot:cell(actions)="row"
         >
           <b-button
@@ -76,6 +88,17 @@
             @click="hapus(row.item, row.index, $event.target)"
           >
             Hapus
+          </b-button>
+          <b-button
+            v-if="
+              row.item.terverifikasi === 0 && $parent.user.role === 'Bendahara'
+            "
+            size="sm"
+            class="mx-1"
+            variant="primary"
+            @click="verif(row.item, row.index, $event.target)"
+          >
+            Verifikasi
           </b-button>
         </template>
       </b-table>
@@ -239,6 +262,44 @@ export default {
         })
         .catch((err) => {
           alert(err)
+        })
+    },
+    verif(item, index, button) {
+      this.$bvModal
+        .msgBoxConfirm(`Apakah anda yakin ingin memverifikasi transaksi ini?`, {
+          title: 'Peringatan',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'warning',
+          okTitle: 'Verifikasi',
+          cancelTitle: 'Batal',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+        .then((value) => {
+          if (value) {
+            this.items[index].terverifikasi = 1
+            window.axios
+              .patch(
+                `/transaksi-verif/${this.items[index].id}`,
+                this.items[index]
+              )
+              .then((res) => {
+                if (res.status === 200) {
+                  this.toast('Transaksi', 'Transaksi berhasil diverifikasi')
+                } else {
+                  this.toast(
+                    'Transaksi',
+                    'Gagal memverifikasi transaksi',
+                    'danger'
+                  )
+                }
+              })
+          }
+        })
+        .catch((err) => {
+          this.toast('Transaksi', err, 'danger')
         })
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN

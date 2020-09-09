@@ -8,12 +8,15 @@ use App\Models\Kategori;
 use App\Models\Kegiatan;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class Bulan {
+class Bulan
+{
     public $value;
     public $text;
 
-    public function __construct($value, $text) {
+    public function __construct($value, $text)
+    {
         $this->value = $value;
         $this->text = $text;
     }
@@ -28,20 +31,22 @@ class TransaksiController extends Controller
      */
     public function index(Request $request)
     {
-        /* if ($request->q) {
+        if (Auth::user()->role == 'PAJ') {
             $data = Transaksi::with(['dompet', 'kategori'])
-                ->where('keterangan', 'like', '%'.$request->q.'%')
+                ->where(
+                    [
+                        ['keterangan', 'like', '%' . $request->q . '%'],
+                        ['user_id', '=', Auth::user()->id]
+                    ]
+                )
                 ->orderBy($request->sortby, $request->sortbydesc)
                 ->paginate($request->per_page);
         } else {
             $data = Transaksi::with(['dompet', 'kategori'])
+                ->where('keterangan', 'like', '%' . $request->q . '%')
                 ->orderBy($request->sortby, $request->sortbydesc)
                 ->paginate($request->per_page);
-        } */
-        $data = Transaksi::with(['dompet', 'kategori'])
-                ->where('keterangan', 'like', '%'.$request->q.'%')
-                ->orderBy($request->sortby, $request->sortbydesc)
-                ->paginate($request->per_page);
+        }
 
         return response()->json([
             'status' => 'OK',
@@ -72,7 +77,8 @@ class TransaksiController extends Controller
         $transaksi->keterangan = $request->get('keterangan');
         $transaksi->pemasukan = $request->get('pemasukan');
         $transaksi->pengeluaran = $request->get('pengeluaran');
-        $transaksi->user_id = 1;
+        $transaksi->terverifikasi = Auth::user()->role == 'Bendahara' ? 1 : 0;
+        $transaksi->user_id = Auth::user()->id;
 
         $dompet = Dompet::find($request->get('dompet'));
         $transaksi->dompet()->associate($dompet);
@@ -86,26 +92,26 @@ class TransaksiController extends Controller
 
         $kategoris = $request->get('kategori');
 
-            foreach ($kategoris as $k) {
-                $kategori = Kategori::findOrFail($k['id']);
-                $transaksi->kategori()->sync($kategori, false);
+        foreach ($kategoris as $k) {
+            $kategori = Kategori::findOrFail($k['id']);
+            $transaksi->kategori()->sync($kategori, false);
+        }
+
+        if ($request->get('kegiatan')) {
+            if (!$kegiatan = Kegiatan::find($request->get('kegiatan'))) {
+                return response()->json([
+                    'status' => 'GAGAL',
+                    'pesan' => 'Kegiatan tidak ditemukan'
+                ], 500);
             }
 
-            if ($request->get('kegiatan')) {
-                if (!$kegiatan = Kegiatan::find($request->get('kegiatan'))) {
-                    return response()->json([
-                        'status' => 'GAGAL',
-                        'pesan' => 'Kegiatan tidak ditemukan'
-                    ], 500);
-                }
+            $transaksi->kegiatan()->sync($kegiatan, false);
+        }
 
-                $transaksi->kegiatan()->sync($kegiatan, false);
-            }
-
-            return response()->json([
-                'status' => 'OK',
-                'data' => $transaksi
-            ]);
+        return response()->json([
+            'status' => 'OK',
+            'data' => $transaksi
+        ]);
     }
 
     /**
@@ -199,7 +205,14 @@ class TransaksiController extends Controller
         ]);
     }
 
-    public function addAktivitas(Request $request) {
+    public function verifikasi(Request $request, $id) {
+        $transaksi = Transaksi::where('id', $request->id)->first();
+        $transaksi->terverifikasi = $request->terverifikasi;
+        $transaksi->save();
+    }
+
+    public function addAktivitas(Request $request)
+    {
         $kegiatan = Kegiatan::where('id', $request->get('kegiatan_id'))->first();
         $transaksi = Transaksi::where('id', $request->get('transaksi_id'))->first();
 
@@ -216,13 +229,14 @@ class TransaksiController extends Controller
         ]);
     }
 
-    public function addAktivitasPilih(Request $request) {
+    public function addAktivitasPilih(Request $request)
+    {
         $kegiatan = Kegiatan::where('id', $request->kegiatan)->first();
         $transaksis = $request->transaksi;
 
         try {
             $kegiatan->transaksi()->sync($transaksis, false);
-        } catch(Throwable $err) {
+        } catch (Throwable $err) {
             return response()->json([
                 'status' => 'ERR',
                 'msg' => $err
@@ -254,7 +268,8 @@ class TransaksiController extends Controller
         ]);
     }
 
-    public function all(Request $request) {
+    public function all(Request $request)
+    {
         $transaksi = Transaksi::orderBy('id', 'DESC')->get();
         $kegiatan_transaksi = Kegiatan::with('transaksi')->where('id', $request->id)->first();
 

@@ -6,7 +6,7 @@
         <div class="col-10">
           <h4 class="ml-2 mt-2">List Transaksi</h4>
         </div>
-        <div v-if="user.role === 'Bendahara'" class="col-2 pb-4">
+        <div v-if="user.role !== 'Kajur'" class="col-2 pb-4">
           <button
             class="btn btn-block btn-primary"
             data-toggle="modal"
@@ -27,7 +27,7 @@
       />
     </div>
     <CModal
-      v-if="user.role === 'Bendahara'"
+      v-if="user.role !== 'Kajur'"
       :id-modal="'modalTambah'"
       :tipe="'Tambah'"
     />
@@ -58,11 +58,18 @@ export default {
       },
       {
         key: 'pemasukan',
+        class: 'text-right',
         sortable: true
       },
       {
         key: 'pengeluaran',
+        class: 'text-right',
         sortable: true
+      },
+      {
+        key: 'terverifikasi',
+        class: 'text-center',
+        sortable: false
       },
       {
         key: 'kategori',
@@ -72,6 +79,7 @@ export default {
       {
         key: 'dompet.nama',
         label: 'Dompet',
+        class: 'text-center',
         sortable: true
       },
       {

@@ -110,6 +110,7 @@ export default {
           }
         })
         .then((res) => {
+          this.pegawais = []
           const data = res.data.data
           this.pegawais = data.data
           this.meta = {
@@ -131,8 +132,24 @@ export default {
       if (this.modal.tipe === 'Edit') this.edit()
       else if (this.modal.tipe === 'Tambah') this.tambah()
     },
+    toast(title, body, variant = 'success') {
+      this.$bvToast.toast(body, {
+        title: title,
+        variant,
+        autoHideDelay: 2500
+      })
+    },
     tambah(data) {
-      window.axios.post('/pegawai', data).then((res) => {})
+      window.axios.post('/pegawai', data).then((res) => {
+        if (res.status === 200) {
+          this.loadData
+          this.$bvModal.hide('modal-pegawai')
+          this.toast('Pegawai', 'Sukses menambah pegawai')
+        } else {
+          this.toast('Pegawai', 'Gagal menambah pegawai', 'danger')
+          this.$bvModal.hide('modal-pegawai')
+        }
+      })
     },
     edit(data) {
       window.axios
@@ -143,6 +160,10 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             this.loadData()
+            this.$bvModal.hide('modal-pegawai')
+            this.toast('Pegawai', 'Sukses mengubah pegawai')
+          } else {
+            this.toast('Pegawai', 'Gagal mengubah pegawai', 'danger')
             this.$bvModal.hide('modal-pegawai')
           }
         })

@@ -52,7 +52,7 @@ class PegawaiController extends Controller
         $user->name = $request->nama;
         $user->email = $request->email;
         $user->role = $request->role;
-        $user->aktif = $request->aktif;
+        $user->status = $request->status ? false : true;
         $user->password = Hash::make($request->password);
         $user->save();
     }
@@ -91,7 +91,7 @@ class PegawaiController extends Controller
         $pegawai = User::where('id', $id)->first();
 
         try {
-            $pegawai->aktif = $request->aktif;
+            $pegawai->status = $request->status;
             $pegawai->role = $request->role;
             $pegawai->save();
         } catch(Throwable $err) {

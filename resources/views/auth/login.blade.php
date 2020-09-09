@@ -12,6 +12,11 @@
                   <form method="POST" action="{{ route('login') }}">
                       @csrf
 
+                    @if(session('nonaktif'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ session('nonaktif') }}</strong>
+                    </span>
+                    @endif
                       <div class="form-group col">
                           <label for="email" class="ml-1">{{ __('E-Mail Address') }}</label>
 

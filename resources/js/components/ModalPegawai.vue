@@ -40,7 +40,7 @@ export default {
     }
   },
   data: () => ({
-    aktif: 0,
+    status: 0,
     options: [
       { text: 'NonAktif', value: 0 },
       { text: 'Aktif', value: 1 }
@@ -49,7 +49,7 @@ export default {
   }),
   mounted() {
     if (this.tipe === 'Edit') {
-      this.aktif = this.selected.aktif
+      this.status = this.selected.status
     }
   },
   methods: {
@@ -72,7 +72,7 @@ export default {
     },
     edit() {
       window.axios
-        .put(`/pegawai/${this.modal.selected.id}`, { status: this.aktif })
+        .put(`/pegawai/${this.modal.selected.id}`, { status: this.status })
         .then((res) => {
           if (res.status === 200) {
             this.loadData()

@@ -14,14 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
+
+Route::redirect('/', '/login');
+Route::redirect('/register', '/login', 302);
 
 Route::get('admin', function () {
     if (Auth::check()) {
+        if (Auth::user()->status == 0) {
+            Auth::logout();
+            return back()->withErrors(['nonaktif', 'Akun belum diaktivasi']);
+        }
         return view('admin.index');
     }
     return redirect('/login');
@@ -30,14 +33,15 @@ Route::get('admin', function () {
 Route::get('/laporan', 'LaporanController@load');
 Route::get('/laporan/pdf', 'LaporanController@pdf');
 
-Route::get('/users', 'UsersController@index');
-Route::post('/users', 'UsersController@create');
+/* Route::get('/users', 'UsersController@index');
+Route::post('/users', 'UsersController@create'); */
 
 Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
     Route::get('user', function() {
         return Auth::user();
     });
 
+    Route::patch('transaksi-verif/{id}', 'TransaksiController@verifikasi');
     Route::get('transaksi-all', 'TransaksiController@all');
     Route::post('transaksi-kegiatan', 'TransaksiController@addAktivitas');
     Route::post('transaksi-pilih', 'TransaksiController@addAktivitasPilih');

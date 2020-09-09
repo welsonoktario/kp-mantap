@@ -18,7 +18,7 @@
       </div>
       <DataTable
         v-if="kategori.transaksi"
-        :fields="transaksiColumn"
+        :fields="columns"
         :items="kategori.transaksi"
         :meta="meta"
         :is-detail="'Kategories'"
@@ -63,6 +63,9 @@ export default {
         sortable: true
       },
       {
+        key: 'terverifikasi'
+      },
+      {
         key: 'actions',
         label: 'Aksi',
         sortable: false
@@ -76,45 +79,40 @@ export default {
     sortBy: 'tanggal_transaksi', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: true //ASCEDING
   }),
-  computed: {
-    transaksiColumn() {
-      var col = this.columns
-      if (this.user.role === 'Bendahara') return this.columns
-      col.pop()
-      return col
-    }
-  },
   mounted() {
     this.loadTransaksi()
   },
   methods: {
+    loadUser() {
+      window.axios.get('/user').then((res) => {
+        this.user = res.data
+        if (this.user.role !== 'Bendahara') this.columns.pop()
+      })
+    },
     loadTransaksi() {
       const id = this.$route.params.id
       let current_page = this.search == '' ? this.current_page : 1
-      window.axios.get('/user').then((res) => {
-        this.user = res.data
-        window.axios
-          .get(`/kategori/${id}`, {
-            params: {
-              page: current_page,
-              per_page: this.per_page,
-              q: this.search,
-              sortby: this.sortBy,
-              sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
-            }
-          })
-          .then((res) => {
-            this.kategori = res.data.data
-            this.kategori.transaksi = res.data.data.data
-            this.meta = {
-              total: res.data.data.total,
-              current_page: res.data.data.current_page,
-              per_page: res.data.data.per_page,
-              from: res.data.data.from,
-              to: res.data.data.to
-            }
-          })
-      })
+      window.axios
+        .get(`/kategori/${id}`, {
+          params: {
+            page: current_page,
+            per_page: this.per_page,
+            q: this.search,
+            sortby: this.sortBy,
+            sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
+          }
+        })
+        .then((res) => {
+          this.kategori = res.data.data
+          this.kategori.transaksi = res.data.data.data
+          this.meta = {
+            total: res.data.data.total,
+            current_page: res.data.data.current_page,
+            per_page: res.data.data.per_page,
+            from: res.data.data.from,
+            to: res.data.data.to
+          }
+        })
     },
     handlePerPage(val) {
       this.per_page = val
@@ -122,17 +120,19 @@ export default {
     //JIKA ADA EMIT PAGINATION YANG DIKIRIM, MAKA FUNGSI INI AKAN DIEKSEKUSI
     handlePagination(val) {
       this.current_page = val //SET CURRENT PAGE YANG AKTIF
-      this.loadPostsData()
+      this.loadTransaksi()
     },
     //JIKA ADA DATA PENCARIAN
     handleSearch(val) {
       this.search = val
+      this.loadTransaksi()
     },
     //JIKA ADA EMIT SORT
     handleSort(val) {
       //MAKA SET SORT-NYA
       this.sortBy = val.sortBy
       this.sortByDesc = val.sortDesc
+      this.loadTransaksi()
     }
   }
 }
