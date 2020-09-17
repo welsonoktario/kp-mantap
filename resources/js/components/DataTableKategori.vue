@@ -43,7 +43,18 @@
         show-empty
         no-local-sorting
       >
-        <!-- eslint-disable-next-line vue/no-unused-vars -->
+        <template v-slot:cell(total_pemasukan)="data">
+          {{ data.value | rupiah }}
+        </template>
+
+        <template v-slot:cell(total_pengeluaran)="data">
+          {{ data.value | rupiah }}
+        </template>
+
+        <template v-slot:cell(selisih)="data">
+          {{ data.value | rupiah }}
+        </template>
+
         <template v-slot:cell(actions)="row">
           <b-button
             size="sm"

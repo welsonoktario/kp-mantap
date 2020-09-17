@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kategori;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KategoriController extends Controller
 {
@@ -15,13 +16,20 @@ class KategoriController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->has('q')) {
-            $data = Kategori::where('nama', 'like', '%'.$request->q.'%')
+        if ($request->sortby == 'selisih') {
+            $data = Kategori::where('nama', 'like', '%' . $request->q . '%')
                 ->withCount('transaksi')
-                ->orderBy($request->sortby, $request->sortbydesc)
+                ->withSum('transaksi:pemasukan as total_pemasukan')
+                ->withSum('transaksi:pengeluaran as total_pengeluaran')
+                ->orderBy(DB::raw("`total_pemasukan` - `total_pengeluaran`"), $request->sortbydesc)
                 ->paginate($request->per_page);
         } else {
-            $data = Kategori::withCount('transaksi')->get();
+            $data = Kategori::where('nama', 'like', '%' . $request->q . '%')
+                ->withCount('transaksi')
+                ->withSum('transaksi:pemasukan as total_pemasukan')
+                ->withSum('transaksi:pengeluaran as total_pengeluaran')
+                ->orderBy($request->sortby, $request->sortbydesc)
+                ->paginate($request->per_page);
         }
 
         return response()->json([
@@ -73,18 +81,11 @@ class KategoriController extends Controller
      */
     public function show(Request $request, $id)
     {
-        /* if (!$kategori = Kategori::where('id', $id)->with(['transaksi', 'transaksi.kategori', 'transaksi.dompet'])->first()) {
-            return response()->json([
-                'status' => 'GAGAL',
-                'pesan' => 'Kategori tidak ditemukan'
-            ], 404);
-        }*/
-
-        $data = Transaksi::with(['dompet', 'kategori'])
-            ->whereHas('kategori', function($q) use($id) {
+        $data = Transaksi::with(['dompet', 'kategori', 'pics'])
+            ->whereHas('kategori', function ($q) use ($id) {
                 return $q->where('id', '=', $id);
             })
-            ->where('keterangan', 'like', '%'.$request->q.'%')
+            ->where('keterangan', 'like', '%' . $request->q . '%')
             ->orderBy($request->sortby, $request->sortbydesc)
             ->paginate($request->per_page);
 
@@ -148,6 +149,13 @@ class KategoriController extends Controller
 
         return response()->json([
             'status' => 'OK'
+        ]);
+    }
+
+    public function all() {
+        return response()->json([
+            'status' => 'OK',
+            'data' => Kategori::all()
         ]);
     }
 }

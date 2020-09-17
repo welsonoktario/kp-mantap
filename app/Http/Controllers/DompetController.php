@@ -88,7 +88,7 @@ class DompetController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $data = Transaksi::with(['dompet', 'kategori'])
+        $data = Transaksi::with(['dompet', 'kategori', 'pics'])
             ->whereHas('dompet', function($q) use($id) {
                 return $q->where('id', '=', $id);
             })

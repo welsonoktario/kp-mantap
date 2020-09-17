@@ -107,6 +107,13 @@ export default {
         autoHideDelay: 2500
       })
     },
+    reset() {
+      this.dataKategori = {
+        id: 0,
+        nama: '',
+        keterangan: ''
+      }
+    },
     save() {
       const error = this.validate()
       if (error.length != 0) return alert(error)
@@ -115,6 +122,7 @@ export default {
           if (res.status === 200) {
             this.$parent.loadData()
             this.$refs.closeModal.click()
+            this.reset()
             return this.toast('Kategori', 'Berhasil menambah kategori')
           } else {
             return this.toast('Kategori', 'Gagal menambah kategori', 'danger')
@@ -127,6 +135,7 @@ export default {
             if (res.status === 200) {
               this.$parent.$parent.loadData()
               this.$refs.closeModal.click()
+              this.reset()
               return this.toast('Kategori', 'Berhasil mengubah kategori')
             } else {
               return this.toast('Kategori', 'Gagal mengubah kategori', 'danger')

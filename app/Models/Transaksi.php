@@ -30,4 +30,9 @@ class Transaksi extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
+    public function pics()
+    {
+        return $this->belongsToMany('App\Models\User', 'user_transaksis');
+    }
 }

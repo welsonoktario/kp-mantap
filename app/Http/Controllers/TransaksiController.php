@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Throwable;
+use App\Models\User;
 use App\Models\Dompet;
 use App\Models\Kategori;
 use App\Models\Kegiatan;
@@ -32,7 +33,7 @@ class TransaksiController extends Controller
     public function index(Request $request)
     {
         if (Auth::user()->role == 'PAJ') {
-            $data = Transaksi::with(['dompet', 'kategori'])
+            $data = Transaksi::with(['dompet', 'kategori', 'pics'])
                 ->where(
                     [
                         ['keterangan', 'like', '%' . $request->q . '%'],
@@ -42,7 +43,7 @@ class TransaksiController extends Controller
                 ->orderBy($request->sortby, $request->sortbydesc)
                 ->paginate($request->per_page);
         } else {
-            $data = Transaksi::with(['dompet', 'kategori'])
+            $data = Transaksi::with(['dompet', 'kategori', 'pics'])
                 ->where('keterangan', 'like', '%' . $request->q . '%')
                 ->orderBy($request->sortby, $request->sortbydesc)
                 ->paginate($request->per_page);
@@ -72,6 +73,8 @@ class TransaksiController extends Controller
      */
     public function store(Request $request)
     {
+        $kategoris = [];
+        $pics = [];
         $transaksi = new Transaksi();
         $transaksi->tanggal_transaksi = $request->get('tanggal_transaksi');
         $transaksi->keterangan = $request->get('keterangan');
@@ -79,6 +82,9 @@ class TransaksiController extends Controller
         $transaksi->pengeluaran = $request->get('pengeluaran');
         $transaksi->terverifikasi = Auth::user()->role == 'Bendahara' ? 1 : 0;
         $transaksi->user_id = Auth::user()->id;
+        foreach ($request->kategori as $kategori) {
+            array_push($kategoris, $kategori['id']);
+        }
 
         $dompet = Dompet::find($request->get('dompet'));
         $transaksi->dompet()->associate($dompet);
@@ -89,12 +95,13 @@ class TransaksiController extends Controller
                 'pesan' => 'Gagal menambah transaksi'
             ], 500);
         }
+        $transaksi->kategori()->sync($kategoris, false);
 
-        $kategoris = $request->get('kategori');
-
-        foreach ($kategoris as $k) {
-            $kategori = Kategori::findOrFail($k['id']);
-            $transaksi->kategori()->sync($kategori, false);
+        if ($request->pics) {
+            foreach ($request->pics as $pic) {
+                array_push($pics, $pic['id']);
+            }
+            $transaksi->pics()->sync($pics, false);
         }
 
         if ($request->get('kegiatan')) {
@@ -160,6 +167,10 @@ class TransaksiController extends Controller
 
         $kategori = Kategori::find($request->get('kategori'));
         $transaksi->kategori()->sync($kategori, false);
+        foreach ($request->pics as $pic) {
+            $pics = User::find($pic['id']);
+            $transaksi->pics()->sync($pics, false);
+        }
 
         if ($request->get('kegiatan')) {
             if (!$kegiatan = Kegiatan::find($request->get('kegiatan'))) {
@@ -270,7 +281,7 @@ class TransaksiController extends Controller
 
     public function all(Request $request)
     {
-        $transaksi = Transaksi::orderBy('id', 'DESC')->get();
+        $transaksi = Transaksi::orderBy('tanggal_transaksi', 'DESC')->get();
         $kegiatan_transaksi = Kegiatan::with('transaksi')->where('id', $request->id)->first();
 
         return response()->json([

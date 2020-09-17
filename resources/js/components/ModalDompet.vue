@@ -91,6 +91,13 @@ export default {
     onContext(ctx) {
       this.context = ctx
     },
+    reset() {
+      this.dataDompet = {
+        id: 0,
+        nama: '',
+        keterangan: ''
+      }
+    },
     validate() {
       const error = []
       if (!this.dataDompet.nama) error.push('Nama tidak boleh kosong')
@@ -113,6 +120,7 @@ export default {
           if (res.status === 200) {
             this.$parent.loadData()
             this.$refs.closeModal.click()
+            this.reset()
             return this.toast('Dompet', 'Berhasil menambah dompet')
           } else {
             return this.toast('Gagal menambah dompet', 'danger')
@@ -125,6 +133,7 @@ export default {
             if (res.status === 200) {
               this.$parent.$parent.loadData()
               this.$refs.closeModal.click()
+              this.reset()
               return this.toast('Dompet', 'Berhasil mengubah dompet')
             } else {
               return this.toast('Dompet', 'Gagal mengubah dompet', 'danger')

@@ -101,7 +101,7 @@ export default {
     per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
     search: '',
     sortBy: 'tanggal_transaksi', //DEFAULT SORTNYA ADALAH CREATED_AT
-    sortByDesc: true //ASCEDING
+    sortByDesc: false //ASCEDING
   }),
   mounted() {
     this.loadTransaksi()
