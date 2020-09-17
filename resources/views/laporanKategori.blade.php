@@ -10,18 +10,14 @@
   @elseif(Request::get('jenis') == 'bulan')
   <title>Laporan Bulan {{ date('F', mktime(0, 0, 0, $bulan, 10)) }}</title>
   @else
-  <title>Laporan {{ $mulai }}_{{ $akhir }}</title>
+  <title><b>Laporan {{ $mulai }} - {{ $akhir }}</b></title>
   @endif
-
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
   </script>
   <style>
-    /* tr {
-      line-height: 14px;
-    } */
     tr .keterangan {
       height: 10px;
     }
@@ -33,20 +29,25 @@
   <H4 align='center'>JURUSAN TEKNIK INFORMATIKA</H4>
   <H4 align='center'>UNIVERSITAS SURABAYA</H4>
   @if (Request::get('jenis') == 'tahun')
-  <p><b>Tahun: {{ $tahun }}</p></b>
+  <p><b>Tanggal: {{ $tahun }}</p></b>
   @elseif(Request::get('jenis') == 'bulan')
   <p><b>Laporan Bulan {{ date('F', mktime(0, 0, 0, $bulan, 10)) }}</b></p>
   @else
-  <p><b>Laporan: {{ $mulai }} - {{ $akhir }} </b></p>
+  <p><b>Tanggal: {{ $mulai }} - {{ $akhir }}</b></p>
   @endif
+  <P><b>Kategori: 
+    @foreach ($kategori as $k)
+      {{$k}};
+    @endforeach
+  </b></P>
   <p> <b> Dompet: {{$dompet}} </b> </p>
   <table class="table table-sm table-striped">
     <thead class="thead-dark">
       <tr>
         <th align="center">Tanggal Transaksi</th>
         <th>Keterangan</th>
-        <th align="right">Pemasukan (Rupiah)</th>
-        <th align="right">Pengeluaran (Rupiah)</th>
+        <th align="right">Pemasukan (Rp)</th>
+        <th align="right">Pengeluaran (Rp)</th>
       </tr>
     </thead>
     <tbody>
@@ -92,32 +93,17 @@
         $bulan = 0;
         $pemasukan_bulanan = 0.0;
         $pengeluaran_bulanan = 0.0;
-        $saldo_bulanan = doubleval($tahun_sebelum[0]->transaksi_sebelumnya);
-        $saldo_sebelumnya = doubleval($tahun_sebelum[0]->transaksi_sebelumnya);
-        $total_bulanan = $saldo_sebelumnya;
-        $data_json = json_decode($data, true);
-        $len = count($data_json);
-        $data_rvrs = array_reverse(json_decode($data, true));
+        $total_pemasukan = 0.0;
+        $total_pengeluaran = 0.0;
+        $saldo_bulanan = 0.0;
+        // $data_json = json_decode($data, true);
+        // $len = count($data_json);
+        $total = 0.0;
+        // $data_rvrs = array_reverse(json_decode($data, true));
       ?>
       @foreach ($data as $transaksi)
         @if(intval(date("m", strtotime($transaksi->tanggal_transaksi))) != $bulan)
           @if($counter != 0)
-            <tr class="table-light">
-              <td align='right' colspan='3'>Saldo Sebelumnya</td>
-              <!-- <td align='right'> Rp {{ number_format(floatval($saldo_sebelumnya), 0, ',', '.')}}</td> -->
-              <td align='right'> Rp
-              <?php
-              if($counter_bulan == 0){
-                // echo $tahun_sebelum[0]->transaksi_sebelumnya;
-                $counter_bulan++;
-                $sblm = $tahun_sebelum[0]->transaksi_sebelumnya;
-                // echo(gettype($sblm));
-                echo rupiah(doubleval($sblm), 0, ',', '.');
-              } else {
-                echo rupiah(doubleval($saldo_sebelumnya), 0, ',', '.');
-              }
-              ?></td>
-            </tr>
             <tr class="table-light keterangan">
               <td align='right' colspan='3'>Pemasukan Bulanan</td>
               <td align='right'>Rp {{ rupiah(floatval($pemasukan_bulanan), 0, ',', '.')}}</td>
@@ -131,31 +117,30 @@
               <td align='right'> Rp {{ rupiah(floatval($saldo_bulanan), 0, ',', '.')}}</td>
             </tr>
             <tr class="table-light keterangan">
-              <td align='right' colspan='3'>Total Bulanan</td>
-              <td align='right'> Rp {{ rupiah(floatval($total_bulanan), 0, ',', '.')}}</td>
-            </tr>
-            <tr class="table-light keterangan">
               <td align='right' colspan='4'><p></p></td>
             </tr>
           @endif
           <?php
             $bulan = intval(date("m", strtotime($transaksi->tanggal_transaksi)));
-            $saldo_sebelumnya = $total_bulanan;
             $pemasukan_bulanan = 0;
             $pengeluaran_bulanan = 0;
+            
+            // $total += $saldo_bulanan;
             $saldo_bulanan = 0;
-            $total_bulanan=0;
           ?>
           <tr>
-              <td colspan='4' class="bg-info text-white p-1"  align='center'><b>Bulan {{konversi_bulan(date("n", strtotime($transaksi->tanggal_transaksi)))}}</b></td>
+              <td colspan='4' class="bg-info text-white p-1"  align='center'><b>Bulan {{konversi_bulan(date("n", strtotime($transaksi->tanggal_transaksi)))}} {{date("Y", strtotime($transaksi->tanggal_transaksi))}}</b></td>
           </tr>
           <?php $counter++; ?>
         @endif
         <?php
             $pemasukan_bulanan += doubleval($transaksi->pemasukan);
+            $total_pemasukan += doubleval($transaksi->pemasukan);
             $pengeluaran_bulanan += doubleval($transaksi->pengeluaran);
+            $total_pengeluaran += doubleval($transaksi->pengeluaran);
+            $total = $total_pemasukan - $total_pengeluaran;
             $saldo_bulanan = $pemasukan_bulanan - $pengeluaran_bulanan;
-            $total_bulanan = $saldo_bulanan + $saldo_sebelumnya;
+            // echo ($total);
           ?>
         <tr>
           <th scope="row">{{ $transaksi->tanggal_transaksi }}</th>
@@ -174,10 +159,6 @@
       @endforeach
 
       <tr class="table-light">
-        <td align='right' colspan='3'>Saldo Sebelumnya</td>
-        <td align='right'> Rp {{ rupiah(floatval($saldo_sebelumnya), 0, ',', '.') }}</td>
-      </tr>
-      <tr class="table-light">
         <td align='right' colspan='3'>Pemasukan Bulanan</td>
         <td align='right'>Rp {{ rupiah(floatval($pemasukan_bulanan), 0, ',', '.') }}</td>
       </tr>
@@ -190,25 +171,21 @@
         <td align='right'> Rp {{ rupiah(floatval($saldo_bulanan), 0, ',', '.')}}</td>
       </tr>
       <tr class="table-light">
-        <td align='right' colspan='3'>Total Bulanan</td>
-        <td align='right'> Rp {{ rupiah(floatval($total_bulanan), 0, ',', '.')}}</td>
-      </tr>
-      <tr class="table-light">
         <td align='right' colspan='4'></td>
       </tr>
       <tr class="table-light">
         <td align='right' colspan='4'></td>
       </tr>
       <tr class="table-light">
-        <td align='right' colspan='4'><b>Ringkasan Tahunan</b></td>
+        <td align='right' colspan='4'><b>Ringkasan Kategori</b></td>
       </tr>
       <tr class="table-light">
         <td align='right' colspan='3'>Total pemasukan:</td>
-        <td align='right'> Rp {{ rupiah(floatval($pemasukan), 0, ',', '.')}}</td>
+        <td align='right'> Rp {{ rupiah(floatval($total_pemasukan), 0, ',', '.')}}</td>
       </tr>
       <tr class="table-light">
         <td align='right' colspan='3'>Total pengeluaran:</td>
-        <td align='right'> Rp {{ rupiah(floatval($pengeluaran), 0, ',', '.') }}</td>
+        <td align='right'> Rp {{ rupiah(floatval($total_pengeluaran), 0, ',', '.') }}</td>
       </tr>
       <tr class="table-light">
         <td align='right' colspan='3'>Total:</td>
@@ -216,26 +193,6 @@
       </tr>
     </tbody>
   </table>
-
-              <!--
-  <div class="col text-right">
-    <div class="row">
-      <span align='right' class="col-12">
-        Total pemasukan: Rp {{ number_format(floatval($pemasukan), 0, ',', '.') }}
-      </span>
-    </div>
-    <div class="row">
-      <span align='right' class="col-12">
-        Total pengeluaran: Rp {{ number_format(floatval($pengeluaran), 0, ',', '.') }}
-      </span>
-    </div>
-    <div class="row">
-      <span align='right' class="col-12">
-        Total: Rp {{ number_format(floatval($total), 0, ',', '.') }}
-      </span>
-    </div>
-  </div> -->
-
   </div>
 
 

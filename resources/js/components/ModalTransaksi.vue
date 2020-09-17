@@ -190,6 +190,7 @@ export default {
           alert("benar")
         }
       })
+
       const error = this.validate()
       if (error.length != 0) return alert(error)
       if (this.selectedJenis === 0) {
@@ -199,6 +200,9 @@ export default {
         this.dataTransaksi.pemasukan = 0
         this.dataTransaksi.pengeluaran = this.nominal
       }
+
+      console.log(this.dataTransaksi.terverifikasi)
+
       if (this.tipe === 'Edit') {
         window.axios
           .patch(`/transaksi/${this.transaksi.id}`, this.dataTransaksi)
