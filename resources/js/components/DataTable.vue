@@ -43,6 +43,9 @@
         show-empty
         no-local-sorting
       >
+        <template v-slot:cell(keterangan)="data">
+          {{ keteranganPic(data.item) }}
+        </template>
         <template v-slot:cell(kategori)="data">
           <b-badge v-for="kat in data.value" :key="kat.id" class="mx-1">
             {{ kat.nama }}
@@ -204,6 +207,17 @@ export default {
       //KIRIM EMIT DENGAN NAMA PAGINATION DAN VALUENYA ADALAH HALAMAN YANG DIPILIH OLEH USER
       this.$emit('pagination', val)
     },
+    keteranganPic(item) {
+      if (item.pics && item.pics.length === 0) {
+        return item.keterangan
+      }
+
+      let keterangan = `${item.keterangan} (`
+      item.pics.forEach((p) => (keterangan += `${p.name}, `))
+      keterangan = keterangan.slice(0, -2)
+      keterangan += ')'
+      return keterangan
+    },
     toast(title, body, variant = 'success') {
       this.$bvToast.toast(body, {
         title: title,
@@ -224,6 +238,7 @@ export default {
       }
       this.$refs.modalEdit.$data.dataTransaksi.dompet = transaksi.dompet.id
       this.$refs.modalEdit.$data.dataTransaksi.kategori = transaksi.kategori
+      this.$refs.modalEdit.$data.dataTransaksi.pics = transaksi.pics
       this.$refs.modalEdit.$data.dataTransaksi.keterangan = transaksi.keterangan
       this.$refs.modalEdit.$data.dataTransaksi.pemasukan = transaksi.pemasukan
       this.$refs.modalEdit.$data.dataTransaksi.pengeluaran =

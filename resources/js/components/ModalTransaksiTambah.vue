@@ -11,6 +11,19 @@
       label="keterangan"
       track-by="keterangan"
     >
+      <template slot="option" slot-scope="props">
+        <div class="row">
+          <div class="col-8">
+            <p>
+              <b>{{ props.option.keterangan }}</b>
+            </p>
+            <p>{{ props.option.tanggal_transaksi }}</p>
+          </div>
+          <div class="col-4">
+            {{ (props.option.pemasukan - props.option.pengeluaran) | rupiah }}
+          </div>
+        </div>
+      </template>
     </multiselect>
     <template v-slot:modal-footer="{ cancel }">
       <b-button variant="secondary" @click="cancel()">

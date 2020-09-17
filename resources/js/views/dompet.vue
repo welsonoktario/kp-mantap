@@ -25,6 +25,9 @@
         @search="handleSearch"
         @sort="handleSort"
       />
+      <div v-if="totalSaldo">
+        Total saldo seluruh dompet: {{ totalSaldo | rupiah }}
+      </div>
     </div>
     <CModal
       v-if="user.role === 'Bendahara'"
@@ -74,6 +77,16 @@ export default {
     sortBy: 'id', //DEFAULT SORTNYA ADALAH CREATED_AT
     sortByDesc: false //ASCEDING
   }),
+  computed: {
+    totalSaldo() {
+      let total = 0
+      this.dompet.forEach((d) => {
+        total += d.saldo
+      })
+
+      return total
+    }
+  },
   mounted() {
     this.loadData()
   },

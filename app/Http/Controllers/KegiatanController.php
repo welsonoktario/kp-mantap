@@ -81,22 +81,13 @@ class KegiatanController extends Controller
      */
     public function show(Request $request, $id)
     {
-        if ($request->get('q')) {
-            $data = Transaksi::with(['dompet', 'kategori'])
+        $data = Transaksi::with(['dompet', 'kategori', 'pics'])
                 ->whereHas('kegiatan', function($q) use($id) {
                     return $q->where('id', '=', $id);
                 })
                 ->where('keterangan', 'like', '%'.$request->q.'%')
                 ->orderBy($request->sortby, $request->sortbydesc)
                 ->paginate($request->per_page);
-        } else {
-            $data = Transaksi::with(['dompet', 'kategori'])
-                ->whereHas('kegiatan', function($q) use($id) {
-                    return $q->where('id', '=', $id);
-                })
-                ->orderBy($request->sortby, $request->sortbydesc)
-                ->paginate($request->per_page);
-        }
 
         return response()->json([
             'status' => 'OK',

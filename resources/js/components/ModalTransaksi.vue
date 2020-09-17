@@ -47,17 +47,28 @@
                 :options="dataKategori"
                 :multiple="true"
                 :taggable="true"
-                @tag="addTag"
+                @tag="addKategori"
+              ></multiselect>
+            </div>
+            <div class="form-group">
+              <label for="pic">PIC (Opsional)</label>
+              <multiselect
+                v-model="dataTransaksi.pics"
+                label="name"
+                track-by="id"
+                :options="dataPic"
+                :multiple="true"
+                :taggable="true"
+                @tag="addPic"
               ></multiselect>
             </div>
             <div class="form-group">
               <label for="keterangan">Keterangan</label>
-              <textarea
+              <b-form-textarea
                 id="keterangan"
                 v-model="dataTransaksi.keterangan"
-                class="form-control"
                 rows="2"
-              ></textarea>
+              ></b-form-textarea>
             </div>
             <div class="form-group">
               <label for="nominal">Nominal</label>
@@ -132,6 +143,7 @@ export default {
       terverifikasi: 1,
       dompet: 1,
       kategori: [],
+      pics: [],
       keterangan: '',
       pemasukan: 0,
       pengeluaran: 0,
@@ -141,19 +153,28 @@ export default {
     dataKegiatan: {},
     dataKategori: [],
     dataDompet: [],
+    dataPic: [],
     context: null
   }),
   mounted() {
     this.loadForm()
   },
   methods: {
-    addTag(newTag) {
+    addKategori(newTag) {
       const tag = {
         id: newTag,
         nama: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000)
       }
       this.dataKategori.push(tag)
       this.dataTransaksi.kategori.push(tag)
+    },
+    addPic(newTag) {
+      const tag = {
+        id: newTag,
+        name: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000)
+      }
+      this.dataPic.push(tag)
+      this.dataTransaksi.pics.push(tag)
     },
     onContext(ctx) {
       this.context = ctx
@@ -261,25 +282,24 @@ export default {
         }
       }
     },
-    loadForm() {
-      // load dompet
-      window.axios.get('/dompet').then((res) => {
-        if (res.status == 200) {
-          res.data.data.forEach((d) => {
-            const dompet = {
-              value: d.id,
-              text: d.nama
-            }
-            this.dataDompet.push(dompet)
-          })
-        }
-      })
-      // load kategori
-      window.axios.get('/kategori').then((res) => {
-        if (res.status === 200) {
-          this.dataKategori = res.data.data
-        }
-      })
+    async loadForm() {
+      const [resDompet, resKategori, resPegawai] = await Promise.all([
+        window.axios.get('/dompet'),
+        window.axios.get('/kategori-all'),
+        window.axios.get('/pegawai')
+      ])
+      if (resDompet.status === 200) {
+        resDompet.data.data.forEach((d) => {
+          const dompet = {
+            value: d.id,
+            text: d.nama
+          }
+          this.dataDompet.push(dompet)
+        })
+      }
+
+      if (resKategori.status === 200) this.dataKategori = resKategori.data.data
+      if (resPegawai.status === 200) this.dataPic = resPegawai.data.data.data
     }
   }
 }

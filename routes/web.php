@@ -43,6 +43,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
 
     Route::patch('transaksi-verif/{id}', 'TransaksiController@verifikasi');
     Route::get('transaksi-all', 'TransaksiController@all');
+    Route::get('kategori-all', 'KategoriController@all');
     Route::post('transaksi-kegiatan', 'TransaksiController@addAktivitas');
     Route::post('transaksi-pilih', 'TransaksiController@addAktivitasPilih');
     Route::get('transaksi-tanggal', 'TransaksiController@tanggalTransaksi');
@@ -69,7 +70,15 @@ Route::get('/admin/dompet', function () {
     return view('admin.dompet.index');
 });
 
+Route::get('/admin/dompet/{id}', function () {
+    return view('admin.dompet.index');
+});
+
 Route::get('/admin/kategori', function () {
+    return view('admin.kategori.index');
+});
+
+Route::get('/admin/kategori/{id}', function () {
     return view('admin.kategori.index');
 });
 
@@ -77,7 +86,7 @@ Route::get('/admin/aktivitas', function () {
     return view('admin.aktivitas.index');
 });
 
-Route::get('/admin/aktivitas/:id', function () {
+Route::get('/admin/aktivitas/{id}', function () {
     return view('admin.aktivitas.detail-aktivitas');
 });
 
