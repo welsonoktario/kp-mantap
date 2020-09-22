@@ -419,8 +419,10 @@ export default {
           console.log(res.data)
           this.dompets = res.data.data;
         })
+    },
+    loadKategori(){
+      
     }
   },
-
 }
 </script>
