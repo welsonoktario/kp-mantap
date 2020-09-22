@@ -2,6 +2,7 @@
   <div class="no">
     <CHeader :title="$route.name" />
     <div class="bg-white rounded shadow pl-4 py-4">
+
       <div class="row w-100 mb-4">
         <span class="col my-auto">Pilih Dompet: </span>
         <b-form-select
@@ -10,6 +11,23 @@
           :options="dataDompet"
         ></b-form-select>
       </div>
+
+      <div class="row w-100 mb-4">
+        <span class="col my-auto">Pilih Kategori: </span>
+        <multiselect
+          class="col-10 float-left"
+          v-model="selectedKategori"
+          :options="kategoris"
+          :multiple="true"
+          :close-on-select="false"
+          :clear-on-select="false"
+          :preserve-search="true"
+          placeholder="(Opsional)"
+          label="nama"
+          track-by="nama"
+        ></multiselect>
+      </div>
+      
       <div class="row w-100 mb-4">
         <span class="col my-auto">Pilih Jenis: </span>
         <b-form-select
@@ -115,7 +133,9 @@ export default {
   },
   data: () => ({
     selectedDompet: 0,
+    selectedKategori: [],
     selectedJenis: '',
+    kategoris: [],
     tahun: 0,
     bulan: 0,
     tanggal_mulai: '',
@@ -127,11 +147,13 @@ export default {
       }
     ],
     dataTahun: [],
-    dataBulan: [],
+    dataBulan: [
+      { value: 0, text: "Semua"},
+    ],
     dataJenis: [
-      { value: 'tahun', text: 'Tahun' }
+      { value: 'tahun', text: 'Tahun' },
       // { value: 'bulan', text: 'Bulan' },
-      // { value: 'tanggal', text: 'Tanggal' }
+      { value: 'tanggal', text: 'Range Tanggal' }
     ],
     laporan: {
       isHidden: true,
@@ -153,6 +175,8 @@ export default {
   },
   methods: {
     load() {
+
+      // Dompet
       window.axios
         .get('/dompet')
         .then((res) => {
@@ -170,8 +194,29 @@ export default {
           this.dataTahun = Array.from(new Set(res.data.tahun))
           this.dataBulan = window._.uniqBy(res.data.bulan, 'value')
         })
+
+      // Kategori
+      window.axios
+        .get('/kategori', {
+          params: {
+              sortby: 'nama',
+              sortbydesc: 'ASC'
+          }
+        })
+        .then((res) => {
+          this.kategoris = []
+          console.log(res.data.data.data)
+          res.data.data.data.forEach((kategori) => {
+            const data_kat = {
+              value: kategori.id,
+              nama: kategori.nama
+            }
+            this.kategoris.push(data_kat)
+          })
+        })
     },
     filterLaporan() {
+
       this.laporan.totalPemasukan = 0
       this.laporan.totalPengeluaran = 0
       this.laporan.isLoading = true
@@ -188,6 +233,21 @@ export default {
           url +
           `&tanggal_mulai=${this.tanggal_mulai}&tanggal_akhir=${this.tanggal_akhir}`
         this.url += `&tanggal_mulai=${this.tanggal_mulai}&tanggal_akhir=${this.tanggal_akhir}`
+      }
+      if (this.selectedKategori.length != 0){
+        var kategori_ids = this.selectedKategori.value
+        console.log("saya ada" + this.selectedKategori.length)
+        var comb = ""
+        var i = 0
+        this.selectedKategori.forEach((kategori) => {
+          comb += kategori.value
+          if (i != this.selectedKategori.length-1){
+            comb += ","
+          }
+          i++
+        })
+        url = url + `&kategori=${comb}`
+        this.url += `&kategori=${comb}`
       }
 
       this.laporan.isHidden = false
