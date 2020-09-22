@@ -93,6 +93,7 @@ class DompetController extends Controller
                 return $q->where('id', '=', $id);
             })
             ->where('keterangan', 'like', '%'.$request->q.'%')
+            ->select()->addSelect(DB::raw('(pemasukan - pengeluaran) as selisih'))
             ->orderBy($request->sortby, $request->sortbydesc)
             ->paginate($request->per_page);
 

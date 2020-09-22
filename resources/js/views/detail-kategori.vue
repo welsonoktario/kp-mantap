@@ -47,10 +47,6 @@ export default {
     user: {},
     columns: [
       {
-        key: 'tanggal_transaksi',
-        sortable: true
-      },
-      {
         key: 'keterangan',
         sortable: false
       },
@@ -63,7 +59,8 @@ export default {
         sortable: true
       },
       {
-        key: 'terverifikasi'
+        key: 'pics',
+        label: 'PIC'
       },
       {
         key: 'actions',

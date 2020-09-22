@@ -67,10 +67,6 @@ export default {
         sortable: true
       },
       {
-        key: 'selisih',
-        sortable: true
-      },
-      {
         key: 'actions',
         label: 'Aksi',
         sortable: false
@@ -106,17 +102,7 @@ export default {
         })
         .then((res) => {
           const data = res.data.data
-          data.data.forEach((k) => {
-            this.kategori.push({
-              id: k.id,
-              nama: k.nama,
-              keterangan: k.keterangan,
-              transaksi_count: k.transaksi_count,
-              total_pemasukan: k.total_pemasukan,
-              total_pengeluaran: k.total_pengeluaran,
-              selisih: k.total_pemasukan - k.total_pengeluaran
-            })
-          })
+          this.kategori = data.data
           this.meta = {
             total: data.total,
             current_page: data.current_page,

@@ -43,10 +43,18 @@ class TransaksiController extends Controller
                 ->orderBy($request->sortby, $request->sortbydesc)
                 ->paginate($request->per_page);
         } else {
-            $data = Transaksi::with(['dompet', 'kategori', 'pics'])
-                ->where('keterangan', 'like', '%' . $request->q . '%')
-                ->orderBy($request->sortby, $request->sortbydesc)
-                ->paginate($request->per_page);
+            if ($request->tglMulai) {
+                $data = Transaksi::with(['dompet', 'kategori', 'pics'])
+                    ->where('keterangan', 'like', '%' . $request->q . '%')
+                    ->whereBetween('tanggal_transaksi', [$request->tglMulai, $request->tglAkhir])
+                    ->orderBy($request->sortby, $request->sortbydesc)
+                    ->paginate($request->per_page);
+            } else {
+                $data = Transaksi::with(['dompet', 'kategori', 'pics'])
+                    ->where('keterangan', 'like', '%' . $request->q . '%')
+                    ->orderBy($request->sortby, $request->sortbydesc)
+                    ->paginate($request->per_page);
+            }
         }
 
         return response()->json([
@@ -216,7 +224,8 @@ class TransaksiController extends Controller
         ]);
     }
 
-    public function verifikasi(Request $request, $id) {
+    public function verifikasi(Request $request, $id)
+    {
         $transaksi = Transaksi::where('id', $request->id)->first();
         $transaksi->terverifikasi = $request->terverifikasi;
         $transaksi->save();

@@ -54,10 +54,12 @@ export default {
       },
       {
         key: 'pic',
+        label: 'PIC',
         sortable: true
       },
       {
         key: 'total',
+        label: 'Total/Selisih',
         sortable: true
       },
       {

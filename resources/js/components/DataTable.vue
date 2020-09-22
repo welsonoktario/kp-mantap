@@ -57,6 +57,11 @@
         <template v-slot:cell(pengeluaran)="data">{{
           data.value | rupiah
         }}</template>
+        <template v-slot:cell(pics)="data">
+          <b-badge v-for="pic in data.value" :key="pic.id" class="mx-1">
+            {{ pic.name }}
+          </b-badge>
+        </template>
         <template v-slot:cell(terverifikasi)="data">
           <b-badge
             v-if="data.value === 1"
