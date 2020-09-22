@@ -6,6 +6,27 @@
 
     <section class="content">
       <div class="container-fluid">
+        <h5 class="mb-2">Saldo Dompet</h5>
+        <div class="row">
+          <div
+            v-for="dompet in dompets"
+            :key="dompet.id"
+            class="col-md-3 col-sm-6 col-12"
+          >
+            <div class="info-box" color="red">
+              <span class="info-box-icon"><i class="far fa-envelope"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">{{ dompet.nama }}</span>
+                <span class="info-box-number">{{ dompet.Saldo }}</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+        </div>
+
         <h5 class="mb-2">Info Box</h5>
         <div class="row">
           <div class="col-md-3 col-sm-6 col-12">
@@ -373,10 +394,24 @@
 
 <script>
 import CHeader from '../components/Header'
-
 export default {
   components: {
     CHeader
+  },
+  data() {
+    return {
+      dompets: []
+    }
+  },
+  mounted() {
+    this.loadDompet()
+  },
+  methods: {
+    loadDompet() {
+      window.axios.get('/dompet').then((res) => {
+        this.dompets = res.data.data
+      })
+    }
   }
 }
 </script>

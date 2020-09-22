@@ -30,13 +30,12 @@ class DompetController extends Controller
                     ->orderBy($request->sortby, $request->sortbydesc)
                     ->paginate($request->get('per_page'));
             }
-        /* } else if ($request->per_page) {
-            $data = Dompet::withCount('transaksi')
-                ->withSum(['transaksi:pemasukan as total_pemasukan','transaksi:pengeluaran as total_pengeluaran'])
-                ->orderBy($request->sortby, $request->sortbydesc)
-                ->paginate($request->per_page); */
         } else {
-            $data = Dompet::all();
+            $data = DB::select('
+                select coalesce(sum(t.pemasukan) - sum(t.pengeluaran), 0) as Saldo, d.id, d.nama
+                from dompets d left join transaksis t on d.id = t.dompet_id
+                group by d.id, d.nama
+            ');
         }
 
         return response()->json([
