@@ -145,8 +145,6 @@ class LaporanController extends Controller
                 $temp = Kategori::find($idkat);
                 $kategoris[] = $temp->nama;
             }
-            // dd($temp);
-            // dd($temp);
             
             $pdf = PDF::loadView('laporanKategori', [
                 'data' => $data,

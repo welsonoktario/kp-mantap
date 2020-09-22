@@ -36,7 +36,13 @@ class DompetController extends Controller
                 ->orderBy($request->sortby, $request->sortbydesc)
                 ->paginate($request->per_page); */
         } else {
-            $data = Dompet::all();
+            // $data = Dompet::all();
+            
+            $data = DB::select('
+                select coalesce(sum(t.pemasukan) - sum(t.pengeluaran), 0) as Saldo, d.id, d.nama
+                from dompets d left join transaksis t on d.id = t.dompet_id 
+                group by d.id, d.nama
+            ');
         }
 
         return response()->json([

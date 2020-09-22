@@ -93,3 +93,7 @@ Route::get('/admin/aktivitas/{id}', function () {
 Route::get('/admin/laporan', function () {
     return view('admin.laporan.index');
 });
+
+Route::get('/admin/home', function () {
+    return view('admin.index');
+});
