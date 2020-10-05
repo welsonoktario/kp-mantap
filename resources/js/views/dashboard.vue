@@ -17,7 +17,7 @@
 
               <div class="info-box-content">
                 <span class="info-box-text">{{dompet.nama}}</span>
-                <span class="info-box-number">{{dompet.Saldo}}</span>
+                <span class="info-box-number">{{dompet.Saldo | rupiah}}</span>
               </div>
               <!-- /.info-box-content -->
             </div>
