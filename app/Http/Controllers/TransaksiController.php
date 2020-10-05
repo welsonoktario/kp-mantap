@@ -40,14 +40,18 @@ class TransaksiController extends Controller
                         ['user_id', '=', Auth::user()->id]
                     ]
                 )
-                ->orderBy($request->sortby, $request->sortbydesc)
-                ->paginate($request->per_page);
+                ->orderBy($request->sortby, $request->sortbydesc);
         } else {
             $data = Transaksi::with(['dompet', 'kategori', 'pics'])
                 ->where('keterangan', 'like', '%' . $request->q . '%')
-                ->orderBy($request->sortby, $request->sortbydesc)
-                ->paginate($request->per_page);
+                ->orderBy($request->sortby, $request->sortbydesc);
         }
+
+        if($request->has('dashboard')){
+            $data = $data->where('terverifikasi','=',0);
+        }
+        $data = $data->paginate($request->per_page);
+
 
         return response()->json([
             'status' => 'OK',

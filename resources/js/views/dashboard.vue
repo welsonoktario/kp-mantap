@@ -11,9 +11,9 @@
         <div class="row">
           <div v-for="dompet in dompets" class="col-md-3 col-sm-6 col-12">
             <div class="info-box" color="red">
-              <span class="info-box-icon"
-                ><i class="far fa-envelope"></i
-              ></span>
+              <!-- <span class="info-box-icon bg-info"
+                ><i class="far fa-money"></i
+              ></span> -->
 
               <div class="info-box-content">
                 <span class="info-box-text">{{dompet.nama}}</span>
@@ -26,8 +26,39 @@
           <!-- /.col -->
         </div>
 
+        
+        <h5 class="mt-4 mb-2">Transaksi <b-badge variant="warning">Belum di Verifikasi</b-badge></h5>
+        <div class="row">
+          <div class="bg-white rounded shadow p-2">
+            
+          <DataTableTransaksis
+            :fields="columns_transaksis"
+            :items="transaksis"
+            :meta="meta_transaksis"
+            @per_page="handlePerPageTransaksi"
+            @pagination="handlePaginationTransaksi"
+            @search="handleSearchTransaksi"
+            @sort="handleSortTransaksi"
+          />
+          </div>
+        </div>
 
-        <h5 class="mb-2">Info Box</h5>
+        <h5 class="mt-4 mb-2">Aktivitas <b-badge variant="warning">Belum Balance</b-badge></h5>
+        <div class="row">
+          <div class="bg-white rounded shadow p-2">
+            <DataTable
+              :fields="columns_aktivitas"
+              :items="aktivitas"
+              :meta="meta"
+              @per_page="handlePerPageAktivitas"
+              @pagination="handlePaginationAktivitas"
+              @search="handleSearchAktivitas"
+              @sort="handleSortAktivitas"
+            />
+          </div>
+        </div>
+
+        <h5 class="mt-4 mb-2">Info Box</h5>
         <div class="row">
           <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
@@ -394,21 +425,114 @@
 
 <script>
 import CHeader from '../components/Header'
+import DataTable from '../components/DataTableAktivitas'
+import DataTableTransaksis from '../components/DataTable'
+import CModal from '../components/ModalTransaksi'
 
 
 
 export default {
   components: {
+    DataTable,
+    DataTableTransaksis,
     CHeader
   },
   data() {
     return {
+      user: {},
       dompets: [],
+
+      // DATA TABLE AKTIVITAS
+      columns_aktivitas: [
+        {
+          key: 'keterangan',
+          sortable: false
+        },
+        {
+          key: 'pic',
+          sortable: true
+        },
+        {
+          key: 'total',
+          sortable: true
+        },
+        {
+          key: 'actions',
+          label: 'Aksi',
+          sortable: false
+        }
+      ],
+      aktivitas: [],
+      meta: {},
+      current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
+      per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
+      search: '',
+      sortBy: 'id', //DEFAULT SORTNYA ADALAH CREATED_AT
+      sortByDesc: false, //ASCEDING
+
+
+
+      // DATA TABLE TRANSAKSIS
+      columns_transaksis: [
+        {
+          key: 'tanggal_transaksi',
+          sortable: true
+        },
+        {
+          key: 'keterangan',
+          sortable: false
+        },
+        {
+          key: 'pemasukan',
+          class: 'text-right',
+          sortable: true
+        },
+        {
+          key: 'pengeluaran',
+          class: 'text-right',
+          sortable: true
+        },
+        {
+          key: 'terverifikasi',
+          class: 'text-center',
+          sortable: false
+        },
+        {
+          key: 'kategori',
+          label: 'Kategori',
+          sortable: true
+        },
+        {
+          key: 'dompet.nama',
+          label: 'Dompet',
+          class: 'text-center',
+          sortable: true
+        },
+        {
+          key: 'actions',
+          label: 'Aksi',
+          sortable: false
+        }
+      ],
+      transaksis: [],
+      meta_transaksis: {}, //JUGA BERLAKU UNTUK META
+      current_page_transaksis: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
+      per_page_transaksis: 10, //DEFAULT LOAD PERPAGE ADALAH 10
+      search_transaksis: '',
+      sortBy_transaksis: 'tanggal_transaksi', //DEFAULT SORTNYA ADALAH CREATED_AT
+      sortByDesc_transaksis: true //ASCEDING
+
     }
   },
 
   mounted() {
+    
+    window.axios.get('/user').then((res) => {
+      this.user = res.data
+    })
     this.loadDompet()
+    this.loadAktivitas()
+    this.loadTransaksi()
   },
 
   methods: {
@@ -422,6 +546,127 @@ export default {
     },
     loadKategori(){
       
+    },
+    loadAktivitas(){
+      let current_page = this.search == '' ? this.current_page : 1
+      // let dashboard = 1
+      window.axios.get('/user').then((res) => {
+        this.user = res.data
+
+        window.axios
+          .get('/aktivitas', {
+            params: {
+              page: current_page,
+              per_page: this.per_page,
+              q: this.search,
+              dashboard: 1,
+              sortby: this.sortBy,
+              sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
+            }
+          })
+          .then((res) => {
+            this.aktivitas = []
+            const data = res.data.data
+            this.meta = {
+              total: data.total,
+              current_page: data.current_page,
+              per_page: data.per_page,
+              from: data.from,
+              to: data.to
+            }
+            data.data.forEach((a) => {
+              const total =
+                Number(a.total_pemasukan) - Number(a.total_pengeluaran)
+              this.aktivitas.push({
+                id: a.id,
+                keterangan: a.keterangan,
+                pic: a.pic,
+                total,
+                jumlah: a.transaksi_count
+              })
+            })
+          })
+      })
+    },
+    
+    loadTransaksi(){
+      let current_page = this.search_transaksis == '' ? this.current_page_transaksis : 1
+      window.axios
+        .get('/transaksi', {
+          params: {
+            page: current_page,
+            per_page: this.per_page_transaksis,
+            q: this.search_transaksis,
+            dashboard: 1,
+            sortby: this.sortBy_transaksis,
+            sortbydesc: this.sortByDesc_transaksis ? 'DESC' : 'ASC'
+          }
+        })
+        .then((res) => {
+          const data = res.data.data
+          this.transaksis = data.data
+          this.meta_transaksis = {
+            total: data.total,
+            current_page: data.current_page,
+            per_page: data.per_page,
+            from: data.from,
+            to: data.to
+          }
+        })
+    },
+
+
+
+
+    // 
+    // AKTIVITAS
+    //
+    handlePerPageAktivitas(val) {
+      this.per_page = val
+      this.loadAktivitas()
+    },
+    //JIKA ADA EMIT PAGINATION YANG DIKIRIM, MAKA FUNGSI INI AKAN DIEKSEKUSI
+    handlePaginationAktivitas(val) {
+      this.current_page = val //SET CURRENT PAGE YANG AKTIF
+      this.loadAktivitas()
+    },
+    //JIKA ADA DATA PENCARIAN
+    handleSearchAktivitas(val) {
+      this.search = val
+      this.loadAktivitas()
+    },
+    //JIKA ADA EMIT SORT
+    handleSortAktivitas(val) {
+      //MAKA SET SORT-NYA
+      this.sortBy = val.sortBy
+      this.sortByDesc = val.sortDesc
+      this.loadAktivitas()
+    },
+
+    //
+    // TRANSAKSI
+    //
+
+    handlePerPageTransaksi(val) {
+      this.per_page = val
+      this.loadTransaksi()
+    },
+    //JIKA ADA EMIT PAGINATION YANG DIKIRIM, MAKA FUNGSI INI AKAN DIEKSEKUSI
+    handlePaginationTransaksi(val) {
+      this.current_page = val //SET CURRENT PAGE YANG AKTIF
+      this.loadTransaksi()
+    },
+    //JIKA ADA DATA PENCARIAN
+    handleSearchTransaksi(val) {
+      this.search = val
+      this.loadTransaksi()
+    },
+    //JIKA ADA EMIT SORT
+    handleSortTransaksi(val) {
+      //MAKA SET SORT-NYA
+      this.sortBy = val.sortBy
+      this.sortByDesc = val.sortDesc
+      this.loadTransaksi()
     }
   },
 }
