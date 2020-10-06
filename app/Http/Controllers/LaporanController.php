@@ -137,7 +137,7 @@ class LaporanController extends Controller
             $data = $transaksi_kategori;
 
             $kategoris = [];
-            $temp;
+            $temp = NULL;
             foreach ($kategori as $idkat) {
                 $temp = Kategori::find($idkat);
                 $kategoris[] = $temp->nama;

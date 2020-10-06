@@ -37,7 +37,7 @@
   @endif
   <P><b>Kategori:
     @foreach ($kategori as $k)
-      {{$k}};
+      {{$k}}
     @endforeach
   </b></P>
   <p> <b> Dompet: {{$dompet}} </b> </p>
