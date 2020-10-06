@@ -102,10 +102,6 @@ export default {
         sortable: true
       },
       {
-        key: 'pics',
-        label: 'PIC'
-      },
-      {
         key: 'kategori',
         label: 'Kategori',
         sortable: true
