@@ -149,4 +149,18 @@ class KegiatanController extends Controller
             'status' => 'GAGAL'
         ]);
     }
+
+    public function detachTransaksi(Request $request, $id)
+    {
+        $kegiatan = Kegiatan::firstWhere('id', $request->idTrans);
+        if (!$kegiatan->transaksi()->detach($id)) {
+            return response()->json([
+                'status' => 'GAGAL'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'OK'
+        ]);
+    }
 }

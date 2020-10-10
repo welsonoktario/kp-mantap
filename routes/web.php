@@ -41,6 +41,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
         return Auth::user();
     });
 
+    Route::delete('transaksi-kegiatan/{id}', 'KegiatanController@detachTransaksi');
     Route::patch('transaksi-verif/{id}', 'TransaksiController@verifikasi');
     Route::get('transaksi-all', 'TransaksiController@all');
     Route::get('kategori-all', 'KategoriController@all');

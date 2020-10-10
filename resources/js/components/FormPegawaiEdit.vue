@@ -1,5 +1,5 @@
 <template>
-  <b-form id="form-pegawai-edit" @submit="edit">
+  <b-form id="form-pegawai-edit" @submit.prevent="edit">
     <b-form-group label="Role">
       <b-form-select v-model="role" :options="roles"></b-form-select>
     </b-form-group>
@@ -30,7 +30,7 @@ export default {
     aktif: 0,
     role: 'Pegawai',
     statuses: [
-      { text: 'NonAktif', value: 0 },
+      { text: 'Non-Aktif', value: 0 },
       { text: 'Aktif', value: 1 }
     ],
     roles: [
@@ -41,12 +41,12 @@ export default {
     ]
   }),
   mounted() {
-    ;(this.aktif = this.selected.aktif), (this.role = this.selected.role)
+    this.aktif = this.selected.status
+    this.role = this.selected.role
   },
   methods: {
     edit(e) {
-      e.preventDefault()
-      this.$emit('submit', { aktif: this.aktif, role: this.role })
+      this.$emit('submit', { status: this.aktif, role: this.role })
     }
   }
 }

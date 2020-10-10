@@ -69,7 +69,7 @@ export default {
         sortable: true
       },
       {
-        key: 'aktif',
+        key: 'status',
         sortable: true,
         label: 'Status'
       },
@@ -142,7 +142,7 @@ export default {
     tambah(data) {
       window.axios.post('/pegawai', data).then((res) => {
         if (res.status === 200) {
-          this.loadData
+          this.loadData();
           this.$bvModal.hide('modal-pegawai')
           this.toast('Pegawai', 'Sukses menambah pegawai')
         } else {
@@ -154,7 +154,7 @@ export default {
     edit(data) {
       window.axios
         .put(`/pegawai/${this.modal.selected.id}`, {
-          aktif: data.aktif,
+          status: data.status,
           role: data.role
         })
         .then((res) => {

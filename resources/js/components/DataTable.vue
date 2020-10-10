@@ -268,16 +268,40 @@ export default {
         })
         .then((value) => {
           if (value) {
-            window.axios
-              .delete(`/transaksi/${this.items[index].id}`)
-              .then((res) => {
-                if (res.status === 200) {
-                  this.items.splice(selected, 1)
-                  this.toast('Transaksi', 'Transaksi berhasil dihapus')
-                } else {
-                  this.toast('Transaksi', 'Gagal menghapus transaksi', 'danger')
-                }
-              })
+            if (this.isDetail === 'Kegiatan') {
+              window.axios
+                .delete(`/transaksi-kegiatan/${this.items[index].id}`, {
+                  data: { idTrans: this.$route.params.id }
+                })
+                .then((res) => {
+                  if (res.status === 200) {
+                    console.log(res.data)
+                    this.items.splice(selected, 1)
+                    this.toast('Transaksi', 'Transaksi berhasil dihapus')
+                  } else {
+                    this.toast(
+                      'Transaksi',
+                      'Gagal menghapus transaksi',
+                      'danger'
+                    )
+                  }
+                })
+            } else {
+              window.axios
+                .delete(`/transaksi/${this.items[index].id}`)
+                .then((res) => {
+                  if (res.status === 200) {
+                    this.items.splice(selected, 1)
+                    this.toast('Transaksi', 'Transaksi berhasil dihapus')
+                  } else {
+                    this.toast(
+                      'Transaksi',
+                      'Gagal menghapus transaksi',
+                      'danger'
+                    )
+                  }
+                })
+            }
           }
         })
         .catch((err) => {

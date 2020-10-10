@@ -48,7 +48,7 @@ export default {
       email: '',
       role: 'Pegawai',
       password: '12345',
-      aktif: 0
+      status: 0
     },
     dataRole: [
       { text: 'Kajur', value: 'Kajur' },

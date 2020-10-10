@@ -47,7 +47,7 @@
             {{ data.value }}
           </b-badge>
         </template>
-        <template v-slot:cell(aktif)="data">
+        <template v-slot:cell(status)="data">
           <b-badge v-if="data.value === 0" class="mx-1">
             Non-Aktif
           </b-badge>
