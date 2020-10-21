@@ -35,13 +35,15 @@
             </div>
             <div class="form-group">
               <label for="nominal">PIC</label>
-              <input
-                id="nominal"
-                v-model="dataAktivitas.pic"
-                type="text"
-                class="form-control"
-                name="nominal"
-              />
+              <multiselect
+                v-model="dataAktivitas.pics"
+                track-by="id"
+                label="name"
+                placeholder="Pilih pegawai"
+                :options="dataPic"
+                :multiple="true"
+                :taggable="true"
+              ></multiselect>
             </div>
           </div>
           <div class="modal-footer">
@@ -53,7 +55,9 @@
             >
               Tutup
             </button>
-            <button type="button" class="btn btn-primary" @click="save">{{ tipe }}</button>
+            <button type="button" class="btn btn-primary" @click="save">
+              {{ tipe }}
+            </button>
           </div>
         </div>
       </div>
@@ -84,10 +88,14 @@ export default {
     dataAktivitas: {
       id: 0,
       keterangan: '',
-      pic: ''
+      pics: []
     },
+    dataPic: [],
     context: null
   }),
+  mounted() {
+    this.loadPic()
+  },
   methods: {
     onContext(ctx) {
       this.context = ctx
@@ -96,7 +104,7 @@ export default {
       const error = []
       if (!this.dataAktivitas.keterangan)
         error.push('Keterangan tidak boleh kosong')
-      else if (!this.dataAktivitas.pic) error.push('Pilih minimal 1 PIC')
+      else if (!this.dataAktivitas.pics) error.push('Pilih minimal 1 PIC')
 
       return error
     },
@@ -106,6 +114,23 @@ export default {
         variant,
         autoHideDelay: 2500
       })
+    },
+    loadPic() {
+      window.axios.get('pegawai').then((res) => {
+        if (res.status === 200) {
+          this.dataPic = res.data.data.data
+        } else {
+          this.toast('Aktivitas', 'Gagal memuat data pegawai')
+        }
+      })
+    },
+    addPic(newTag) {
+      const tag = {
+        id: newTag,
+        name: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000)
+      }
+      this.dataPic.push(tag)
+      this.dataAktivitas.pics.push(tag)
     },
     save() {
       const error = this.validate()

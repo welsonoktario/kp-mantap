@@ -53,7 +53,7 @@ export default {
         sortable: false
       },
       {
-        key: 'pic',
+        key: 'pegawai',
         label: 'PIC',
         sortable: true
       },
@@ -99,6 +99,7 @@ export default {
           .then((res) => {
             this.aktivitas = []
             const data = res.data.data
+            console.log(data);
             this.meta = {
               total: data.total,
               current_page: data.current_page,
@@ -112,7 +113,7 @@ export default {
               this.aktivitas.push({
                 id: a.id,
                 keterangan: a.keterangan,
-                pic: a.pic,
+                pegawai: a.pegawai,
                 total,
                 jumlah: a.transaksi_count
               })

@@ -16,7 +16,8 @@ class KegiatanController extends Controller
     public function index(Request $request)
     {
         if ($request->has('q')) {
-            $data = Kegiatan::where('keterangan', 'like', '%' . $request->q . '%')
+            $data = Kegiatan::with('pegawai')
+                ->where('keterangan', 'like', '%' . $request->q . '%')
                 ->orderBy($request->sortby, $request->sortbydesc)
                 ->withCount('transaksi')
                 ->withSum(['transaksi:pemasukan as total_pemasukan', 'transaksi:pengeluaran as total_pengeluaran']);
@@ -37,16 +38,6 @@ class KegiatanController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -54,14 +45,19 @@ class KegiatanController extends Controller
      */
     public function store(Request $request)
     {
+        $pics = [];
         $kegiatan = new Kegiatan();
         $kegiatan->keterangan = $request->get('keterangan');
-        $kegiatan->pic = $request->get('pic');
+        foreach ($request->pics as $pic) {
+            array_push($pics, $pic['id']);
+        }
 
         if ($kegiatan->save()) {
+            $kegiatan->pegawai()->sync($pics);
+
             return response()->json([
                 'status' => 'OK',
-                'data' => $kegiatan,
+                'data' => $kegiatan::with('pegawai'),
             ]);
         }
 
@@ -94,18 +90,6 @@ class KegiatanController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -114,9 +98,13 @@ class KegiatanController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $pics = [];
         $kegiatan = Kegiatan::findOrFail($id);
         $kegiatan->keterangan = $request->get('keterangan');
-        $kegiatan->pic = $request->get('pic');
+        foreach ($request->pics as $pic) {
+            array_push($pics, $pic['id']);
+        }
+        $kegiatan->pegawai()->sync($pics);
         $kegiatan->save();
 
         if ($kegiatan->save()) {

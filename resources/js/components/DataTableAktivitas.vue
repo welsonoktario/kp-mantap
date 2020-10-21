@@ -43,6 +43,17 @@
         show-empty
         no-local-sorting
       >
+        <template v-slot:cell(pegawai)="data">
+          <div v-if="data.value.length == 0">
+            -
+          </div>
+          <div v-else>
+            <b-badge v-for="pic in data.value" :key="pic.id" class="mx-1">
+              {{ pic.name }}
+            </b-badge>
+          </div>
+        </template>
+
         <template v-slot:cell(total)="data">{{ data.value | rupiah }}</template>
 
         <!-- eslint-disable-next-line vue/no-unused-vars -->
@@ -196,7 +207,7 @@ export default {
       this.selectedAktivitas = this.items.find((i) => i.id === item.id)
       const aktivitas = this.selectedAktivitas
       this.$refs.modalEdit.$data.dataAktivitas.id = aktivitas.id
-      this.$refs.modalEdit.$data.dataAktivitas.pic = aktivitas.pic
+      this.$refs.modalEdit.$data.dataAktivitas.pics = aktivitas.pegawai
       this.$refs.modalEdit.$data.dataAktivitas.keterangan = aktivitas.keterangan
     },
     // eslint-disable-next-line no-unused-vars

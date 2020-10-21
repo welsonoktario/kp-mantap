@@ -13,4 +13,8 @@ class Kegiatan extends Model
     {
         return $this->belongsToMany('App\Models\Transaksi', 'kegiatan_transaksis');
     }
+
+    public function pegawai() {
+        return $this->belongsToMany('App\Models\User', 'user_kegiatans');
+    }
 }
