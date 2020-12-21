@@ -28,6 +28,7 @@
           </router-link>
         </li>
         @endif
+        @if (Auth::user()->role != 'PAJ')
         <li class="nav-item">
           <router-link tag="a" to="/dompet" class="nav-link">
             <i class="nav-icon fas fa-wallet"></i>
@@ -40,12 +41,14 @@
             <p>Kategori</p>
           </router-link>
         </li>
+        @endif
         <li class="nav-item">
           <router-link tag="a" to="/transaksi" class="nav-link">
             <i class="nav-icon fas fa-money-bill-wave-alt"></i>
             <p>Transaksi</p>
           </router-link>
         </li>
+        @if (Auth::user()->role != 'PAJ')
         <li class="nav-item">
           <router-link tag="a" to="/aktivitas" class="nav-link">
             <i class="nav-icon fas fa-poll-h"></i>
@@ -58,6 +61,7 @@
             <p>Laporan</p>
           </router-link>
         </li>
+        @endif
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

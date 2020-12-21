@@ -99,7 +99,7 @@
           </b-button>
           <b-button
             v-if="
-              row.item.terverifikasi === 0 && $parent.user.role === 'Bendahara'
+              row.item.terverifikasi === 0 && $parent.user.role === 'PAJ'
             "
             size="sm"
             class="mx-1"

@@ -11,6 +11,6 @@ class Kategori extends Model
 
     public function transaksi()
     {
-        return $this->belongsToMany('App\Models\Transaksi', 'kategori_transaksis');
+        return $this->belongsToMany('App\Models\Transaksi', 'kategori_transaksis', 'kategori_id', 'transaksi_id');
     }
 }

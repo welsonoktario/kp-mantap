@@ -18,7 +18,7 @@ class Transaksi extends Model
 
     public function kategori()
     {
-        return $this->belongsToMany('App\Models\Kategori', 'kategori_transaksis');
+        return $this->belongsToMany('App\Models\Kategori', 'kategori_transaksis', 'transaksi_id', 'kategori_id')->withPivot('kategori_id');
     }
 
     public function kegiatan()
