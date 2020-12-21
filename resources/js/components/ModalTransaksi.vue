@@ -165,6 +165,7 @@ export default {
         id: newTag,
         nama: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000)
       }
+    //   console.log(tag)
       this.dataKategori.push(tag)
       this.dataTransaksi.kategori.push(tag)
     },
