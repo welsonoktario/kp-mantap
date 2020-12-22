@@ -307,7 +307,7 @@ export default {
       if (resKategori.status === 200) {
         if (this.paj) {
           this.dataKategori = resKategori.data.data.filter(k => k.id === 1)
-          this.dataTransaksi.kategori = this.dataKategori[0]
+          this.dataTransaksi.kategori = this.dataKategori
         } else this.dataKategori = resKategori.data.data
       }
       if (resPegawai.status === 200) this.dataPic = resPegawai.data.data.data
