@@ -32,54 +32,68 @@ class TransaksiController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->role == 'PAJ') {  
-            // dd('y');
-            if ($request->dashboard==1){
-                $data = Transaksi::with(['dompet', 'kategori', 'pics'])
+        if ($request->dashboard == 1) {
+            $data = Transaksi::with(['kategori' => function ($q) { $q->where('id', '=', 1);  },'dompet', 'pics'])
                 ->where(
                     [
                         ['keterangan', 'like', '%' . $request->q . '%'],
                         ['terverifikasi', '=', 0],
-                        // ['kategori_id', '=', 1]
                     ]
                 )
-                // ->kategoris->where('kategori_id', '=', 1)
-                // ->wherePivot('kategori_transaksis.kategori_id', 1)
                 ->orderBy($request->sortby, $request->sortbydesc)
                 ->paginate($request->per_page);
-            }
-            else {
-                $data = Transaksi::with(['dompet', 'kategori', 'pics'])
+        } else {
+            $data = Transaksi::with(['kategori' => function ($q) { $q->where('id', '=', 1);  },'dompet', 'pics'])
                 ->where(
                     [
                         ['keterangan', 'like', '%' . $request->q . '%'],
-                        // ['user_id', '=', Auth::user()->id]
+                        ['user_id', '=', Auth::user()->id]
                         // ['kategori_id', '=', 1]
                     ]
                 )
-                // ->wherePivot('kategori_transaksis.kategori_id', 1)
                 ->orderBy($request->sortby, $request->sortbydesc)
                 ->paginate($request->per_page);
+        }
+       /*  if (Auth::user()->role == 'PAJ') {
+            if ($request->dashboard == 1) {
+                $data = Transaksi::with(['kategori' => function ($q) { $q->where('id', '=', 1);  },'dompet', 'pics'])
+                    ->where(
+                        [
+                            ['keterangan', 'like', '%' . $request->q . '%'],
+                            ['terverifikasi', '=', 0],
+                        ]
+                    )
+                    ->orderBy($request->sortby, $request->sortbydesc)
+                    ->paginate($request->per_page);
+            } else {
+                $data = Transaksi::with(['kategori' => function ($q) { $q->where('id', '=', 1);  },'dompet', 'pics'])
+                    ->where(
+                        [
+                            ['keterangan', 'like', '%' . $request->q . '%'],
+                            ['user_id', '=', Auth::user()->id]
+                            // ['kategori_id', '=', 1]
+                        ]
+                    )
+                    ->orderBy($request->sortby, $request->sortbydesc)
+                    ->paginate($request->per_page);
             }
-            
         } else {
-            if ($request->dashboard == 1){
+            if ($request->dashboard == 1) {
                 if ($request->tglMulai) {
                     $data = Transaksi::with(['dompet', 'kategori', 'pics'])
                         ->where('keterangan', 'like', '%' . $request->q . '%')
-                        ->where('terverifikasi','=',0)
+                        ->where('terverifikasi', '=', 0)
                         ->whereBetween('tanggal_transaksi', [$request->tglMulai, $request->tglAkhir])
                         ->orderBy($request->sortby, $request->sortbydesc)
                         ->paginate($request->per_page);
                 } else {
                     $data = Transaksi::with(['dompet', 'kategori', 'pics'])
                         ->where('keterangan', 'like', '%' . $request->q . '%')
-                        ->where('terverifikasi','=',0)
+                        ->where('terverifikasi', '=', 0)
                         ->orderBy($request->sortby, $request->sortbydesc)
                         ->paginate($request->per_page);
                 }
-            }
-            else {
+            } else {
                 if ($request->tglMulai) {
                     $data = Transaksi::with(['dompet', 'kategori', 'pics'])
                         ->where('keterangan', 'like', '%' . $request->q . '%')
@@ -94,7 +108,7 @@ class TransaksiController extends Controller
                         ->paginate($request->per_page);
                 }
             }
-        }
+        } */
 
         return response()->json([
             'status' => 'OK',
@@ -131,13 +145,13 @@ class TransaksiController extends Controller
         $terverivikasi = 1;
         foreach ($request->kategori as $kategori) {
             array_push($kategoris, $kategori['id']);
-            if ($kategori['id'] == 1){
+            if ($kategori['id'] == 1) {
                 // transaksi sumbangan bendahara, veriff = 0;
                 $terverivikasi = Auth::user()->role == 'Bendahara' ? 0 : 1;
             }
         }
-        $transaksi->terverifikasi= $terverivikasi;
-        
+        $transaksi->terverifikasi = $terverivikasi;
+
 
         $dompet = Dompet::find($request->get('dompet'));
         $transaksi->dompet()->associate($dompet);

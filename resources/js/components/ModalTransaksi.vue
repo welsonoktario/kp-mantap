@@ -110,6 +110,11 @@
 <script>
 export default {
   props: {
+    user: {
+      type: String,
+      required: false,
+      default: 'Bendahara'
+    },
     transaksi: {
       type: Object,
       required: false,
