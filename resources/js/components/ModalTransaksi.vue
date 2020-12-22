@@ -110,10 +110,10 @@
 <script>
 export default {
   props: {
-    user: {
-      type: String,
+    paj: {
+      type: Boolean,
       required: false,
-      default: 'Bendahara'
+      default: false
     },
     transaksi: {
       type: Object,
@@ -304,7 +304,12 @@ export default {
         })
       }
 
-      if (resKategori.status === 200) this.dataKategori = resKategori.data.data
+      if (resKategori.status === 200) {
+        if (this.paj) {
+          this.dataKategori = resKategori.data.data.filter(k => k.id === 1)
+          this.dataTransaksi.kategori = this.dataKategori[0]
+        } else this.dataKategori = resKategori.data.data
+      }
       if (resPegawai.status === 200) this.dataPic = resPegawai.data.data.data
     }
   }

@@ -32,31 +32,10 @@ class TransaksiController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->dashboard == 1) {
-            $data = Transaksi::with(['kategori' => function ($q) { $q->where('id', '=', 1);  },'dompet', 'pics'])
-                ->where(
-                    [
-                        ['keterangan', 'like', '%' . $request->q . '%'],
-                        ['terverifikasi', '=', 0],
-                    ]
-                )
-                ->orderBy($request->sortby, $request->sortbydesc)
-                ->paginate($request->per_page);
-        } else {
-            $data = Transaksi::with(['kategori' => function ($q) { $q->where('id', '=', 1);  },'dompet', 'pics'])
-                ->where(
-                    [
-                        ['keterangan', 'like', '%' . $request->q . '%'],
-                        ['user_id', '=', Auth::user()->id]
-                        // ['kategori_id', '=', 1]
-                    ]
-                )
-                ->orderBy($request->sortby, $request->sortbydesc)
-                ->paginate($request->per_page);
-        }
-       /*  if (Auth::user()->role == 'PAJ') {
+        if (Auth::user()->role == 'PAJ') {
             if ($request->dashboard == 1) {
-                $data = Transaksi::with(['kategori' => function ($q) { $q->where('id', '=', 1);  },'dompet', 'pics'])
+                $data = Transaksi::whereHas('kategori', function ($q) { $q->where('id', 1); })
+                    ->with(['kategori', 'dompet', 'pics'])
                     ->where(
                         [
                             ['keterangan', 'like', '%' . $request->q . '%'],
@@ -66,11 +45,12 @@ class TransaksiController extends Controller
                     ->orderBy($request->sortby, $request->sortbydesc)
                     ->paginate($request->per_page);
             } else {
-                $data = Transaksi::with(['kategori' => function ($q) { $q->where('id', '=', 1);  },'dompet', 'pics'])
+                $data = Transaksi::whereHas('kategori', function ($q) { $q->where('id', 1); })
+                    ->with(['kategori', 'dompet', 'pics'])
                     ->where(
                         [
                             ['keterangan', 'like', '%' . $request->q . '%'],
-                            ['user_id', '=', Auth::user()->id]
+                            // ['user_id', '=', Auth::user()->id]
                             // ['kategori_id', '=', 1]
                         ]
                     )
@@ -108,7 +88,7 @@ class TransaksiController extends Controller
                         ->paginate($request->per_page);
                 }
             }
-        } */
+        }
 
         return response()->json([
             'status' => 'OK',

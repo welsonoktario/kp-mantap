@@ -63,6 +63,7 @@
     </div>
     <CModal
       v-if="user.role !== 'Kajur'"
+      :paj="user.role === 'PAJ' ? true : false"
       :id-modal="'modalTambah'"
       :tipe="'Tambah'"
     />
