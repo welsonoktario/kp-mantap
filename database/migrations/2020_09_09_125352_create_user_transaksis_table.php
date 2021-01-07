@@ -14,8 +14,8 @@ class CreateUserTransaksisTable extends Migration
     public function up()
     {
         Schema::create('user_transaksis', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('transaksi_id')->constrained();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('transaksi_id')->constrained()->cascadeOnDelete();
         });
     }
 

@@ -306,7 +306,7 @@ export default {
 
       if (resKategori.status === 200) {
         if (this.paj) {
-          this.dataKategori = resKategori.data.data.filter(k => k.id === 1)
+          this.dataKategori = resKategori.data.data.filter(k => k.nama === 'Sumbangan Mahasiswa')
           this.dataTransaksi.kategori = this.dataKategori
         } else this.dataKategori = resKategori.data.data
       }
