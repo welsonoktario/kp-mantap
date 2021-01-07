@@ -125,7 +125,7 @@ class TransaksiController extends Controller
         $terverivikasi = 1;
         foreach ($request->kategori as $kategori) {
             array_push($kategoris, $kategori['id']);
-            if ($kategori['id'] == 1) {
+            if ($kategori['nama'] == 'Sumbangan Mahasiswa') {
                 // transaksi sumbangan bendahara, veriff = 0;
                 $terverivikasi = Auth::user()->role == 'Bendahara' ? 0 : 1;
             }
